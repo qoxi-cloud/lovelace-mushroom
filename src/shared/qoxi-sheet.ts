@@ -54,6 +54,15 @@ export interface SheetTable {
   rows: TableCell[][];
   /** Below this width the table scrolls horizontally instead of squeezing (e.g. "520px") */
   minWidth?: string;
+  /** grid-template-columns on narrow screens (≤ 640px); hidden columns must be dropped here */
+  columnsMobile?: string;
+  /** column indexes hidden on narrow screens */
+  hideOnMobile?: number[];
+  /** row keys (same order as rows) to make rows selectable */
+  rowKeys?: string[];
+  /** keys of rows to highlight */
+  activeKeys?: string[];
+  onRow?: (key: string) => void;
 }
 
 export abstract class QoxiSheet<P> extends MushroomBaseElement {
@@ -171,7 +180,9 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   }
 
   protected renderTable(table: SheetTable) {
-    const style = `--table-columns: ${table.columns}; --table-min-width: ${table.minWidth ?? "0"}`;
+    const style = `--table-columns: ${table.columns}; --table-columns-mobile: ${table.columnsMobile ?? table.columns}; --table-min-width: ${table.minWidth ?? "0"}`;
+    const hidden = new Set(table.hideOnMobile ?? []);
+    const active = new Set(table.activeKeys ?? []);
     return html`
       <section>
         <div class="section-title">
@@ -180,17 +191,33 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         </div>
         <div class="table" style=${style}>
           <div class="table-head">
-            ${table.headers.map((h) => html`<span>${h}</span>`)}
+            ${table.headers.map(
+              (h, i) =>
+                html`<span class=${classMap({ "m-hide": hidden.has(i) })}
+                  >${h}</span
+                >`
+            )}
           </div>
-          ${table.rows.map(
-            (cells) => html`
-              <div class="table-row">
+          ${table.rows.map((cells, rowIndex) => {
+            const key = table.rowKeys?.[rowIndex];
+            return html`
+              <div
+                class=${classMap({
+                  "table-row": true,
+                  selectable: !!table.onRow && key !== undefined,
+                  active: key !== undefined && active.has(key),
+                })}
+                @click=${key !== undefined && table.onRow
+                  ? () => table.onRow!(key)
+                  : undefined}
+              >
                 ${cells.map(
-                  (c) => html`
+                  (c, i) => html`
                     <span
                       class=${classMap({
                         cell: true,
                         muted: !!c.muted,
+                        "m-hide": hidden.has(i),
                         [c.tone ?? "normal"]: true,
                       })}
                     >
@@ -206,8 +233,8 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
                   `
                 )}
               </div>
-            `
-          )}
+            `;
+          })}
         </div>
       </section>
     `;
@@ -447,6 +474,16 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         .table-row + .table-row {
           border-top: 1px solid rgba(var(--rgb-primary-text-color), 0.06);
         }
+        .table-row.selectable {
+          cursor: pointer;
+        }
+        .table-row.selectable:hover {
+          background: rgba(var(--rgb-primary-text-color), 0.06);
+        }
+        .table-row.active {
+          background: rgba(var(--rgb-primary), 0.18);
+          box-shadow: inset 3px 0 0 rgb(var(--rgb-primary));
+        }
         .cell {
           display: flex;
           align-items: center;
@@ -534,6 +571,14 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           }
           .columns {
             grid-template-columns: 1fr;
+          }
+          .table-head,
+          .table-row {
+            grid-template-columns: var(--table-columns-mobile);
+            min-width: 0;
+          }
+          .m-hide {
+            display: none;
           }
         }
       `,

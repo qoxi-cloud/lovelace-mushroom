@@ -1,5 +1,5 @@
 import { html } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import setupCustomlocalize from "../../localize";
 import {
   QoxiSheet,
@@ -62,6 +62,24 @@ function clientAttachment(client: ClientRecord): string {
 
 @customElement(OMADA_DEVICE_DETAIL_DIALOG_NAME)
 export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogParams> {
+  /** port selected from either table; highlights the port row and its clients */
+  @state() private _activePort?: string;
+
+  public showDialog(params: OmadaDeviceDetailDialogParams): void {
+    this._activePort = undefined;
+    super.showDialog(params);
+  }
+
+  private _selectPort = (port: string) => {
+    this._activePort = this._activePort === port ? undefined : port;
+    if (this._activePort) {
+      this.updateComplete.then(() => {
+        const row = this.renderRoot.querySelector(".table-row.active");
+        row?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      });
+    }
+  };
+
   private get _device(): DeviceRecord | undefined {
     if (!this._params || !this.hass) return undefined;
     return findDevice(this.hass, this._params.device, this._params.site);
@@ -270,38 +288,48 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         this.renderTable({
           title: t("ports"),
           tag: `${up} / ${total} ${t("ports_up_tag")}`,
-          columns: "56px 140px 100px 72px minmax(0, 1fr)",
+          columns: "40px 132px 96px 64px minmax(0, 1fr)",
+          columnsMobile: "32px minmax(0, 1fr) 84px 56px",
+          hideOnMobile: [4],
           headers: [t("port"), t("status"), t("speed"), "PoE", t("client")],
           rows,
-          minWidth: "520px",
+          minWidth: "480px",
+          rowKeys: device.ports.map((port) => port.port),
+          activeKeys: this._activePort ? [this._activePort] : [],
+          onRow: this._selectPort,
         })
       );
     }
 
     if (device.clients.length) {
-      const rows: TableCell[][] = device.clients
+      const sortedClients = device.clients
         .slice()
-        .sort((a, b) => clientRate(b) - clientRate(a))
-        .map((client) => {
-          const rate = clientRate(client);
-          return [
-            {
-              text: client.name || client.hostName || client.mac,
-              dot: "success",
-            },
-            { text: clientAttachment(client) || "—", muted: true },
-            { text: client.ip || "—" },
-            { text: rate > 0 ? formatRateBits(rate) : "—", muted: rate <= 0 },
-          ];
-        });
+        .sort((a, b) => clientRate(b) - clientRate(a));
+      const rows: TableCell[][] = sortedClients.map((client) => {
+        const rate = clientRate(client);
+        return [
+          {
+            text: client.name || client.hostName || client.mac,
+            dot: "success",
+          },
+          { text: clientAttachment(client) || "—", muted: true },
+          { text: client.ip || "—" },
+          { text: rate > 0 ? formatRateBits(rate) : "—", muted: rate <= 0 },
+        ];
+      });
       tables.push(
         this.renderTable({
           title: t("clients"),
           tag: String(device.clients.length),
           columns: "minmax(0, 1.4fr) minmax(0, 1fr) 120px 96px",
+          columnsMobile: "minmax(0, 1.4fr) minmax(0, 1fr) 80px",
+          hideOnMobile: [2],
           headers: [t("name"), t("via"), t("ip_short"), t("rate")],
           rows,
           minWidth: "460px",
+          rowKeys: sortedClients.map((c) => c.attachmentPort || ""),
+          activeKeys: this._activePort ? [this._activePort] : [],
+          onRow: (port) => port && this._selectPort(port),
         })
       );
     }
