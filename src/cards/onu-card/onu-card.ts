@@ -192,8 +192,18 @@ export class OnuCard
     return this.getGridOptions().rows ?? 1;
   }
 
-  private _handleAction(ev: ActionHandlerEvent) {
+  private _openDetail() {
     const onu = this._onu;
+    showOnuDetailDialog(this, {
+      serial: onu?.serial ?? this._config!.serial,
+      prefix: this._config!.prefix,
+      name: this._config!.name,
+      icon: this._config!.icon,
+      icon_color: this._config!.icon_color,
+    });
+  }
+
+  private _handleAction(ev: ActionHandlerEvent) {
     const action = ev.detail.action!;
     const configured = this._config![`${action}_action`];
     // Tap opens the ONU detail sheet unless the user configured an action.
@@ -201,19 +211,13 @@ export class OnuCard
       action === "tap" &&
       (!configured || (configured.action as string) === "onu-detail")
     ) {
-      showOnuDetailDialog(this, {
-        serial: onu?.serial ?? this._config!.serial,
-        prefix: this._config!.prefix,
-        name: this._config!.name,
-        icon: this._config!.icon,
-        icon_color: this._config!.icon_color,
-      });
+      this._openDetail();
       return;
     }
     handleAction(
       this,
       this.hass!,
-      { ...this._config!, entity: onu?.linkEntityId },
+      { ...this._config!, entity: this._onu?.linkEntityId },
       action
     );
   }
@@ -342,7 +346,11 @@ export class OnuCard
     const stats = this._stats;
     if (stats.length === 0) return nothing;
     return html`
-      <div class="actions stats" ?rtl=${computeRTL(this.hass)}>
+      <div
+        class="actions stats"
+        ?rtl=${computeRTL(this.hass)}
+        @click=${this._openDetail}
+      >
         ${stats.map((key) => {
           const stat = computeStat(onu, key);
           return html`
@@ -377,6 +385,7 @@ export class OnuCard
           --main-color: rgb(var(--rgb-warning));
         }
         .stats {
+          cursor: pointer;
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
           gap: 8px;
