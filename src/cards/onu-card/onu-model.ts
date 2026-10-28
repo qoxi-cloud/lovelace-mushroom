@@ -10,6 +10,7 @@ export interface OnuDevice {
   online: boolean;
   alarm: boolean;
   ponState: string;
+  ponPreviousState: string;
   model: string;
   vendor: string;
   oltVendor: string;
@@ -148,6 +149,7 @@ export function collectOnuDevices(
       online: link?.state === "on",
       alarm: get("pon_alarms")?.state === "on",
       ponState: state("pon_state"),
+      ponPreviousState: state("pon_previous_state"),
       model: state("part_number"),
       vendor: state("vendor"),
       oltVendor: state("olt_vendor"),

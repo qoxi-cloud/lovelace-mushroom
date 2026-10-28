@@ -37,6 +37,8 @@ import {
   OnuDevice,
   shortPonState,
 } from "./onu-model";
+import "./onu-detail-dialog";
+import { showOnuDetailDialog } from "./onu-detail-dialog";
 
 registerCustomCard({
   type: ONU_CARD_NAME,
@@ -151,6 +153,13 @@ export class OnuCard
     };
   }
 
+  setConfig(config: OnuCardConfig): void {
+    this._config = {
+      hold_action: { action: "more-info" },
+      ...config,
+    };
+  }
+
   private get _onu(): OnuDevice | undefined {
     if (!this.hass || !this._config) return undefined;
     return findOnu(this.hass, this._config.prefix, this._config.serial);
@@ -185,11 +194,27 @@ export class OnuCard
 
   private _handleAction(ev: ActionHandlerEvent) {
     const onu = this._onu;
+    const action = ev.detail.action!;
+    const configured = this._config![`${action}_action`];
+    // Tap opens the ONU detail sheet unless the user configured an action.
+    if (
+      action === "tap" &&
+      (!configured || (configured.action as string) === "onu-detail")
+    ) {
+      showOnuDetailDialog(this, {
+        serial: onu?.serial ?? this._config!.serial,
+        prefix: this._config!.prefix,
+        name: this._config!.name,
+        icon: this._config!.icon,
+        icon_color: this._config!.icon_color,
+      });
+      return;
+    }
     handleAction(
       this,
       this.hass!,
       { ...this._config!, entity: onu?.linkEntityId },
-      ev.detail.action!
+      action
     );
   }
 
