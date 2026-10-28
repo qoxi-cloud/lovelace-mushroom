@@ -168,9 +168,8 @@ export class ChipsCardEditorChips extends MushroomBaseElement {
 
   private async _createSortable() {
     if (!Sortable) {
-      const sortableImport = await import(
-        "sortablejs/modular/sortable.core.esm"
-      );
+      const sortableImport =
+        await import("sortablejs/modular/sortable.core.esm");
 
       Sortable = sortableImport.Sortable;
       Sortable.mount(sortableImport.OnSpill);

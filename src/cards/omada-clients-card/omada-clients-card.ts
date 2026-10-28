@@ -185,7 +185,7 @@ export class OmadaClientsCard
             ? this.renderFilters(all, t)
             : nothing}
           <div class="list">
-            ${visible.map((client) => this.renderRow(client))}
+            ${visible.map((client) => this.renderRow(client, t))}
             ${hidden > 0
               ? html`<div class="more">
                   ${t("more").replace("{n}", String(hidden))}
@@ -223,7 +223,7 @@ export class OmadaClientsCard
     `;
   }
 
-  private renderRow(client: ClientRecord) {
+  private renderRow(client: ClientRecord, t: (k: string) => string) {
     const rate = clientRate(client);
     const signal = client.metrics.omada_client_signal_pct ?? 0;
     const tone = client.wireless ? signalTone(signal) : "normal";
@@ -238,7 +238,7 @@ export class OmadaClientsCard
         </div>
         <span class="row-ip">${client.ip || "—"}</span>
         <span class=${classMap({ "row-rate": true, muted: rate <= 0 })}>
-          ${rate > 0 ? formatRateBits(rate) : "—"}
+          ${rate > 0 ? formatRateBits(rate) : t("idle")}
         </span>
         <span
           class=${classMap({ "row-signal": true, [tone ?? "normal"]: true })}

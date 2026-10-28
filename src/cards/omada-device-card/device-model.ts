@@ -133,9 +133,19 @@ export function clientVia(client: ClientRecord, short = false): string {
   return short ? parts.join(" · ") : ["Wired", ...parts].join(" · ");
 }
 
+/** Real throughput in bit/s: Omada's client "activity" counters are bytes per second. */
 export function clientRate(client: ClientRecord): number {
   return (
-    (client.metrics.omada_client_rx_rate ?? 0) +
-    (client.metrics.omada_client_tx_rate ?? 0)
+    ((client.metrics.omada_client_download_activity_bytes ?? 0) +
+      (client.metrics.omada_client_upload_activity_bytes ?? 0)) *
+    8
   );
+}
+
+export function clientDownRate(client: ClientRecord): number {
+  return (client.metrics.omada_client_download_activity_bytes ?? 0) * 8;
+}
+
+export function clientUpRate(client: ClientRecord): number {
+  return (client.metrics.omada_client_upload_activity_bytes ?? 0) * 8;
 }
