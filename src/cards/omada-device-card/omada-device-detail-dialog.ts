@@ -245,6 +245,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
           columns: "56px 140px 100px 72px minmax(0, 1fr)",
           headers: [t("port"), t("status"), t("speed"), "PoE", t("client")],
           rows,
+          minWidth: "520px",
         })
       );
     }
@@ -280,6 +281,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
           columns: "minmax(0, 1.4fr) minmax(0, 1fr) 120px 96px",
           headers: [t("name"), t("via"), t("ip_short"), t("rate")],
           rows,
+          minWidth: "460px",
         })
       );
     }

@@ -52,6 +52,8 @@ export interface SheetTable {
   columns: string;
   headers: string[];
   rows: TableCell[][];
+  /** Below this width the table scrolls horizontally instead of squeezing (e.g. "520px") */
+  minWidth?: string;
 }
 
 export abstract class QoxiSheet<P> extends MushroomBaseElement {
@@ -169,7 +171,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   }
 
   protected renderTable(table: SheetTable) {
-    const style = `--table-columns: ${table.columns}`;
+    const style = `--table-columns: ${table.columns}; --table-min-width: ${table.minWidth ?? "0"}`;
     return html`
       <section>
         <div class="section-title">
@@ -415,8 +417,13 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         }
         .table {
           border-radius: var(--control-border-radius);
-          overflow: hidden;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scrollbar-width: none;
           background: rgba(var(--rgb-primary-text-color), 0.04);
+        }
+        .table::-webkit-scrollbar {
+          display: none;
         }
         .table-head,
         .table-row {
@@ -425,7 +432,8 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           gap: 8px;
           align-items: center;
           padding: 8px 12px;
-          min-width: 0;
+          box-sizing: border-box;
+          min-width: var(--table-min-width, 0);
         }
         .table-head {
           font-size: 10px;
