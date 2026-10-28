@@ -175,8 +175,10 @@
         "down_total": "Downloaded",
         "up_total": "Uploaded",
         "down_activity": "Download activity",
-        "up_activity": "Upload activity"
-      }
+        "up_activity": "Upload activity",
+        "link_rate": "Link rate ↓ / ↑"
+      },
+      "idle": "idle"
     }
   },
   "editor": {

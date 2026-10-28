@@ -17,6 +17,7 @@ import { computeRgbColor } from "../../utils/colors";
 import { DEFAULT_DEVICE_ICON, DEVICE_TYPE_ICONS } from "./const";
 import {
   ClientRecord,
+  clientRate,
   DeviceRecord,
   deviceOnline,
   deviceRate,
@@ -253,17 +254,9 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     if (device.clients.length) {
       const rows: TableCell[][] = device.clients
         .slice()
-        .sort(
-          (a, b) =>
-            (b.metrics.omada_client_rx_rate ?? 0) +
-            (b.metrics.omada_client_tx_rate ?? 0) -
-            ((a.metrics.omada_client_rx_rate ?? 0) +
-              (a.metrics.omada_client_tx_rate ?? 0))
-        )
+        .sort((a, b) => clientRate(b) - clientRate(a))
         .map((client) => {
-          const rate =
-            (client.metrics.omada_client_rx_rate ?? 0) +
-            (client.metrics.omada_client_tx_rate ?? 0);
+          const rate = clientRate(client);
           return [
             {
               text: client.name || client.hostName || client.mac,
