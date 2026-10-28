@@ -5,8 +5,9 @@ Fork of [piitaya/lovelace-mushroom](https://github.com/piitaya/lovelace-mushroom
 - [ONU card](docs/cards/onu.md) — XGS-PON ONU sticks via the 8311 ONU Monitor integration.
 - [ISP card](docs/cards/isp.md) — ISP / WAN links from OmadaBridge (virtual WANs included).
 - [Omada device card](docs/cards/omada-device.md) — gateway / switch / AP with ports, radios and clients in a detail sheet.
+- [Omada clients card](docs/cards/omada-clients.md) — client list with filters, rate, signal and a client sheet.
 
-Upstream is merged with `git merge upstream/main`; the fork's own code lives in `src/cards/onu-card/`, `src/cards/isp-card/`, `src/cards/omada-device-card/`, `src/shared/qoxi-sheet.ts` and the dashboard model copied from omada_exporter in `src/shared/omada/`.
+Upstream is merged with `git merge upstream/main`; the fork's own code lives in `src/cards/onu-card/`, `src/cards/isp-card/`, `src/cards/omada-device-card/`, `src/cards/omada-clients-card/`, `src/shared/qoxi-sheet.ts` and the dashboard model copied from omada_exporter in `src/shared/omada/`.
 
 ---
 

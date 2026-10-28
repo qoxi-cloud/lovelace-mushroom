@@ -7,6 +7,7 @@ import {
   normalizeMacKey,
 } from "../../shared/omada/model";
 import type {
+  ClientRecord,
   DeviceRecord,
   HomeAssistant as OmadaHass,
   PortRecord,
@@ -91,4 +92,50 @@ export function deviceEntityId(
     }
   }
   return undefined;
+}
+
+export function listClients(hass: MushroomHass, site?: string): ClientRecord[] {
+  return getDashboardModel(omadaHass(hass), site ? { site } : undefined)
+    .clients;
+}
+
+/** Match by MAC (any separator / case), IP or name (case-insensitive). */
+export function findClient(
+  hass: MushroomHass,
+  client: string | undefined,
+  site?: string
+): ClientRecord | undefined {
+  if (!client) return undefined;
+  const wanted = client.trim().toLowerCase();
+  const wantedMac = normalizeMacKey(client);
+  return listClients(hass, site).find(
+    (c) =>
+      (wantedMac && normalizeMacKey(c.mac) === wantedMac) ||
+      c.ip.toLowerCase() === wanted ||
+      c.name.toLowerCase() === wanted ||
+      c.key.toLowerCase() === wanted
+  );
+}
+
+/** "Wi-Fi · IoT · AP-2" or "Wired · SG3218XP · Port 3" */
+export function clientVia(client: ClientRecord, short = false): string {
+  if (client.wireless) {
+    const parts = [client.ssid, client.apName].filter(Boolean);
+    return short ? parts.join(" · ") : ["Wi-Fi", ...parts].join(" · ");
+  }
+  const where = client.switchName || client.gatewayName;
+  const port = client.attachmentLagId
+    ? `LAG ${client.attachmentLagId}`
+    : client.attachmentPort
+      ? `Port ${client.attachmentPort}`
+      : "";
+  const parts = [where, port].filter(Boolean);
+  return short ? parts.join(" · ") : ["Wired", ...parts].join(" · ");
+}
+
+export function clientRate(client: ClientRecord): number {
+  return (
+    (client.metrics.omada_client_rx_rate ?? 0) +
+    (client.metrics.omada_client_tx_rate ?? 0)
+  );
 }

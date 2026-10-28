@@ -138,6 +138,45 @@
         "ip_short": "IP",
         "rate": "Rate"
       }
+    },
+    "omada_clients": {
+      "title": "Clients",
+      "clients": "clients",
+      "all": "All",
+      "wired": "Wired",
+      "wireless": "Wireless",
+      "more": "and {n} more",
+      "empty": "No clients",
+      "detail": {
+        "client": "Client",
+        "connection": "Connection",
+        "traffic": "Traffic",
+        "session": "session",
+        "name": "Name",
+        "host_name": "Host name",
+        "mac": "MAC",
+        "vendor": "Vendor",
+        "category": "Category",
+        "ip": "IP address",
+        "vlan": "VLAN",
+        "type": "Type",
+        "wired": "Wired",
+        "ssid": "SSID",
+        "ap": "Access point",
+        "wifi_mode": "Wi-Fi mode",
+        "signal": "Signal",
+        "rssi": "RSSI",
+        "snr": "SNR",
+        "device": "Device",
+        "port": "Port",
+        "link_speed": "Link speed",
+        "down_rate": "Down",
+        "up_rate": "Up",
+        "down_total": "Downloaded",
+        "up_total": "Uploaded",
+        "down_activity": "Download activity",
+        "up_activity": "Upload activity"
+      }
     }
   },
   "editor": {
@@ -279,6 +318,16 @@
       "omada_device": {
         "device": "Omada device",
         "stats": "Statistics"
+      },
+      "omada_clients": {
+        "device": "Only clients of device",
+        "filter": "Filter",
+        "show_filters": "Show filter chips",
+        "sort": "Sort",
+        "limit": "Max rows (0 = all)",
+        "sort_rate": "By rate",
+        "sort_name": "By name",
+        "sort_ip": "By IP"
       }
     },
     "badge": {
