@@ -245,15 +245,14 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         )
         .map((client) => ({
           label: `${client.name || client.hostName || client.mac}${clientAttachment(client) ? ` · ${clientAttachment(client)}` : ""}`,
-          value: [
-            client.ip,
-            formatRateBits(
+          value: (() => {
+            const rate =
               (client.metrics.omada_client_rx_rate ?? 0) +
-                (client.metrics.omada_client_tx_rate ?? 0)
-            ),
-          ]
-            .filter(Boolean)
-            .join(" · "),
+              (client.metrics.omada_client_tx_rate ?? 0);
+            return [client.ip, rate > 0 ? formatRateBits(rate) : ""]
+              .filter(Boolean)
+              .join(" · ");
+          })(),
         }));
       sections.push(
         this.renderSection(t("clients"), String(device.clients.length), rows)
