@@ -80,6 +80,27 @@ export class OnuDetailDialog extends MushroomBaseElement {
     if (ev.key === "Escape") this.closeDialog();
   };
 
+  // Scroll only inside .body; the page behind the sheet stays put.
+  private _onScrollIntent = (ev: Event) => {
+    const body = this.renderRoot.querySelector(".body");
+    if (body && ev.composedPath().includes(body)) return;
+    ev.preventDefault();
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener("wheel", this._onScrollIntent, { passive: false });
+    this.addEventListener("touchmove", this._onScrollIntent, {
+      passive: false,
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener("wheel", this._onScrollIntent);
+    this.removeEventListener("touchmove", this._onScrollIntent);
+  }
+
   protected render() {
     if (!this._params || !this.hass) return nothing;
     const onu = findOnu(this.hass, this._params.prefix, this._params.serial);
