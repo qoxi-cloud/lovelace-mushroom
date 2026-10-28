@@ -710,9 +710,37 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         }
         .path {
           display: flex;
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
           align-items: center;
           gap: 6px;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+          scroll-snap-type: x proximity;
+          padding: 2px 0;
+          /* fade the clipped edges so it reads as scrollable */
+          mask-image: linear-gradient(
+            90deg,
+            transparent 0,
+            #000 10px,
+            #000 calc(100% - 18px),
+            transparent 100%
+          );
+          -webkit-mask-image: linear-gradient(
+            90deg,
+            transparent 0,
+            #000 10px,
+            #000 calc(100% - 18px),
+            transparent 100%
+          );
+        }
+        .path::-webkit-scrollbar {
+          display: none;
+        }
+        .hop-wrap {
+          flex: none;
+          scroll-snap-align: start;
         }
         .hop {
           display: flex;
@@ -721,7 +749,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           padding: 8px 12px 8px 10px;
           border-radius: var(--control-border-radius);
           background: rgba(var(--rgb-primary-text-color), 0.05);
-          min-width: 0;
+          flex: none;
         }
         .hop.linked {
           cursor: pointer;
