@@ -336,8 +336,10 @@ export class OmadaDeviceCard
         class=${classMap({ trail: true, [tone]: true })}
         title="Health"
         @click=${() => showMoreInfo(this, health.entityId)}
-        >${health.score.toFixed(0)} / 10</span
       >
+        <ha-icon icon="mdi:heart-pulse"></ha-icon>
+        <span>${health.score.toFixed(0)}/10</span>
+      </span>
     `;
   }
 
@@ -445,6 +447,10 @@ export class OmadaDeviceCard
           min-width: 0;
         }
         .trail {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          --mdc-icon-size: 15px;
           flex: none;
           padding: 0 var(--spacing) 0 4px;
           font-size: 13px;
