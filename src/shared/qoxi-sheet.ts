@@ -152,11 +152,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   protected renderStat(row: SheetRow) {
     return html`
       <div class=${classMap({ stat: true, [row.tone ?? "normal"]: true })}>
-        <span class="stat-label"
-          >${row.label}${row.tone && row.tone !== "normal"
-            ? html`<i class="tone-dot"></i>`
-            : nothing}</span
-        >
+        <span class="stat-label">${row.label}</span>
         <span class="stat-value">${row.value}</span>
       </div>
     `;
@@ -174,11 +170,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
             (r) => html`
               <div class=${classMap({ row: true, [r.tone ?? "normal"]: true })}>
                 <span class="row-label">${r.label}</span>
-                <span class="row-value"
-                  >${r.tone && r.tone !== "normal"
-                    ? html`<i class="tone-dot"></i>`
-                    : nothing}${r.value}</span
-                >
+                <span class="row-value">${r.value}</span>
               </div>
             `
           )}
@@ -356,42 +348,17 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           background: rgba(var(--rgb-primary-text-color), 0.05);
           --stat-color: var(--primary-text-color);
         }
-        .tone-dot {
-          display: inline-block;
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: var(--tone-rgb, var(--secondary-text-color));
-          vertical-align: middle;
-          flex: none;
+        .stat.warning {
+          --stat-color: rgb(var(--rgb-warning));
         }
-        .stat-label .tone-dot {
-          margin-left: 5px;
-          margin-top: -2px;
-        }
-        .row-value .tone-dot {
-          margin-right: 7px;
-        }
-        .success {
-          --tone-rgb: rgb(var(--rgb-success));
-        }
-        .warning {
-          --tone-rgb: rgb(var(--rgb-warning));
-        }
-        .danger {
-          --tone-rgb: rgb(var(--rgb-danger));
-        }
-        .stat.warning,
         .stat.danger {
-          box-shadow: inset 0 0 0 1px var(--tone-rgb);
-          --stat-color: var(--tone-rgb);
+          --stat-color: rgb(var(--rgb-danger));
         }
-        .row.warning .row-value,
+        .row.warning .row-value {
+          color: rgb(var(--rgb-warning));
+        }
         .row.danger .row-value {
-          color: var(--tone-rgb);
-          background: color-mix(in srgb, var(--tone-rgb) 16%, transparent);
-          padding: 2px 10px 2px 8px;
-          border-radius: 999px;
+          color: rgb(var(--rgb-danger));
         }
         .stat-label,
         .row-label {
@@ -464,8 +431,6 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           --stat-color: var(--primary-text-color);
         }
         .row-value {
-          display: inline-flex;
-          align-items: center;
           font-size: 13px;
           font-weight: 500;
           font-variant-numeric: tabular-nums;
