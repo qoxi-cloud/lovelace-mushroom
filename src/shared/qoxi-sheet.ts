@@ -481,8 +481,8 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           background: rgba(var(--rgb-primary-text-color), 0.06);
         }
         .table-row.active {
-          background: rgba(var(--rgb-primary), 0.18);
-          box-shadow: inset 3px 0 0 rgb(var(--rgb-primary));
+          background: rgba(var(--rgb-primary-color, var(--rgb-blue)), 0.18);
+          box-shadow: inset 3px 0 0 rgb(var(--rgb-primary-color, var(--rgb-blue)));
         }
         .cell {
           display: flex;

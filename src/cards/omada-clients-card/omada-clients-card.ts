@@ -298,8 +298,8 @@ export class OmadaClientsCard
           background: rgba(var(--rgb-primary-text-color), 0.05);
         }
         .chip.active {
-          color: rgb(var(--rgb-primary));
-          background: rgba(var(--rgb-primary), 0.15);
+          color: rgb(var(--rgb-primary-color, var(--rgb-blue)));
+          background: rgba(var(--rgb-primary-color, var(--rgb-blue)), 0.15);
         }
         .chip .count {
           opacity: 0.7;
@@ -421,7 +421,7 @@ export class OmadaClientsCard
           text-align: center;
           font-size: 11px;
           font-weight: 500;
-          color: rgb(var(--rgb-primary));
+          color: rgb(var(--rgb-primary-color, var(--rgb-blue)));
           padding: 8px 0 2px;
         }
         .more:hover {
