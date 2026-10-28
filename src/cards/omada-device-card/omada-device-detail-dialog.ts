@@ -256,6 +256,10 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     }
 
     if (device.ports.length) {
+      // PoE column only when the device has at least one PoE-capable port.
+      const hasPoe = device.ports.some(
+        (port) => port.poe || port.metrics.omada_port_power_watts !== undefined
+      );
       const rows: TableCell[][] = device.ports.map((port: PortRecord) => {
         const up = portUp(port);
         const speed = portSpeedMbps(port);
@@ -267,8 +271,10 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
           .join(", ");
         const custom =
           port.name && !/^port\s*\d+$/i.test(port.name) ? port.name : "";
-        return [
-          { text: `${port.port}${custom ? ` · ${custom}` : ""}` },
+        // port name (e.g. "SFP+ WAN1") goes with the client column so the port column stays narrow
+        const clientText = [custom, who].filter(Boolean).join(" · ");
+        const cells: TableCell[] = [
+          { text: port.port },
           {
             text: up
               ? port.status || t("port_up")
@@ -277,21 +283,32 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
             muted: !up,
           },
           { text: up ? formatSpeedMbps(speed) : "—", muted: !up },
-          port.poe || poe
-            ? { text: `${(poe ?? 0).toFixed(0)} W`, icon: "mdi:flash" }
-            : { text: "—", muted: true },
-          { text: who || "—", muted: !who },
         ];
+        if (hasPoe) {
+          cells.push(
+            port.poe || poe
+              ? { text: `${(poe ?? 0).toFixed(0)} W`, icon: "mdi:flash" }
+              : { text: "—", muted: true }
+          );
+        }
+        cells.push({ text: clientText || "—", muted: !who });
+        return cells;
       });
       const [up, total] = portsUp(device);
       tables.push(
         this.renderTable({
           title: t("ports"),
           tag: `${up} / ${total} ${t("ports_up_tag")}`,
-          columns: "40px 132px 96px 64px minmax(0, 1fr)",
-          columnsMobile: "32px minmax(0, 1fr) 84px 56px",
-          hideOnMobile: [4],
-          headers: [t("port"), t("status"), t("speed"), "PoE", t("client")],
+          columns: hasPoe
+            ? "40px 132px 96px 64px minmax(0, 1fr)"
+            : "40px 132px 96px minmax(0, 1fr)",
+          columnsMobile: hasPoe
+            ? "32px minmax(0, 1fr) 84px 56px"
+            : "32px minmax(0, 1fr) 84px",
+          hideOnMobile: [hasPoe ? 4 : 3],
+          headers: hasPoe
+            ? [t("port"), t("status"), t("speed"), "PoE", t("client")]
+            : [t("port"), t("status"), t("speed"), t("client")],
           rows,
           minWidth: "480px",
           rowKeys: device.ports.map((port) => port.port),
