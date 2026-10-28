@@ -67,34 +67,18 @@
         "disconnecting": "Disconnecting",
         "unknown": "Unknown"
       },
+      "yes": "yes",
+      "no": "no",
       "stats": {
         "latency": "Latency",
-        "down_rate": "Down",
-        "up_rate": "Up",
         "link_speed": "Link",
+        "port": "Port",
+        "proto": "Proto",
         "ip": "IP",
-        "rx_power": "RX",
-        "tx_power": "TX",
-        "onu_uptime": "ONU up"
-      },
-      "detail": {
-        "wan": "WAN",
-        "onu": "ONU",
-        "latency": "Latency",
-        "down_rate": "Down",
-        "up_rate": "Up",
-        "link_speed": "Link speed",
-        "state": "State",
-        "isp_enabled": "ISP enabled",
-        "yes": "yes",
-        "no": "no",
-        "ip": "IP address",
-        "proto": "Protocol",
-        "gateway": "Gateway",
-        "port": "WAN port",
-        "max_bandwidth": "Max bandwidth",
-        "gw_rx": "Gateway RX",
-        "gw_tx": "Gateway TX"
+        "isp_enabled": "ISP",
+        "max_bandwidth": "Max BW",
+        "rx_rate": "RX",
+        "tx_rate": "TX"
       }
     }
   },

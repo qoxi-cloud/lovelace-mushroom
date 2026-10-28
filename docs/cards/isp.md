@@ -3,10 +3,9 @@
 One card per ISP / WAN link of an Omada gateway, read from the MQTT entities
 published by [OmadaBridge](https://github.com/qoxi-cloud/omadabridge-addon)
 (`sensor.<gateway>_wan_*_port_<port>_<slug>`). Virtual WANs (VLAN sub-interfaces
-on a trunk port) are supported. When an 8311 ONU stick with a matching name
-exists (`LinkCom_sfp2` ↔ `ONU LinkCom (sfp2)`), its optics and GEM traffic are
-merged in: the Down/Up tiles fall back to the ONU counters because Omada reports
-no rates for virtual WANs.
+on a trunk port) are supported. Everything Omada exposes for a WAN fits on the
+card, so there is no detail sheet; tap opens more-info of the WAN status sensor.
+Note that Omada reports no RX/TX rates for virtual WANs (always 0).
 
 ## Configuration variables
 
@@ -24,7 +23,7 @@ no rates for virtual WANs.
 
 ### `stats` values
 
-`latency` `down_rate` `up_rate` `link_speed` `ip` `rx_power` `tx_power` `onu_uptime`
+`latency` `link_speed` `port` `proto` `ip` `isp_enabled` `max_bandwidth` `rx_rate` `tx_rate`
 
 Latency turns orange at ≥ 40 ms and red at ≥ 100 ms.
 
@@ -33,5 +32,5 @@ Latency turns orange at ≥ 40 ms and red at ≥ 100 ms.
 ```yaml
 type: custom:mushroom-isp-card
 wan: kopiyka_sfp3
-stats: [latency, down_rate, up_rate, rx_power]
+stats: [latency, link_speed, port, isp_enabled]
 ```

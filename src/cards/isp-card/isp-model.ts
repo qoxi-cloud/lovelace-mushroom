@@ -3,11 +3,6 @@
 // `binary_sensor.<gateway>_isp_status_port_<port>_<slug>`.
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant } from "../../ha";
-import {
-  collectOnuDevices,
-  findOnuForLink,
-  OnuDevice,
-} from "../onu-card/onu-model";
 
 export type WanState =
   | "online"
@@ -30,11 +25,8 @@ export interface WanLink {
   latency: number; // ms
   linkSpeedMbps: number;
   maxBandwidthMbps: number;
-  rxRate: number; // bit/s, gateway counters
+  rxRate: number; // bit/s
   txRate: number;
-  downRate: number; // bit/s, effective (gateway or ONU GEM fallback)
-  upRate: number;
-  onu?: OnuDevice;
   statusEntityId: string;
   entities: Record<string, HassEntity | undefined>;
 }
@@ -85,11 +77,7 @@ function wanState(status: number, internet: number, isp: number): WanState {
 
 const LATENCY_RE = /^sensor\.(.+?)_wan_latency_port_(\d+)_(.+)$/;
 
-export function collectWanLinks(
-  hass: HomeAssistant,
-  onuPrefix?: string
-): WanLink[] {
-  const onus = collectOnuDevices(hass, onuPrefix);
+export function collectWanLinks(hass: HomeAssistant): WanLink[] {
   const links: WanLink[] = [];
   for (const entity of Object.values(hass.states)) {
     const match = LATENCY_RE.exec(entity.entity_id);
@@ -113,9 +101,6 @@ export function collectWanLinks(
     const attrs = (entities.status ?? entity).attributes;
     const ispAttrs = entities.isp?.attributes ?? {};
     const name = String(attrs.desc ?? attrs.name ?? slug).replace(/_/g, " ");
-    const onu = findOnuForLink(onus, name) ?? findOnuForLink(onus, slug!);
-    const rxRate = bitRate(entities.rx);
-    const txRate = bitRate(entities.tx);
     links.push({
       key: `${gateway}:${port}`,
       gateway: gateway!,
@@ -136,12 +121,8 @@ export function collectWanLinks(
       latency: numState(entity),
       linkSpeedMbps: numState(entities.linkSpeed),
       maxBandwidthMbps: toNumber(ispAttrs.max_bandwidth),
-      rxRate,
-      txRate,
-      // Virtual WANs carry no gateway counters; fall back to the ONU GEM rates.
-      downRate: rxRate || (onu ? onu.metrics.down_rate * 8 : 0),
-      upRate: txRate || (onu ? onu.metrics.up_rate * 8 : 0),
-      onu,
+      rxRate: bitRate(entities.rx),
+      txRate: bitRate(entities.tx),
       statusEntityId: (entities.status ?? entity).entity_id,
       entities,
     });
@@ -152,10 +133,9 @@ export function collectWanLinks(
 /** Match by `gateway:port`, port number, slug or display name (case-insensitive). */
 export function findWanLink(
   hass: HomeAssistant,
-  wan: string | undefined,
-  onuPrefix?: string
+  wan: string | undefined
 ): WanLink | undefined {
-  const links = collectWanLinks(hass, onuPrefix);
+  const links = collectWanLinks(hass);
   if (!wan) return links[0];
   const wanted = wan.toLowerCase();
   return links.find(
@@ -182,4 +162,25 @@ export function formatLatency(ms: number): string {
 export function formatMbps(mbps: number): string {
   if (mbps <= 0) return "—";
   return mbps >= 1000 ? `${(mbps / 1000).toFixed(0)} Gbit/s` : `${mbps} Mbit/s`;
+}
+
+export function wanStateColor(link: WanLink): string {
+  switch (link.state) {
+    case "online":
+      return "green";
+    case "offline":
+      return "red";
+    case "connecting":
+    case "disconnecting":
+      return "orange";
+    default:
+      return "grey";
+  }
+}
+
+export function latencyTone(ms: number): "normal" | "warning" | "danger" {
+  if (ms <= 0) return "normal";
+  if (ms >= 100) return "danger";
+  if (ms >= 40) return "warning";
+  return "normal";
 }

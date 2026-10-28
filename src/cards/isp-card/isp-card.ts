@@ -26,14 +26,7 @@ import { cardStyle } from "../../utils/card-styles";
 import { computeRgbColor } from "../../utils/colors";
 import { registerCustomCard } from "../../utils/custom-cards";
 import { computeInfoDisplay } from "../../utils/info";
-import { formatDuration } from "../onu-card/onu-model";
 import { DEFAULT_ISP_ICON, ISP_CARD_EDITOR_NAME, ISP_CARD_NAME } from "./const";
-import "./isp-detail-dialog";
-import {
-  latencyTone,
-  showIspDetailDialog,
-  wanStateColor,
-} from "./isp-detail-dialog";
 import { DEFAULT_ISP_STATS, IspCardConfig, IspStat } from "./isp-card-config";
 import {
   collectWanLinks,
@@ -41,7 +34,9 @@ import {
   formatBitRate,
   formatLatency,
   formatMbps,
+  latencyTone,
   WanLink,
+  wanStateColor,
 } from "./isp-model";
 
 registerCustomCard({
@@ -58,39 +53,42 @@ interface StatView {
   tone: StatTone;
 }
 
-function computeStat(link: WanLink, key: IspStat): StatView {
+function computeStat(
+  link: WanLink,
+  key: IspStat,
+  t: (k: string) => string
+): StatView {
   let value = "—";
   let tone: StatTone = "normal";
-  const onu = link.onu;
   switch (key) {
     case "latency":
       value = formatLatency(link.latency);
-      tone = (latencyTone(link.latency) ?? "normal") as StatTone;
-      break;
-    case "down_rate":
-      value = formatBitRate(link.downRate);
-      break;
-    case "up_rate":
-      value = formatBitRate(link.upRate);
+      tone = latencyTone(link.latency);
       break;
     case "link_speed":
       value = formatMbps(link.linkSpeedMbps);
       break;
+    case "port":
+      value = String(link.port);
+      break;
+    case "proto":
+      value = link.proto ? link.proto.toUpperCase() : "—";
+      break;
     case "ip":
       value = link.ip || "—";
       break;
-    case "rx_power":
-      if (onu) {
-        value = `${onu.metrics.rx_power.toFixed(1)} dBm`;
-        if (onu.metrics.rx_power <= -27) tone = "danger";
-        else if (onu.metrics.rx_power <= -24) tone = "warning";
-      }
+    case "isp_enabled":
+      value = link.ispEnabled ? t("yes") : t("no");
+      if (!link.ispEnabled) tone = "warning";
       break;
-    case "tx_power":
-      if (onu) value = `${onu.metrics.tx_power.toFixed(1)} dBm`;
+    case "max_bandwidth":
+      value = formatMbps(link.maxBandwidthMbps);
       break;
-    case "onu_uptime":
-      if (onu) value = formatDuration(onu.metrics.uptime);
+    case "rx_rate":
+      value = formatBitRate(link.rxRate);
+      break;
+    case "tx_rate":
+      value = formatBitRate(link.txRate);
       break;
   }
   return { key, value, tone };
@@ -116,16 +114,9 @@ export class IspCard
     };
   }
 
-  setConfig(config: IspCardConfig): void {
-    this._config = {
-      hold_action: { action: "more-info" },
-      ...config,
-    };
-  }
-
   private get _link(): WanLink | undefined {
     if (!this.hass || !this._config) return undefined;
-    return findWanLink(this.hass, this._config.wan, this._config.onu_prefix);
+    return findWanLink(this.hass, this._config.wan);
   }
 
   protected get _stateObj(): HassEntity | undefined {
@@ -149,32 +140,12 @@ export class IspCard
     return this.getGridOptions().rows ?? 1;
   }
 
-  private _openDetail() {
-    const link = this._link;
-    showIspDetailDialog(this, {
-      wan: link?.slug ?? this._config!.wan,
-      onu_prefix: this._config!.onu_prefix,
-      name: this._config!.name,
-      icon: this._config!.icon,
-      icon_color: this._config!.icon_color,
-    });
-  }
-
   private _handleAction(ev: ActionHandlerEvent) {
-    const action = ev.detail.action!;
-    const configured = this._config![`${action}_action`];
-    if (
-      action === "tap" &&
-      (!configured || (configured.action as string) === "isp-detail")
-    ) {
-      this._openDetail();
-      return;
-    }
     handleAction(
       this,
       this.hass!,
       { ...this._config!, entity: this._link?.statusEntityId },
-      action
+      ev.detail.action!
     );
   }
 
@@ -284,15 +255,6 @@ export class IspCard
         ></mushroom-badge-icon>
       `;
     }
-    if (link.onu && !link.onu.online) {
-      return html`
-        <mushroom-badge-icon
-          slot="badge"
-          class="pending"
-          icon="mdi:alert"
-        ></mushroom-badge-icon>
-      `;
-    }
     return nothing;
   }
 
@@ -303,13 +265,11 @@ export class IspCard
     const stats = this._stats;
     if (stats.length === 0) return nothing;
     return html`
-      <div
-        class="actions stats"
-        ?rtl=${computeRTL(this.hass)}
-        @click=${this._openDetail}
-      >
+      <div class="actions stats" ?rtl=${computeRTL(this.hass)}>
         ${stats.map((key) => {
-          const stat = computeStat(link, key);
+          const stat = computeStat(link, key, (k) =>
+            customLocalize(`card.isp.${k}`)
+          );
           return html`
             <div class=${classMap({ stat: true, [stat.tone]: true })}>
               <span class="stat-label"
@@ -338,7 +298,6 @@ export class IspCard
           --main-color: rgb(var(--rgb-warning));
         }
         .stats {
-          cursor: pointer;
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
           gap: 8px;

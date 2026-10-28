@@ -23,15 +23,14 @@ const ISP_LABELS = ["wan", "stats"];
 const computeSchema = memoizeOne(
   (
     hass: HomeAssistant,
-    customLocalize: ReturnType<typeof setupCustomlocalize>,
-    onuPrefix: string | undefined
+    customLocalize: ReturnType<typeof setupCustomlocalize>
   ): HaFormSchema[] => [
     {
       name: "wan",
       selector: {
         select: {
           mode: "dropdown",
-          options: collectWanLinks(hass, onuPrefix).map((link) => ({
+          options: collectWanLinks(hass).map((link) => ({
             value: link.slug,
             label: `${link.name} (${link.gatewayName} · WAN ${link.port})`,
           })),
@@ -98,11 +97,7 @@ export class IspCardEditor
   protected render() {
     if (!this.hass || !this._config) return nothing;
     const customLocalize = setupCustomlocalize(this.hass);
-    const schema = computeSchema(
-      this.hass,
-      customLocalize,
-      this._config.onu_prefix
-    );
+    const schema = computeSchema(this.hass, customLocalize);
     return html`
       <ha-form
         .hass=${this.hass}

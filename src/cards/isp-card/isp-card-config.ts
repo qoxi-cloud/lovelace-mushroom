@@ -12,29 +12,29 @@ import { LovelaceCardConfig } from "../../ha";
 
 export const ISP_STATS = [
   "latency",
-  "down_rate",
-  "up_rate",
   "link_speed",
+  "port",
+  "proto",
   "ip",
-  "rx_power",
-  "tx_power",
-  "onu_uptime",
+  "isp_enabled",
+  "max_bandwidth",
+  "rx_rate",
+  "tx_rate",
 ] as const;
 
 export type IspStat = (typeof ISP_STATS)[number];
 
 export const DEFAULT_ISP_STATS: IspStat[] = [
   "latency",
-  "down_rate",
-  "up_rate",
   "link_speed",
+  "port",
+  "proto",
 ];
 
 export type IspCardConfig = LovelaceCardConfig &
   AppearanceSharedConfig &
   ActionsSharedConfig & {
     wan?: string;
-    onu_prefix?: string;
     name?: string;
     icon?: string;
     icon_color?: string;
@@ -46,7 +46,6 @@ export const ispCardConfigStruct = assign(
   assign(appearanceSharedConfigStruct, actionsSharedConfigStruct),
   object({
     wan: optional(string()),
-    onu_prefix: optional(string()),
     name: optional(string()),
     icon: optional(string()),
     icon_color: optional(string()),
