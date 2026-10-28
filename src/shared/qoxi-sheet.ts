@@ -48,6 +48,8 @@ export interface TableCell {
   tone?: Tone;
   /** status dot before the text */
   dot?: Tone;
+  /** explicit dot colour (CSS), e.g. Omada link-speed legend colours */
+  dotColor?: string;
   /** mdi icon before the text */
   icon?: string;
   muted?: boolean;
@@ -71,7 +73,27 @@ export interface SheetTable {
   /** keys of rows to highlight */
   activeKeys?: string[];
   onRow?: (key: string) => void;
+  /** rendered under the rows, e.g. a colour legend */
+  footer?: TemplateResult;
 }
+
+/** Omada's link-speed legend: 10/100 orange, 1G lime, 2.5G green, 5G teal, 10G+ blue */
+export function linkSpeedColor(mbps: number): string | undefined {
+  if (mbps <= 0) return undefined;
+  if (mbps < 1000) return "#e3a23a";
+  if (mbps < 2500) return "#a9c93a";
+  if (mbps < 5000) return "#4fb46e";
+  if (mbps < 10000) return "#49a890";
+  return "#4fa9cf";
+}
+
+export const LINK_SPEED_LEGEND: [string, number][] = [
+  ["10/100 Mbps", 100],
+  ["1 Gbps", 1000],
+  ["2.5 Gbps", 2500],
+  ["5 Gbps", 5000],
+  ["10 Gbps", 10000],
+];
 
 export interface PathHop {
   icon: string;
@@ -403,7 +425,14 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
                         [c.tone ?? "normal"]: true,
                       })}
                     >
-                      ${c.dot ? html`<i class="dot ${c.dot}"></i>` : nothing}
+                      ${c.dotColor
+                        ? html`<i
+                            class="dot"
+                            style="background:${c.dotColor};box-shadow:0 0 6px ${c.dotColor}"
+                          ></i>`
+                        : c.dot
+                          ? html`<i class="dot ${c.dot}"></i>`
+                          : nothing}
                       ${c.icon
                         ? html`<ha-icon
                             class="cell-icon"
@@ -418,7 +447,23 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
             `;
           })}
         </div>
+        ${table.footer ?? nothing}
       </section>
+    `;
+  }
+
+  protected renderSpeedLegend() {
+    return html`
+      <div class="legend">
+        ${LINK_SPEED_LEGEND.map(
+          ([label, mbps]) => html`
+            <span class="legend-item"
+              ><i class="dot" style="background:${linkSpeedColor(mbps)}"></i
+              >${label}</span
+            >
+          `
+        )}
+      </div>
     `;
   }
 
@@ -820,6 +865,19 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           --mdc-icon-size: 14px;
           color: rgb(var(--rgb-warning));
           flex: none;
+        }
+        .legend {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px 14px;
+          padding: 8px 12px 0;
+          font-size: 11px;
+          color: var(--secondary-text-color);
+        }
+        .legend-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
         }
         .dot {
           flex: none;

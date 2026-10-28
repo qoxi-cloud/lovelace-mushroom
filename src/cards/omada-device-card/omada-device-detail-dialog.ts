@@ -2,6 +2,7 @@ import { html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import setupCustomlocalize from "../../localize";
 import {
+  linkSpeedColor,
   PathHop,
   QoxiSheet,
   SheetRow,
@@ -453,7 +454,11 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
             dot: up ? "success" : "danger",
             muted: !up,
           },
-          { text: up ? formatSpeedMbps(speed) : "—", muted: !up },
+          {
+            text: up ? formatSpeedMbps(speed) : "—",
+            muted: !up,
+            dotColor: up ? linkSpeedColor(speed) : undefined,
+          },
         ];
         if (hasPoe) {
           cells.push(
@@ -493,6 +498,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
           rowKeys: device.ports.map((port) => port.port),
           activeKeys: this._activePort ? [this._activePort] : [],
           onRow: this._selectPort,
+          footer: this.renderSpeedLegend(),
         })
       );
     }
