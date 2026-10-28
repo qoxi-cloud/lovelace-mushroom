@@ -317,7 +317,7 @@ export class OnuCard
         </span>
         ${rates
           ? html`<span class="trail-sub"
-              >${rates.down} / ${rates.up} Gbit/s</span
+              >↓ ${rates.down}G&nbsp;&nbsp;↑ ${rates.up}G</span
             >`
           : nothing}
       </div>
@@ -445,9 +445,10 @@ export class OnuCard
           font-weight: 600;
         }
         .trail-sub {
-          font-size: 12px;
+          font-size: 11px;
           line-height: 16px;
           font-weight: 400;
+          letter-spacing: 0.02em;
           font-variant-numeric: tabular-nums;
         }
         mushroom-shape-icon {
