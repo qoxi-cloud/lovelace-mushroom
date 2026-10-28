@@ -1,0 +1,196 @@
+export interface HomeAssistant {
+  states: Record<string, HassEntity>;
+  callService?: (
+    domain: string,
+    service: string,
+    data: { entity_id: string }
+  ) => Promise<unknown>;
+  themes?: {
+    darkMode?: boolean;
+  };
+}
+
+export interface DashboardScope {
+  bridge_id?: string;
+  site?: string;
+  site_id?: string;
+}
+
+export interface HassEntity {
+  entity_id: string;
+  state: string;
+  attributes: Record<string, unknown>;
+  last_updated?: string;
+}
+
+export interface MetricRecord {
+  [metricName: string]: number;
+}
+
+export interface UplinkPacketCounts {
+  packets?: number;
+  dropped?: number;
+  errors?: number;
+}
+
+export interface DeviceQuality {
+  interference: { band: string; percentage: number }[];
+  uplink?: {
+    status: "available" | "unavailable" | "error" | "wireless" | "offline";
+    up: UplinkPacketCounts;
+    down: UplinkPacketCounts;
+  };
+  wan?: {
+    status: "available" | "unavailable" | "error" | "offline";
+    latencySeconds?: number;
+    jitterSeconds?: number;
+    packetLossPercentage?: number;
+    mos?: number;
+    windowSeconds?: number;
+  };
+}
+
+export interface DeviceRecord {
+  key: string;
+  name: string;
+  type: string;
+  model: string;
+  status: string;
+  ip: string;
+  mac: string;
+  version: string;
+  site: string;
+  attrs: Record<string, unknown>;
+  metrics: MetricRecord;
+  ports: PortRecord[];
+  radios: RadioRecord[];
+  clients: ClientRecord[];
+  quality?: DeviceQuality;
+}
+
+export interface PortRecord {
+  key: string;
+  deviceMac: string;
+  name: string;
+  port: string;
+  kind: string;
+  operation: string;
+  status: string;
+  poe: boolean;
+  attrs: Record<string, unknown>;
+  metrics: MetricRecord;
+  clients: ClientRecord[];
+}
+
+export interface RadioRecord {
+  key: string;
+  deviceMac: string;
+  band: string;
+  attrs: Record<string, unknown>;
+  metrics: MetricRecord;
+}
+
+export interface ClientRecord {
+  key: string;
+  name: string;
+  mac: string;
+  ip: string;
+  vendor: string;
+  hostName: string;
+  category: string;
+  clientType: string;
+  wireless: boolean;
+  apMac: string;
+  apName: string;
+  switchMac: string;
+  switchName: string;
+  gatewayMac: string;
+  gatewayName: string;
+  attachmentPort: string;
+  attachmentLagId: string;
+  attachmentLagPorts: string;
+  attachmentLinkSpeedMbps?: number;
+  ssid: string;
+  vlanId: string;
+  wifiMode: string;
+  site: string;
+  attrs: Record<string, unknown>;
+  metrics: MetricRecord;
+}
+
+export interface LinkRow {
+  key: string;
+  name: string;
+  status: string;
+  attrs: Record<string, unknown>;
+  metrics: MetricRecord;
+}
+
+export interface SiteSummary {
+  site: string;
+  wiredClients: number;
+  wirelessClients: number;
+  devicesOnline: number;
+  devicesOffline: number;
+  gateways: number;
+  switches: number;
+  aps: number;
+  controllers: number;
+  maxCpu: number;
+  maxCpuDevice: string;
+  maxMem: number;
+  maxMemDevice: string;
+}
+
+export interface DpiCategoryRecord {
+  key: string;
+  siteKey: string;
+  site: string;
+  siteId: string;
+  familyId: string;
+  name: string;
+  bytes: number;
+}
+
+export interface DpiApplicationRecord extends DpiCategoryRecord {
+  applicationId: string;
+  categoryName: string;
+}
+
+export interface DpiSiteRecord {
+  key: string;
+  site: string;
+  siteId: string;
+  observedAt?: string;
+  totalBytes?: number;
+  windowSeconds?: number;
+  categories: DpiCategoryRecord[];
+  applications: DpiApplicationRecord[];
+}
+
+export interface DpiSummary {
+  available: boolean;
+  // Only defined when all available sites supply a valid total. Category and
+  // application rows are not summed: application exports can be capped.
+  totalBytes?: number;
+  sites: DpiSiteRecord[];
+  categories: DpiCategoryRecord[];
+  applications: DpiApplicationRecord[];
+}
+
+export interface DashboardModel {
+  siteSummary: SiteSummary;
+  dpi: DpiSummary;
+  devices: DeviceRecord[];
+  clients: ClientRecord[];
+  isps: LinkRow[];
+  vpns: LinkRow[];
+  vpnPeers: LinkRow[];
+  wans: LinkRow[];
+  deviceByKey: Map<string, DeviceRecord>;
+  deviceByMac: Map<string, DeviceRecord>;
+  portByDeviceMacAndPort: Map<string, PortRecord>;
+  clientByKey: Map<string, ClientRecord>;
+  wanByName: Map<string, LinkRow>;
+  wanByPort: Map<string, LinkRow>;
+}

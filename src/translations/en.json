@@ -80,6 +80,57 @@
         "rx_rate": "RX",
         "tx_rate": "TX"
       }
+    },
+    "omada_device": {
+      "stats": {
+        "cpu": "CPU",
+        "mem": "RAM",
+        "clients": "Clients",
+        "uptime": "Uptime",
+        "rx_rate": "RX",
+        "tx_rate": "TX",
+        "ports_up": "Ports",
+        "temp": "Temp",
+        "poe_remain": "PoE",
+        "util_2g": "2.4G",
+        "util_5g": "5G",
+        "download": "DL",
+        "upload": "UL",
+        "model": "Model",
+        "firmware": "Firmware"
+      },
+      "detail": {
+        "device": "Device",
+        "radios": "Radios",
+        "ports": "Ports",
+        "clients": "Clients",
+        "cpu": "CPU",
+        "mem": "RAM",
+        "uptime": "Uptime",
+        "rx_rate": "RX",
+        "tx_rate": "TX",
+        "temp": "Temp",
+        "poe_remain": "PoE left",
+        "ports_up": "Ports up",
+        "ports_up_tag": "up",
+        "status": "Status",
+        "model": "Model",
+        "ip": "IP address",
+        "mac": "MAC",
+        "firmware": "Firmware",
+        "upgrade": "Firmware upgrade",
+        "upgrade_available": "available",
+        "upgrade_none": "up to date",
+        "download": "Downloaded",
+        "upload": "Uploaded",
+        "rx_util": "RX util",
+        "tx_util": "TX util",
+        "interference": "Interference",
+        "uplink_packets": "Uplink packets ↓ / ↑",
+        "uplink_errors": "Uplink dropped + errors",
+        "port": "Port",
+        "port_down": "down"
+      }
     }
   },
   "editor": {
@@ -216,6 +267,10 @@
       },
       "isp": {
         "wan": "WAN link",
+        "stats": "Statistics"
+      },
+      "omada_device": {
+        "device": "Omada device",
         "stats": "Statistics"
       }
     },
