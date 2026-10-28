@@ -441,6 +441,9 @@ export class OnuCard
           align-items: center;
           gap: 4px;
           --mdc-icon-size: 15px;
+        }
+        .trail-main ha-icon {
+          color: rgb(var(--rgb-primary-color, var(--rgb-blue)));
           font-size: 13px;
           line-height: 20px;
           font-weight: 600;
