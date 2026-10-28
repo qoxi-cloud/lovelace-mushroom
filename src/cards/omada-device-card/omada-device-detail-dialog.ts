@@ -110,16 +110,6 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     const subtitle = [device.status, device.model, device.ip]
       .filter(Boolean)
       .join(" · ");
-    const health = deviceHealth(this.hass, device);
-    const trail = health
-      ? this.renderHeaderTrail(
-          "mdi:heart-pulse",
-          `${health.score.toFixed(0)}/10`,
-          health.score < 5 ? "danger" : health.score < 8 ? "warning" : "normal",
-          () => showMoreInfo(this, health.entityId),
-          "Health"
-        )
-      : undefined;
     return this.renderTitle(
       this._params?.icon ??
         DEVICE_TYPE_ICONS[device.type] ??
@@ -127,8 +117,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       rgb,
       !online,
       name,
-      subtitle,
-      trail
+      subtitle
     );
   }
 
@@ -288,31 +277,47 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       (max, port) => Math.max(max, portSpeedMbps(port)),
       0
     );
-    const radar = this.renderRadar(t("health_profile"), t("health_tag"), [
-      {
-        label: t("cpu"),
-        value: m.omada_device_cpu_percentage ?? 0,
-      },
-      {
-        label: t("mem"),
-        value: m.omada_device_mem_percentage ?? 0,
-      },
-      {
-        label: t("ports"),
-        value: portsTotal ? (portsUpCount / portsTotal) * 100 : 0,
-        detail: portsTotal ? `${portsUpCount}/${portsTotal}` : "—",
-      },
-      {
-        label: t("clients"),
-        value: Math.min(device.clients.length * 12, 100),
-        detail: String(device.clients.length),
-      },
-      {
-        label: t("uplink"),
-        value: Math.min(uplinkMbps / 100, 100),
-        detail: uplinkMbps ? formatSpeedMbps(uplinkMbps) : "—",
-      },
-    ]);
+    const radar = this.renderRadar(
+      t("health_profile"),
+      health
+        ? this.renderHeaderTrail(
+            "mdi:heart-pulse",
+            `${health.score.toFixed(0)}/10`,
+            health.score < 5
+              ? "danger"
+              : health.score < 8
+                ? "warning"
+                : "normal",
+            () => showMoreInfo(this, health.entityId),
+            "Health"
+          )
+        : t("health_tag"),
+      [
+        {
+          label: t("cpu"),
+          value: m.omada_device_cpu_percentage ?? 0,
+        },
+        {
+          label: t("mem"),
+          value: m.omada_device_mem_percentage ?? 0,
+        },
+        {
+          label: t("ports"),
+          value: portsTotal ? (portsUpCount / portsTotal) * 100 : 0,
+          detail: portsTotal ? `${portsUpCount}/${portsTotal}` : "—",
+        },
+        {
+          label: t("clients"),
+          value: Math.min(device.clients.length * 12, 100),
+          detail: String(device.clients.length),
+        },
+        {
+          label: t("uplink"),
+          value: Math.min(uplinkMbps / 100, 100),
+          detail: uplinkMbps ? formatSpeedMbps(uplinkMbps) : "—",
+        },
+      ]
+    );
     const sections = [
       this.renderSection(t("device"), device.type.toUpperCase(), info),
       radar,

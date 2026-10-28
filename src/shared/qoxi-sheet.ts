@@ -234,7 +234,11 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   }
 
   /** 5-ish axis radar, values 0..100, drawn as inline SVG so no chart library is needed */
-  protected renderRadar(title: string, tag: string, axes: RadarAxis[]) {
+  protected renderRadar(
+    title: string,
+    tag: string | TemplateResult,
+    axes: RadarAxis[]
+  ) {
     const n = axes.length;
     const cx = 150;
     const cy = 112;
