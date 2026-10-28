@@ -90,24 +90,51 @@ export class OnuDetailDialog extends MushroomBaseElement {
     return html`
       <div class="backdrop" @click=${this.closeDialog}></div>
       <div class="sheet" role="dialog" aria-label=${name}>
+        <div class="handle" @click=${this.closeDialog}></div>
+        ${onu
+          ? this.renderHeader(onu, name)
+          : html`<div class="header"><span class="name">${name}</span></div>`}
         <ha-icon-button class="close" @click=${this.closeDialog}>
           <ha-icon icon="mdi:close"></ha-icon>
         </ha-icon-button>
-        ${onu
-          ? this.renderBody(onu, name, t)
-          : html`<p>${localize("card.not_found")}</p>`}
+        <div class="body">
+          ${onu
+            ? this.renderBody(onu, t)
+            : html`<p>${localize("card.not_found")}</p>`}
+        </div>
       </div>
     `;
   }
 
-  private renderBody(onu: OnuDevice, name: string, t: (k: string) => string) {
-    const m = onu.metrics;
+  private renderHeader(onu: OnuDevice, name: string) {
     const status = onu.online
       ? setupCustomlocalize(this.hass)("card.onu.online")
       : setupCustomlocalize(this.hass)("card.onu.offline");
     const rgb = computeRgbColor(
       this._params?.icon_color ?? (onu.online ? "green" : "grey")
     );
+    return html`
+      <div class="header">
+        <mushroom-shape-icon
+          .disabled=${!onu.online}
+          style="--icon-color: rgb(${rgb}); --shape-color: rgba(${rgb}, 0.2)"
+        >
+          <ha-icon .icon=${this._params?.icon ?? DEFAULT_ONU_ICON}></ha-icon>
+        </mushroom-shape-icon>
+        <div class="title">
+          <span class="name">${name}</span>
+          <span class="subtitle"
+            >${status}${onu.ponState
+              ? ` · ${shortPonState(onu.ponState)}`
+              : ""}${onu.model ? ` · ${onu.model}` : ""}</span
+          >
+        </div>
+      </div>
+    `;
+  }
+
+  private renderBody(onu: OnuDevice, t: (k: string) => string) {
+    const m = onu.metrics;
 
     const hero: Row[] = [
       {
@@ -192,22 +219,6 @@ export class OnuDetailDialog extends MushroomBaseElement {
     ];
 
     return html`
-      <div class="header">
-        <mushroom-shape-icon
-          .disabled=${!onu.online}
-          style="--icon-color: rgb(${rgb}); --shape-color: rgba(${rgb}, 0.2)"
-        >
-          <ha-icon .icon=${this._params?.icon ?? DEFAULT_ONU_ICON}></ha-icon>
-        </mushroom-shape-icon>
-        <div class="title">
-          <span class="name">${name}</span>
-          <span class="subtitle"
-            >${status}${onu.ponState
-              ? ` · ${shortPonState(onu.ponState)}`
-              : ""}${onu.model ? ` · ${onu.model}` : ""}</span
-          >
-        </div>
-      </div>
       <div class="hero">${hero.map((r) => this.renderStat(r))}</div>
       <div class="columns">
         ${this.renderSection(t("pon_link"), onu.oltVendor || "OLT", link)}
@@ -260,6 +271,9 @@ export class OnuDetailDialog extends MushroomBaseElement {
           display: flex;
           align-items: center;
           justify-content: center;
+          box-sizing: border-box;
+          padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+            env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
           font-family: var(--paper-font-body1_-_font-family, inherit);
         }
         .backdrop {
@@ -271,11 +285,18 @@ export class OnuDetailDialog extends MushroomBaseElement {
         }
         .sheet {
           position: relative;
+          display: flex;
+          flex-direction: column;
           width: min(780px, calc(100vw - 32px));
-          max-height: calc(100vh - 32px);
-          overflow: auto;
+          max-height: calc(
+            100dvh - env(safe-area-inset-top, 0px) - env(
+                safe-area-inset-bottom,
+                0px
+              ) -
+              32px
+          );
+          overflow: hidden;
           box-sizing: border-box;
-          padding: 20px;
           background: var(
             --ha-card-background,
             var(--card-background-color, white)
@@ -284,19 +305,31 @@ export class OnuDetailDialog extends MushroomBaseElement {
           box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
           color: var(--primary-text-color);
         }
+        .handle {
+          display: none;
+        }
         .close {
           position: absolute;
-          top: 8px;
-          right: 8px;
+          top: 10px;
+          right: 10px;
           color: var(--secondary-text-color);
-          --mdc-icon-button-size: 40px;
+          --mdc-icon-button-size: 44px;
+          z-index: 1;
         }
         .header {
+          flex: none;
           display: flex;
           align-items: center;
           gap: 12px;
-          margin-bottom: 16px;
-          padding-right: 40px;
+          padding: 20px 64px 12px 20px;
+        }
+        .body {
+          flex: 1 1 auto;
+          min-height: 0;
+          overflow: auto;
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior: contain;
+          padding: 4px 20px 20px;
         }
         .title {
           display: flex;
@@ -411,14 +444,39 @@ export class OnuDetailDialog extends MushroomBaseElement {
           text-overflow: ellipsis;
         }
         @media (max-width: 640px) {
+          :host {
+            align-items: flex-end;
+            padding: 0;
+          }
+          .sheet {
+            width: 100vw;
+            max-height: calc(100dvh - env(safe-area-inset-top, 0px) - 40px);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.35);
+          }
+          .handle {
+            display: block;
+            flex: none;
+            width: 40px;
+            height: 5px;
+            margin: 8px auto 0;
+            border-radius: 3px;
+            background: rgba(var(--rgb-primary-text-color), 0.25);
+          }
+          .header {
+            padding: 10px 60px 10px 16px;
+          }
+          .close {
+            top: 12px;
+          }
+          .body {
+            padding: 0 16px calc(16px + env(safe-area-inset-bottom, 0px));
+          }
           .hero {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
           .columns {
             grid-template-columns: 1fr;
-          }
-          .sheet {
-            padding: 16px;
           }
         }
       `,
