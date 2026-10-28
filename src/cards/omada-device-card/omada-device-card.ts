@@ -40,8 +40,10 @@ import {
 import {
   DeviceRecord,
   deviceEntityId,
+  deviceHealth,
   deviceOnline,
   deviceStatEntityId,
+  poeBudget,
   deviceUptime,
   findDevice,
   listDevices,
@@ -72,6 +74,7 @@ function pctTone(value: number): StatTone {
 }
 
 function computeStat(
+  hass: HomeAssistant,
   device: DeviceRecord,
   key: DeviceStat
 ): { value: string; tone: StatTone } {
@@ -114,6 +117,27 @@ function computeStat(
       if (m.omada_device_poe_remain_watts !== undefined)
         value = `${m.omada_device_poe_remain_watts.toFixed(1)} W`;
       break;
+    case "poe": {
+      const budget = poeBudget(hass, device);
+      if (budget) {
+        value = budget.total
+          ? `${(budget.total - budget.remain).toFixed(0)} / ${budget.total.toFixed(0)} W`
+          : `${budget.remain.toFixed(1)} W`;
+        if (budget.total && budget.remain / budget.total < 0.1) tone = "danger";
+        else if (budget.total && budget.remain / budget.total < 0.25)
+          tone = "warning";
+      }
+      break;
+    }
+    case "health": {
+      const health = deviceHealth(hass, device);
+      if (health) {
+        value = `${health.score.toFixed(0)} / 10`;
+        tone =
+          health.score < 5 ? "danger" : health.score < 8 ? "warning" : "normal";
+      }
+      break;
+    }
     case "util_2g":
       if (m.omada_device_2g_rx_util !== undefined)
         value = `${(m.omada_device_2g_rx_util ?? 0).toFixed(0)}/${(m.omada_device_2g_tx_util ?? 0).toFixed(0)}%`;
@@ -354,7 +378,7 @@ export class OmadaDeviceCard
         @click=${this._openDetail}
       >
         ${stats.map((key) => {
-          const stat = computeStat(device, key);
+          const stat = computeStat(this.hass, device, key);
           const entityId = deviceStatEntityId(this.hass, device, key);
           return html`
             <div

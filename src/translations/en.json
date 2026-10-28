@@ -97,7 +97,9 @@
         "download": "DL",
         "upload": "UL",
         "model": "Model",
-        "firmware": "Firmware"
+        "firmware": "Firmware",
+        "poe": "PoE used",
+        "health": "Health"
       },
       "detail": {
         "device": "Device",
@@ -137,11 +139,26 @@
         "via": "Via",
         "ip_short": "IP",
         "rate": "Rate",
-        "health": "Health profile",
+        "health": "Health",
         "health_tag": "now",
         "uplink": "Uplink",
         "path": "Path",
-        "path_tag": "to gateway"
+        "path_tag": "to gateway",
+        "poe": "PoE used",
+        "serial": "Serial",
+        "client_health": "Client health",
+        "good": "good",
+        "fair": "fair",
+        "poor": "poor",
+        "fan": "Fan",
+        "fan_ok": "OK",
+        "stp": "STP",
+        "loops": "loops",
+        "blocks": "blocked",
+        "radio": "Radio",
+        "channel": "ch",
+        "clients_short": "clients",
+        "health_profile": "Health profile"
       }
     },
     "omada_clients": {
@@ -184,7 +201,15 @@
         "link_rate": "Link rate ↓ / ↑",
         "status": "Status",
         "connected": "Connected",
-        "path": "Path"
+        "path": "Path",
+        "network": "Network",
+        "connected_for": "Connected for",
+        "health": "Health",
+        "guest": "Guest",
+        "blocked": "Blocked",
+        "channel": "Channel",
+        "power_save": "Power save",
+        "yes": "yes"
       },
       "idle": "idle",
       "less": "Show less"

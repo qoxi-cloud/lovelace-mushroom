@@ -17,8 +17,11 @@ import {
 import { computeRgbColor } from "../../utils/colors";
 import { DEFAULT_DEVICE_ICON, DEVICE_TYPE_ICONS } from "./const";
 import {
+  apRadios,
   childrenByPort,
   ClientRecord,
+  deviceHealth,
+  poeBudget,
   clientRate,
   deviceChain,
   DeviceRecord,
@@ -170,15 +173,33 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
               : "success",
       });
     }
-    if (m.omada_device_poe_remain_watts !== undefined) {
+    const budget = poeBudget(this.hass, device);
+    if (budget) {
+      const used = budget.total ? budget.total - budget.remain : 0;
       hero.push({
-        label: t("poe_remain"),
-        entityId: deviceStatEntityId(this.hass, device, "poe_remain"),
-        value: `${m.omada_device_poe_remain_watts.toFixed(1)} W`,
+        label: t("poe"),
+        entityId: budget.entityId,
+        value: budget.total
+          ? `${used.toFixed(0)} / ${budget.total.toFixed(0)} W`
+          : `${budget.remain.toFixed(1)} W`,
         tone:
-          m.omada_device_poe_remain_watts < 20
+          budget.total && budget.remain / budget.total < 0.1
             ? "danger"
-            : m.omada_device_poe_remain_watts < 50
+            : budget.total && budget.remain / budget.total < 0.25
+              ? "warning"
+              : "success",
+      });
+    }
+    const health = deviceHealth(this.hass, device);
+    if (health) {
+      hero.push({
+        label: t("health"),
+        entityId: health.entityId,
+        value: `${health.score.toFixed(0)} / 10`,
+        tone:
+          health.score < 5
+            ? "danger"
+            : health.score < 8
               ? "warning"
               : "success",
       });
@@ -203,7 +224,43 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       { label: t("model"), value: device.model || "—" },
       { label: t("ip"), value: device.ip || "—" },
       { label: t("mac"), value: device.mac || "—" },
+      ...(health?.serial ? [{ label: t("serial"), value: health.serial }] : []),
       { label: t("firmware"), value: device.version || "—" },
+      ...(health
+        ? [
+            {
+              label: t("client_health"),
+              value: `${health.good} ${t("good")} · ${health.fair} ${t("fair")} · ${health.poor} ${t("poor")}`,
+              tone: (health.poor > 0
+                ? "danger"
+                : health.fair > 0
+                  ? "warning"
+                  : "normal") as SheetRow["tone"],
+              entityId: health.entityId,
+            },
+          ]
+        : []),
+      ...(health && device.type === "switch"
+        ? [
+            {
+              label: t("fan"),
+              value:
+                health.fanStatus === "0"
+                  ? t("fan_ok")
+                  : health.fanStatus || "—",
+              tone: (health.fanStatus && health.fanStatus !== "0"
+                ? "warning"
+                : "normal") as SheetRow["tone"],
+            },
+            {
+              label: t("stp"),
+              value: `${health.loops} ${t("loops")} · ${health.blocks} ${t("blocks")}`,
+              tone: (health.loops > 0 || health.blocks > 0
+                ? "warning"
+                : "normal") as SheetRow["tone"],
+            },
+          ]
+        : []),
       {
         label: t("upgrade"),
         value: m.omada_device_need_upgrade
@@ -232,7 +289,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       (max, port) => Math.max(max, portSpeedMbps(port)),
       0
     );
-    const radar = this.renderRadar(t("health"), t("health_tag"), [
+    const radar = this.renderRadar(t("health_profile"), t("health_tag"), [
       {
         label: t("cpu"),
         value: m.omada_device_cpu_percentage ?? 0,
@@ -283,12 +340,36 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
 
     if (device.type === "ap") {
       const radios: SheetRow[] = [];
-      for (const band of ["2g", "5g", "6g"]) {
+      const settings = new Map(
+        apRadios(this.hass, device).map((r) => [r.band, r])
+      );
+      for (const band of ["2g", "5g", "5g2", "6g"] as const) {
         const rx = m[`omada_device_${band}_rx_util`];
         const tx = m[`omada_device_${band}_tx_util`];
-        if (rx === undefined && tx === undefined) continue;
+        const radio = settings.get(band);
+        if (rx === undefined && tx === undefined && !radio) continue;
         const label =
-          band === "2g" ? "2.4 GHz" : band === "5g" ? "5 GHz" : "6 GHz";
+          band === "2g"
+            ? "2.4 GHz"
+            : band === "5g"
+              ? "5 GHz"
+              : band === "5g2"
+                ? "5 GHz (2)"
+                : "6 GHz";
+        if (radio) {
+          radios.push({
+            label: `${label} · ${t("radio")}`,
+            value: [
+              radio.channel ? `${t("channel")} ${radio.channel}` : "",
+              radio.width,
+              radio.txPower ? `${radio.txPower} dBm` : "",
+              `${radio.clients} ${t("clients_short")}`,
+            ]
+              .filter(Boolean)
+              .join(" · "),
+            tone: radio.channel ? "normal" : "warning",
+          });
+        }
         radios.push({
           label: `${label} · ${t("rx_util")}`,
           value: formatPercent(rx ?? 0),

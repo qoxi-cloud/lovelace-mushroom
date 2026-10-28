@@ -5,6 +5,7 @@ import {
   formatBytes,
   formatRateBits,
   formatSpeedMbps,
+  formatUptimeSeconds,
   qualityLabel,
 } from "../../shared/omada/format";
 import {
@@ -172,7 +173,13 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
       hops.push({
         icon: DEVICE_TYPE_ICONS.gateway,
         title: gatewayName,
-        subtitle: client.vlanId ? `VLAN ${client.vlanId}` : undefined,
+        subtitle:
+          [
+            String(client.attrs.network_name ?? ""),
+            client.vlanId ? `VLAN ${client.vlanId}` : "",
+          ]
+            .filter(Boolean)
+            .join(" · ") || undefined,
         onClick: byName(gatewayName) ? openDevice(gatewayName) : undefined,
       });
     }
@@ -247,7 +254,57 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
           "—",
       },
       { label: t("ip"), value: client.ip || "—" },
-      { label: t("vlan"), value: client.vlanId || "—" },
+      {
+        label: t("network"),
+        value:
+          [
+            String(client.attrs.network_name ?? "") ||
+              (client.wireless ? client.ssid : ""),
+            client.vlanId ? `VLAN ${client.vlanId}` : "",
+          ]
+            .filter(Boolean)
+            .join(" · ") || "—",
+      },
+      ...(Number(client.attrs.uptime_seconds ?? 0) > 0
+        ? [
+            {
+              label: t("connected_for"),
+              value: formatUptimeSeconds(Number(client.attrs.uptime_seconds)),
+            },
+          ]
+        : []),
+      ...(client.attrs.health_score !== undefined &&
+      client.attrs.health_score !== ""
+        ? [
+            {
+              label: t("health"),
+              value: `${client.attrs.health_score} / 10`,
+              tone: (Number(client.attrs.health_score) < 5
+                ? "danger"
+                : Number(client.attrs.health_score) < 8
+                  ? "warning"
+                  : "normal") as SheetRow["tone"],
+            },
+          ]
+        : []),
+      ...(String(client.attrs.guest ?? "") === "true"
+        ? [
+            {
+              label: t("guest"),
+              value: t("yes"),
+              tone: "warning" as SheetRow["tone"],
+            },
+          ]
+        : []),
+      ...(String(client.attrs.blocked ?? "") === "true"
+        ? [
+            {
+              label: t("blocked"),
+              value: t("yes"),
+              tone: "danger" as SheetRow["tone"],
+            },
+          ]
+        : []),
     ];
 
     const conn: SheetRow[] = client.wireless
@@ -255,6 +312,17 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
           { label: t("status"), value: t("connected"), tone: "success" },
           { label: t("type"), value: "Wi-Fi" },
           { label: t("ssid"), value: client.ssid || "—" },
+          ...(client.attrs.channel
+            ? [
+                {
+                  label: t("channel"),
+                  value: `${client.attrs.channel}${client.attrs.radio_id === "1" ? " · 5 GHz" : client.attrs.radio_id === "0" ? " · 2.4 GHz" : ""}`,
+                },
+              ]
+            : []),
+          ...(String(client.attrs.power_save ?? "") === "true"
+            ? [{ label: t("power_save"), value: t("yes") }]
+            : []),
           { label: t("ap"), value: client.apName || "—" },
           { label: t("wifi_mode"), value: client.wifiMode || "—" },
           {

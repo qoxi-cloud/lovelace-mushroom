@@ -20,6 +20,8 @@ export const DEVICE_STATS = [
   "ports_up",
   "temp",
   "poe_remain",
+  "poe",
+  "health",
   "util_2g",
   "util_5g",
   "download",

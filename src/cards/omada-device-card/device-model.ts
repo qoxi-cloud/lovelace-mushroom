@@ -80,7 +80,105 @@ export function deviceRate(device: DeviceRecord, dir: "rx" | "tx"): string {
   return formatRateBits(device.metrics[`omada_device_${dir}_rate`] ?? 0);
 }
 
+export interface DeviceHealth {
+  score: number;
+  good: number;
+  fair: number;
+  poor: number;
+  noData: number;
+  serial: string;
+  fanStatus: string;
+  loops: number;
+  blocks: number;
+  entityId: string;
+}
+
+/** omada_device_health_score (OmadaBridge >= 2.4.4-qoxi.4) */
+export function deviceHealth(
+  hass: MushroomHass,
+  device: DeviceRecord
+): DeviceHealth | undefined {
+  const entity = entityForDevice(hass, device.mac, "omada_device_health_score");
+  if (!entity) return undefined;
+  const a = entity.attributes;
+  const n = (k: string) => Number(a[k] ?? 0) || 0;
+  return {
+    score: Number(entity.state) || 0,
+    good: n("client_health_good"),
+    fair: n("client_health_fair"),
+    poor: n("client_health_poor"),
+    noData: n("client_health_no_data"),
+    serial: String(a.device_serial ?? ""),
+    fanStatus: String(a.device_fan_status ?? ""),
+    loops: n("device_loopback_num"),
+    blocks: n("device_block_num"),
+    entityId: entity.entity_id,
+  };
+}
+
+/** PoE budget: remaining watts from the sensor, total from its device_total_power attribute */
+export function poeBudget(
+  hass: MushroomHass,
+  device: DeviceRecord
+): { remain: number; total: number; entityId: string } | undefined {
+  const entity = entityForDevice(
+    hass,
+    device.mac,
+    "omada_device_poe_remain_watts"
+  );
+  if (!entity) return undefined;
+  return {
+    remain: Number(entity.state) || 0,
+    total: Number(entity.attributes.device_total_power ?? 0) || 0,
+    entityId: entity.entity_id,
+  };
+}
+
+export interface ApRadio {
+  band: "2g" | "5g" | "5g2" | "6g";
+  label: string;
+  channel: string;
+  txPower: number;
+  clients: number;
+  mode: string;
+  width: string;
+  maxRate: number;
+}
+
+/** per-band radio settings from the AP's device_wpXg_* attributes */
+export function apRadios(hass: MushroomHass, device: DeviceRecord): ApRadio[] {
+  const entity =
+    entityForDevice(hass, device.mac, "omada_device_5g_rx_util") ??
+    entityForDevice(hass, device.mac, "omada_device_2g_rx_util");
+  if (!entity) return [];
+  const a = entity.attributes;
+  const out: ApRadio[] = [];
+  const bands: [ApRadio["band"], string][] = [
+    ["2g", "2.4 GHz"],
+    ["5g", "5 GHz"],
+    ["5g2", "5 GHz (2)"],
+    ["6g", "6 GHz"],
+  ];
+  for (const [band, label] of bands) {
+    const mode = String(a[`device_wp${band}_mode`] ?? "");
+    if (!mode) continue;
+    out.push({
+      band,
+      label,
+      channel: String(a[`device_wp${band}_channel`] ?? ""),
+      txPower: Number(a[`device_wp${band}_tx_power`] ?? 0) || 0,
+      clients: Number(a[`device_wp${band}_clients`] ?? 0) || 0,
+      mode,
+      width: String(a[`device_wp${band}_band_width`] ?? ""),
+      maxRate: Number(a[`device_wp${band}_tx_max_rate`] ?? 0) || 0,
+    });
+  }
+  return out;
+}
+
 const DEVICE_STAT_METRIC: Record<string, string> = {
+  health: "omada_device_health_score",
+  poe: "omada_device_poe_remain_watts",
   cpu: "omada_device_cpu_percentage",
   mem: "omada_device_mem_percentage",
   uptime: "omada_device_uptime_seconds",
@@ -168,7 +266,8 @@ export function clientVia(client: ClientRecord, short = false): string {
     : client.attachmentPort
       ? `Port ${client.attachmentPort}`
       : "";
-  const parts = [where, port].filter(Boolean);
+  const network = String(client.attrs.network_name ?? "");
+  const parts = [where, port, network].filter(Boolean);
   return short ? parts.join(" · ") : ["Wired", ...parts].join(" · ");
 }
 
