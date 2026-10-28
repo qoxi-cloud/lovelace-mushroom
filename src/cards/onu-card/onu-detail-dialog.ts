@@ -10,6 +10,7 @@ import {
   formatDuration,
   formatRate,
   OnuDevice,
+  onuStatEntityId,
   shortPonState,
 } from "./onu-model";
 
@@ -38,6 +39,7 @@ export function onuHeroRows(
   return [
     {
       label: t("rx_power"),
+      entityId: onuStatEntityId(onu, "rx_power"),
       value: `${m.rx_power.toFixed(2)} dBm`,
       tone:
         m.rx_power <= -27
@@ -50,6 +52,7 @@ export function onuHeroRows(
     },
     {
       label: t("tx_power"),
+      entityId: onuStatEntityId(onu, "tx_power"),
       value: `${m.tx_power.toFixed(2)} dBm`,
       tone:
         m.tx_power > 0 && m.tx_power < 9
@@ -60,16 +63,19 @@ export function onuHeroRows(
     },
     {
       label: t("uptime"),
+      entityId: onuStatEntityId(onu, "uptime"),
       value: formatDuration(m.uptime),
       tone: m.uptime > 3600 ? "success" : m.uptime > 0 ? "warning" : "normal",
     },
     {
       label: t("time_in_state"),
+      entityId: onuStatEntityId(onu, "time_in_state"),
       value: formatDuration(m.time_in_state),
       tone: onu.online ? "success" : "danger",
     },
     {
       label: t("optic_temp"),
+      entityId: onuStatEntityId(onu, "optic_temp"),
       value: `${m.optic_temp.toFixed(1)} °C`,
       tone:
         m.optic_temp >= 70
@@ -80,17 +86,20 @@ export function onuHeroRows(
     },
     {
       label: t("cpu_temp"),
+      entityId: onuStatEntityId(onu, "cpu_temp"),
       value: `${m.cpu_temp.toFixed(1)} °C`,
       tone:
         m.cpu_temp >= 85 ? "danger" : m.cpu_temp >= 75 ? "warning" : "success",
     },
     {
       label: t("down_rate"),
+      entityId: onuStatEntityId(onu, "down_rate"),
       value: formatRate(m.down_rate),
       tone: m.down_rate > 0 ? "success" : "normal",
     },
     {
       label: t("up_rate"),
+      entityId: onuStatEntityId(onu, "up_rate"),
       value: formatRate(m.up_rate),
       tone: m.up_rate > 0 ? "success" : "normal",
     },
@@ -103,9 +112,14 @@ export function onuLinkRows(
 ): SheetRow[] {
   const m = onu.metrics;
   return [
-    { label: t("vendor"), value: onu.vendor || "—" },
+    {
+      label: t("vendor"),
+      entityId: onuStatEntityId(onu, "vendor"),
+      value: onu.vendor || "—",
+    },
     {
       label: t("pon_state"),
+      entityId: onuStatEntityId(onu, "pon_state"),
       value: onu.ponState || "—",
       tone: /^O5/.test(onu.ponState)
         ? "success"
@@ -115,12 +129,29 @@ export function onuLinkRows(
             ? "danger"
             : "normal",
     },
-    { label: t("pon_previous_state"), value: onu.ponPreviousState || "—" },
-    { label: t("pon_mode"), value: onu.ponMode || "—" },
-    { label: t("gpon_serial"), value: onu.gponSerial || "—" },
-    { label: t("sfp_serial"), value: onu.serial.toUpperCase() },
+    {
+      label: t("pon_previous_state"),
+      entityId: onuStatEntityId(onu, "pon_previous_state"),
+      value: onu.ponPreviousState || "—",
+    },
+    {
+      label: t("pon_mode"),
+      entityId: onuStatEntityId(onu, "pon_mode"),
+      value: onu.ponMode || "—",
+    },
+    {
+      label: t("gpon_serial"),
+      entityId: onuStatEntityId(onu, "gpon_serial"),
+      value: onu.gponSerial || "—",
+    },
+    {
+      label: t("sfp_serial"),
+      entityId: onuStatEntityId(onu, "sfp_serial"),
+      value: onu.serial.toUpperCase(),
+    },
     {
       label: t("voltage"),
+      entityId: onuStatEntityId(onu, "voltage"),
       value: `${m.voltage.toFixed(3)} V`,
       tone:
         m.voltage >= 3.13 && m.voltage <= 3.47
@@ -131,6 +162,7 @@ export function onuLinkRows(
     },
     {
       label: t("tx_bias"),
+      entityId: onuStatEntityId(onu, "tx_bias"),
       value: `${m.tx_bias.toFixed(2)} mA`,
       tone:
         m.tx_bias > 0 && m.tx_bias < 60
@@ -141,16 +173,19 @@ export function onuLinkRows(
     },
     {
       label: t("memory"),
+      entityId: onuStatEntityId(onu, "memory"),
       value: `${m.memory.toFixed(0)} %`,
       tone: m.memory >= 90 ? "danger" : m.memory >= 80 ? "warning" : "success",
     },
     {
       label: t("load_1m"),
+      entityId: onuStatEntityId(onu, "load_1m"),
       value: m.load_1m.toFixed(2),
       tone: m.load_1m >= 2 ? "danger" : m.load_1m >= 1 ? "warning" : "success",
     },
     {
       label: t("ethernet_speed"),
+      entityId: onuStatEntityId(onu, "ethernet_speed"),
       value: m.ethernet_speed ? `${m.ethernet_speed} Mbit/s` : "—",
       tone:
         m.ethernet_speed >= 10000
@@ -170,37 +205,49 @@ export function onuTrafficRows(
   return [
     {
       label: t("down_total"),
+      entityId: onuStatEntityId(onu, "down_total"),
       value: formatBytes(m.down_total),
       tone: "normal",
     },
-    { label: t("up_total"), value: formatBytes(m.up_total), tone: "normal" },
+    {
+      label: t("up_total"),
+      entityId: onuStatEntityId(onu, "up_total"),
+      value: formatBytes(m.up_total),
+      tone: "normal",
+    },
     {
       label: t("gem_key_errors"),
+      entityId: onuStatEntityId(onu, "gem_key_errors"),
       value: String(m.gem_key_errors),
       tone: m.gem_key_errors > 0 ? "warning" : "success",
     },
     {
       label: t("fec_corrected"),
+      entityId: onuStatEntityId(onu, "fec_corrected"),
       value: String(m.fec_corrected),
       tone: m.fec_corrected > 10000 ? "warning" : "success",
     },
     {
       label: t("fec_uncorrected"),
+      entityId: onuStatEntityId(onu, "fec_uncorrected"),
       value: String(m.fec_uncorrected),
       tone: m.fec_uncorrected > 0 ? "danger" : "success",
     },
     {
       label: t("bip_errors"),
+      entityId: onuStatEntityId(onu, "bip_errors"),
       value: String(m.bip_errors),
       tone: m.bip_errors > 0 ? "warning" : "success",
     },
     {
       label: t("lods_events"),
+      entityId: onuStatEntityId(onu, "lods_events"),
       value: String(m.lods_events),
       tone: m.lods_events > 0 ? "warning" : "success",
     },
     {
       label: t("alarm"),
+      entityId: onuStatEntityId(onu, "alarm"),
       value: onu.alarm ? t("alarm_active") : t("alarm_none"),
       tone: onu.alarm ? "danger" : "success",
     },

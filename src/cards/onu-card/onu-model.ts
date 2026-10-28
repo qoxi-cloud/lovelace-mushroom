@@ -206,6 +206,41 @@ export function shortPonState(ponState: string): string {
     .trim();
 }
 
+/** metric suffix of the 8311 entity behind a card/sheet stat */
+const ONU_STAT_ENTITY: Record<string, string> = {
+  rx_power: "rx_power",
+  tx_power: "tx_power",
+  down_rate: "gem_downstream",
+  up_rate: "gem_upstream",
+  down_total: "gem_downstream",
+  up_total: "gem_upstream",
+  optic_temp: "optic_temperature",
+  cpu_temp: "cpu0_temperature",
+  voltage: "voltage",
+  tx_bias: "tx_bias_current",
+  uptime: "onu_uptime",
+  time_in_state: "pon_time_in_state",
+  fec_corrected: "gtc_fec_corrected",
+  fec_uncorrected: "gtc_fec_uncorrected",
+  bip_errors: "gtc_bip_errors",
+  lods_events: "gtc_lods_events",
+  gem_key_errors: "gem_key_errors",
+  memory: "memory_usage",
+  load_1m: "cpu_load_1m",
+  ethernet_speed: "ethernet_speed",
+  pon_state: "pon_state",
+  pon_previous_state: "pon_previous_state",
+  alarm: "pon_alarms",
+};
+
+export function onuStatEntityId(
+  onu: OnuDevice,
+  stat: string
+): string | undefined {
+  const suffix = ONU_STAT_ENTITY[stat];
+  return suffix ? onu.entities.get(suffix)?.entity_id : undefined;
+}
+
 export function formatRate(bytesPerSecond: number): string {
   const bits = bytesPerSecond * 8;
   if (bits >= 1e9) return `${(bits / 1e9).toFixed(2)} Gbit/s`;

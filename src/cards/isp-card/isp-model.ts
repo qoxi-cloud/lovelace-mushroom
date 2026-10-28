@@ -28,6 +28,8 @@ export interface WanLink {
   rxRate: number; // bit/s
   txRate: number;
   statusEntityId: string;
+  /** latency sensor: the natural "history" entity for an ISP link */
+  latencyEntityId: string;
   entities: Record<string, HassEntity | undefined>;
 }
 
@@ -124,6 +126,7 @@ export function collectWanLinks(hass: HomeAssistant): WanLink[] {
       rxRate: bitRate(entities.rx),
       txRate: bitRate(entities.tx),
       statusEntityId: (entities.status ?? entity).entity_id,
+      latencyEntityId: entity.entity_id,
       entities,
     });
   }
@@ -162,6 +165,26 @@ export function formatLatency(ms: number): string {
 export function formatMbps(mbps: number): string {
   if (mbps <= 0) return "—";
   return mbps >= 1000 ? `${(mbps / 1000).toFixed(0)} Gbit/s` : `${mbps} Mbit/s`;
+}
+
+const ISP_STAT_ENTITY: Record<string, string> = {
+  latency: "latency",
+  link_speed: "linkSpeed",
+  rx_rate: "rx",
+  tx_rate: "tx",
+  isp_enabled: "isp",
+  max_bandwidth: "ispDown",
+  ip: "status",
+  port: "status",
+  proto: "status",
+};
+
+export function ispStatEntityId(
+  link: WanLink,
+  stat: string
+): string | undefined {
+  const key = ISP_STAT_ENTITY[stat];
+  return key ? link.entities[key]?.entity_id : undefined;
 }
 
 export function wanStateColor(link: WanLink): string {

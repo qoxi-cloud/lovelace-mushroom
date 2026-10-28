@@ -34,10 +34,12 @@ import {
   formatBitRate,
   formatLatency,
   formatMbps,
+  ispStatEntityId,
   latencyTone,
   WanLink,
   wanStateColor,
 } from "./isp-model";
+import { showMoreInfo } from "../../shared/qoxi-sheet";
 
 registerCustomCard({
   type: ISP_CARD_NAME,
@@ -122,7 +124,11 @@ export class IspCard
   protected get _stateObj(): HassEntity | undefined {
     const link = this._link;
     if (!link) return undefined;
-    return this.hass.states[link.statusEntityId];
+    // latency is the entity people want history for; it also carries the WAN attributes
+    return (
+      this.hass.states[link.latencyEntityId] ??
+      this.hass.states[link.statusEntityId]
+    );
   }
 
   private get _stats(): IspStat[] {
@@ -144,7 +150,7 @@ export class IspCard
     handleAction(
       this,
       this.hass!,
-      { ...this._config!, entity: this._link?.statusEntityId },
+      { ...this._config!, entity: this._link?.latencyEntityId },
       ev.detail.action!
     );
   }
@@ -270,8 +276,21 @@ export class IspCard
           const stat = computeStat(link, key, (k) =>
             customLocalize(`card.isp.${k}`)
           );
+          const entityId = ispStatEntityId(link, key);
           return html`
-            <div class=${classMap({ stat: true, [stat.tone]: true })}>
+            <div
+              class=${classMap({
+                stat: true,
+                linked: !!entityId,
+                [stat.tone]: true,
+              })}
+              @click=${entityId
+                ? (ev: Event) => {
+                    ev.stopPropagation();
+                    showMoreInfo(this, entityId);
+                  }
+                : undefined}
+            >
               <span class="stat-label"
                 >${customLocalize(`card.isp.stats.${key}`)}</span
               >
@@ -314,6 +333,12 @@ export class IspCard
           border-radius: var(--control-border-radius);
           background: rgba(var(--rgb-primary-text-color), 0.05);
           --stat-color: var(--primary-text-color);
+        }
+        .stat.linked {
+          cursor: pointer;
+        }
+        .stat.linked:hover {
+          background: rgba(var(--rgb-primary-text-color), 0.1);
         }
         .stat.warning {
           background: rgba(var(--rgb-warning), 0.15);

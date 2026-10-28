@@ -21,6 +21,7 @@ import {
   DeviceRecord,
   deviceOnline,
   deviceRate,
+  deviceStatEntityId,
   deviceUptime,
   findDevice,
   PortRecord,
@@ -120,27 +121,32 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     const hero: SheetRow[] = [
       {
         label: t("cpu"),
+        entityId: deviceStatEntityId(this.hass, device, "cpu"),
         value: formatPercent(m.omada_device_cpu_percentage ?? 0),
         tone: pctTone(m.omada_device_cpu_percentage ?? 0),
       },
       {
         label: t("mem"),
+        entityId: deviceStatEntityId(this.hass, device, "mem"),
         value: formatPercent(m.omada_device_mem_percentage ?? 0),
         tone: pctTone(m.omada_device_mem_percentage ?? 0),
       },
       { label: t("clients"), value: String(device.clients.length) },
       {
         label: t("uptime"),
+        entityId: deviceStatEntityId(this.hass, device, "uptime"),
         value: deviceUptime(device),
         tone: deviceOnline(device) ? "success" : "danger",
       },
       {
         label: t("rx_rate"),
+        entityId: deviceStatEntityId(this.hass, device, "rx_rate"),
         value: deviceRate(device, "rx"),
         tone: (m.omada_device_rx_rate ?? 0) > 0 ? "success" : "normal",
       },
       {
         label: t("tx_rate"),
+        entityId: deviceStatEntityId(this.hass, device, "tx_rate"),
         value: deviceRate(device, "tx"),
         tone: (m.omada_device_tx_rate ?? 0) > 0 ? "success" : "normal",
       },
@@ -148,6 +154,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     if (m.omada_device_temp !== undefined) {
       hero.push({
         label: t("temp"),
+        entityId: deviceStatEntityId(this.hass, device, "temp"),
         value: `${m.omada_device_temp.toFixed(0)} °C`,
         tone:
           m.omada_device_temp >= 80
@@ -160,6 +167,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     if (m.omada_device_poe_remain_watts !== undefined) {
       hero.push({
         label: t("poe_remain"),
+        entityId: deviceStatEntityId(this.hass, device, "poe_remain"),
         value: `${m.omada_device_poe_remain_watts.toFixed(1)} W`,
         tone:
           m.omada_device_poe_remain_watts < 20

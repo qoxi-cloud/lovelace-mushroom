@@ -41,6 +41,7 @@ import {
   DeviceRecord,
   deviceEntityId,
   deviceOnline,
+  deviceStatEntityId,
   deviceUptime,
   findDevice,
   listDevices,
@@ -53,6 +54,7 @@ import {
 } from "./omada-device-card-config";
 import "./omada-device-detail-dialog";
 import { showOmadaDeviceDetailDialog } from "./omada-device-detail-dialog";
+import { showMoreInfo } from "../../shared/qoxi-sheet";
 
 registerCustomCard({
   type: OMADA_DEVICE_CARD_NAME,
@@ -353,8 +355,21 @@ export class OmadaDeviceCard
       >
         ${stats.map((key) => {
           const stat = computeStat(device, key);
+          const entityId = deviceStatEntityId(this.hass, device, key);
           return html`
-            <div class=${classMap({ stat: true, [stat.tone]: true })}>
+            <div
+              class=${classMap({
+                stat: true,
+                linked: !!entityId,
+                [stat.tone]: true,
+              })}
+              @click=${entityId
+                ? (ev: Event) => {
+                    ev.stopPropagation();
+                    showMoreInfo(this, entityId);
+                  }
+                : undefined}
+            >
               <span class="stat-label"
                 >${customLocalize(`card.omada_device.stats.${key}`)}</span
               >
@@ -398,6 +413,9 @@ export class OmadaDeviceCard
           border-radius: var(--control-border-radius);
           background: rgba(var(--rgb-primary-text-color), 0.05);
           --stat-color: var(--primary-text-color);
+        }
+        .stat.linked:hover {
+          background: rgba(var(--rgb-primary-text-color), 0.1);
         }
         .stat.warning {
           background: rgba(var(--rgb-warning), 0.15);

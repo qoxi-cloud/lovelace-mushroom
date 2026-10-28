@@ -76,6 +76,41 @@ export function deviceRate(device: DeviceRecord, dir: "rx" | "tx"): string {
   return formatRateBits(device.metrics[`omada_device_${dir}_rate`] ?? 0);
 }
 
+const DEVICE_STAT_METRIC: Record<string, string> = {
+  cpu: "omada_device_cpu_percentage",
+  mem: "omada_device_mem_percentage",
+  uptime: "omada_device_uptime_seconds",
+  rx_rate: "omada_device_rx_rate",
+  tx_rate: "omada_device_tx_rate",
+  temp: "omada_device_temp",
+  poe_remain: "omada_device_poe_remain_watts",
+  download: "omada_device_download",
+  upload: "omada_device_upload",
+  util_2g: "omada_device_2g_rx_util",
+  util_5g: "omada_device_5g_rx_util",
+};
+
+/** entity id of the OmadaBridge sensor behind a device stat (for more-info / history) */
+export function deviceStatEntityId(
+  hass: MushroomHass,
+  device: DeviceRecord,
+  stat: string
+): string | undefined {
+  const metric = DEVICE_STAT_METRIC[stat];
+  if (!metric) return undefined;
+  const mac = normalizeMacKey(device.mac);
+  for (const entity of Object.values(hass.states)) {
+    const a = entity.attributes as Record<string, unknown>;
+    if (
+      a.metric === metric &&
+      normalizeMacKey(String(a.device_mac ?? "")) === mac
+    ) {
+      return entity.entity_id;
+    }
+  }
+  return undefined;
+}
+
 /** The primary device-level entity, used for more-info / badges. */
 export function deviceEntityId(
   hass: MushroomHass,

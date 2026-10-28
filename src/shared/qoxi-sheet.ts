@@ -16,6 +16,7 @@ declare global {
       addHistory?: boolean;
     };
     "dialog-closed": { dialog: string };
+    "hass-more-info": { entityId: string | null };
   }
 }
 
@@ -33,6 +34,13 @@ export interface SheetRow {
   label: string;
   value: string;
   tone?: Tone;
+  /** when set the row/tile opens HA more-info (history) for this entity */
+  entityId?: string;
+}
+
+export function showMoreInfo(element: HTMLElement, entityId?: string) {
+  if (!entityId) return;
+  fireEvent(element, "hass-more-info", { entityId });
 }
 
 export interface TableCell {
@@ -151,7 +159,16 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
 
   protected renderStat(row: SheetRow) {
     return html`
-      <div class=${classMap({ stat: true, [row.tone ?? "normal"]: true })}>
+      <div
+        class=${classMap({
+          stat: true,
+          linked: !!row.entityId,
+          [row.tone ?? "normal"]: true,
+        })}
+        @click=${row.entityId
+          ? () => showMoreInfo(this, row.entityId)
+          : undefined}
+      >
         <span class="stat-label">${row.label}</span>
         <span class="stat-value">${row.value}</span>
       </div>
@@ -168,7 +185,16 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         <div class="rows">
           ${rows.map(
             (r) => html`
-              <div class=${classMap({ row: true, [r.tone ?? "normal"]: true })}>
+              <div
+                class=${classMap({
+                  row: true,
+                  linked: !!r.entityId,
+                  [r.tone ?? "normal"]: true,
+                })}
+                @click=${r.entityId
+                  ? () => showMoreInfo(this, r.entityId)
+                  : undefined}
+              >
                 <span class="row-label">${r.label}</span>
                 <span class="row-value">${r.value}</span>
               </div>
@@ -250,7 +276,8 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         :host {
           position: fixed;
           inset: 0;
-          z-index: 10;
+          /* below HA dialogs (more-info opens on top of the sheet) */
+          z-index: 6;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -347,6 +374,14 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           border-radius: var(--control-border-radius);
           background: rgba(var(--rgb-primary-text-color), 0.05);
           --stat-color: var(--primary-text-color);
+        }
+        .stat.linked,
+        .row.linked {
+          cursor: pointer;
+        }
+        .stat.linked:hover,
+        .row.linked:hover {
+          background: rgba(var(--rgb-primary-text-color), 0.09);
         }
         .stat.warning {
           --stat-color: rgb(var(--rgb-warning));
