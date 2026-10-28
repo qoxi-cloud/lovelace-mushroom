@@ -189,8 +189,8 @@
       "all": "All",
       "gateway": "Gateway",
       "switch": "Switches",
-      "ap": "Access points",
-      "controller": "Controller",
+      "ap": "APs",
+      "controller": "Ctrl",
       "empty": "No devices"
     }
   },

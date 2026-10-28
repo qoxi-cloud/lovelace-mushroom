@@ -81,19 +81,25 @@ export class OmadaDevicesCard
     return 6;
   }
 
-  private _devices(): DeviceRecord[] {
+  /** devices after `types` and `exclude`, before the chip filter */
+  private _pool(): DeviceRecord[] {
     const cfg = this._config!;
     const allowedTypes = new Set<string>(
       cfg.types ?? ["gateway", "switch", "ap", "controller"]
     );
     const excluded = (cfg.exclude ?? []).map((e) => e.trim().toLowerCase());
     const excludedMacs = excluded.map(normalizeMacKey).filter(Boolean);
-    let devices = listDevices(this.hass, cfg.site).filter(
+    return listDevices(this.hass, cfg.site).filter(
       (d) =>
         allowedTypes.has(d.type) &&
         !excluded.includes(d.name.toLowerCase()) &&
         !excludedMacs.includes(normalizeMacKey(d.mac))
     );
+  }
+
+  private _devices(): DeviceRecord[] {
+    const cfg = this._config!;
+    let devices = this._pool();
     const filter = this._typeFilter ?? "all";
     if (filter !== "all") devices = devices.filter((d) => d.type === filter);
     const sort = cfg.sort ?? "type";
@@ -128,7 +134,7 @@ export class OmadaDevicesCard
     const customLocalize = setupCustomlocalize(this.hass);
     const t = (key: string) => customLocalize(`card.omada_devices.${key}`);
     const devices = this._devices();
-    const all = listDevices(this.hass, this._config.site);
+    const all = this._pool();
     const online = all.filter(deviceOnline).length;
 
     return html`
@@ -191,11 +197,7 @@ export class OmadaDevicesCard
     `;
     return html`
       <div class="filters">
-        ${chip(
-          "all",
-          t("all"),
-          all.filter((d) => allowed.includes(d.type as DeviceType)).length
-        )}
+        ${chip("all", t("all"), all.length)}
         ${present.map((type) =>
           chip(type, t(type), all.filter((d) => d.type === type).length)
         )}
@@ -228,10 +230,12 @@ export class OmadaDevicesCard
         }
         .filters {
           display: flex;
+          flex-wrap: wrap;
           gap: 6px;
           padding: 0 0 8px;
         }
         .chip {
+          white-space: nowrap;
           appearance: none;
           border: none;
           font: inherit;
