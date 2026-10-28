@@ -16,6 +16,7 @@ import "./cards/media-player-card/media-player-card";
 import "./cards/number-card/number-card";
 import "./cards/omada-clients-card/omada-clients-card";
 import "./cards/omada-device-card/omada-device-card";
+import "./cards/omada-devices-card/omada-devices-card";
 import "./cards/onu-card/onu-card";
 import "./cards/person-card/person-card";
 import "./cards/select-card/select-card";

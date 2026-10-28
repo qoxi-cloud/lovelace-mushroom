@@ -182,6 +182,16 @@
       },
       "idle": "idle",
       "less": "Show less"
+    },
+    "omada_devices": {
+      "title": "Devices",
+      "online": "online",
+      "all": "All",
+      "gateway": "Gateway",
+      "switch": "Switches",
+      "ap": "Access points",
+      "controller": "Controller",
+      "empty": "No devices"
     }
   },
   "editor": {
@@ -333,6 +343,17 @@
         "sort_rate": "By rate",
         "sort_name": "By name",
         "sort_ip": "By IP"
+      },
+      "omada_devices": {
+        "types": "Device types",
+        "exclude": "Exclude devices",
+        "stats": "Statistics (each tile)",
+        "show_filters": "Show type chips",
+        "show_header": "Show header",
+        "sort": "Sort",
+        "sort_type": "By type",
+        "sort_name": "By name",
+        "sort_status": "Offline first"
       }
     },
     "badge": {

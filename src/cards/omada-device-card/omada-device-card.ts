@@ -158,6 +158,15 @@ export class OmadaDeviceCard
     };
   }
 
+  /** Property form of setConfig so container cards can bind `.config=` */
+  public set config(value: OmadaDeviceCardConfig) {
+    this.setConfig(value);
+  }
+
+  public get config(): OmadaDeviceCardConfig | undefined {
+    return this._config;
+  }
+
   setConfig(config: OmadaDeviceCardConfig): void {
     this._config = {
       hold_action: { action: "more-info" },
