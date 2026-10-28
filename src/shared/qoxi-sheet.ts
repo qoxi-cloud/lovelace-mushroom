@@ -114,12 +114,18 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   @state() protected _params?: P;
   /** index of the path hop whose details are expanded (compact path chips) */
   @state() private _openHop: number | null = null;
-  /** phone layout: path chips are compact and expand on tap */
-  @state() private _compact = QoxiSheet._narrowQuery.matches;
-  private static _narrowQuery = window.matchMedia("(max-width: 640px)");
-  private _onNarrowChange = (ev: MediaQueryListEvent) => {
-    this._compact = ev.matches;
-    if (!ev.matches) this._openHop = null;
+  /** the full path (with subtitles) does not fit on one line: show compact
+   *  chips that expand on tap. Measured from a hidden copy of the full path. */
+  @state() private _compact = false;
+  private _pathObserver?: ResizeObserver;
+  private _measurePath = () => {
+    const probe = this.renderRoot?.querySelector<HTMLElement>(".path-measure");
+    if (!probe || probe.clientWidth === 0) return;
+    const compact = probe.scrollWidth > probe.clientWidth + 1;
+    if (compact !== this._compact) {
+      this._compact = compact;
+      if (!compact) this._openHop = null;
+    }
   };
 
   public showDialog(params: P): void {
@@ -155,15 +161,20 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
     this.addEventListener("touchmove", this._onScrollIntent, {
       passive: false,
     });
-    QoxiSheet._narrowQuery.addEventListener("change", this._onNarrowChange);
-    this._compact = QoxiSheet._narrowQuery.matches;
+    this._pathObserver = new ResizeObserver(this._measurePath);
+    this._pathObserver.observe(this);
+  }
+
+  protected updated(changed: Map<PropertyKey, unknown>) {
+    super.updated(changed);
+    this._measurePath();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener("wheel", this._onScrollIntent);
     this.removeEventListener("touchmove", this._onScrollIntent);
-    QoxiSheet._narrowQuery.removeEventListener("change", this._onNarrowChange);
+    this._pathObserver?.disconnect();
   }
 
   protected abstract renderHeader(): TemplateResult | typeof nothing;
@@ -258,6 +269,29 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         <div class="section-title">
           <span>${title}</span>
           <span class="tag">${tag}</span>
+        </div>
+        <div class="path path-measure" aria-hidden="true">
+          ${hops.map(
+            (hop, i) => html`
+              <div class="hop-wrap">
+                ${i > 0
+                  ? html`<ha-icon
+                      class="path-arrow"
+                      icon="mdi:chevron-right"
+                    ></ha-icon>`
+                  : nothing}
+                <div class="hop">
+                  <ha-icon class="hop-icon" .icon=${hop.icon}></ha-icon>
+                  <div class="hop-text">
+                    <span class="hop-title">${hop.title}</span>
+                    ${hop.subtitle
+                      ? html`<span class="hop-sub">${hop.subtitle}</span>`
+                      : nothing}
+                  </div>
+                </div>
+              </div>
+            `
+          )}
         </div>
         <div class="path">
           ${hops.map((hop, i) => {
@@ -750,6 +784,19 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           flex-wrap: wrap;
           align-items: center;
           gap: 6px;
+        }
+        section {
+          position: relative;
+        }
+        .path-measure {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 0;
+          overflow: hidden;
+          visibility: hidden;
+          pointer-events: none;
+          flex-wrap: nowrap;
         }
         .hop-wrap {
           display: inline-flex;
