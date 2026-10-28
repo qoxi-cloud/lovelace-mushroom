@@ -112,6 +112,8 @@ export interface RadarAxis {
 
 export abstract class QoxiSheet<P> extends MushroomBaseElement {
   @state() protected _params?: P;
+  /** index of the path hop whose details are expanded (compact path chips) */
+  @state() private _openHop: number | null = null;
 
   public showDialog(params: P): void {
     this._params = params;
@@ -120,6 +122,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   }
 
   public closeDialog(): void {
+    this._openHop = null;
     if (!this._params) return;
     this._params = undefined;
     // The dialog manager keeps the element mounted; never leave a full-screen overlay behind.
@@ -228,6 +231,18 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   }
 
   protected renderPath(title: string, tag: string, hops: PathHop[]) {
+    const toggle = (i: number, hop: PathHop) => (ev: Event) => {
+      ev.stopPropagation();
+      if (!hop.subtitle && hop.onClick) {
+        hop.onClick();
+        return;
+      }
+      this._openHop = this._openHop === i ? null : i;
+    };
+    const open = (hop: PathHop) => (ev: Event) => {
+      ev.stopPropagation();
+      hop.onClick?.();
+    };
     return html`
       <section>
         <div class="section-title">
@@ -235,8 +250,9 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           <span class="tag">${tag}</span>
         </div>
         <div class="path">
-          ${hops.map(
-            (hop, i) => html`
+          ${hops.map((hop, i) => {
+            const expanded = this._openHop === i;
+            return html`
               <div class="hop-wrap">
                 ${i > 0
                   ? html`<ha-icon
@@ -245,20 +261,27 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
                     ></ha-icon>`
                   : nothing}
                 <div
-                  class=${classMap({ hop: true, linked: !!hop.onClick })}
-                  @click=${hop.onClick}
+                  class=${classMap({ hop: true, expanded })}
+                  @click=${toggle(i, hop)}
                 >
                   <ha-icon class="hop-icon" .icon=${hop.icon}></ha-icon>
                   <div class="hop-text">
                     <span class="hop-title">${hop.title}</span>
-                    ${hop.subtitle
+                    ${expanded && hop.subtitle
                       ? html`<span class="hop-sub">${hop.subtitle}</span>`
                       : nothing}
                   </div>
+                  ${expanded && hop.onClick
+                    ? html`<ha-icon
+                        class="hop-open"
+                        icon="mdi:arrow-right-circle"
+                        @click=${open(hop)}
+                      ></ha-icon>`
+                    : nothing}
                 </div>
               </div>
-            `
-          )}
+            `;
+          })}
         </div>
       </section>
     `;
@@ -710,51 +733,29 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         }
         .path {
           display: flex;
-          flex-wrap: nowrap;
+          flex-wrap: wrap;
           align-items: center;
           gap: 6px;
-          overflow-x: auto;
-          overflow-y: hidden;
-          scrollbar-width: none;
-          -webkit-overflow-scrolling: touch;
-          scroll-snap-type: x proximity;
-          padding: 2px 0;
-          /* fade the clipped edges so it reads as scrollable */
-          mask-image: linear-gradient(
-            90deg,
-            transparent 0,
-            #000 10px,
-            #000 calc(100% - 18px),
-            transparent 100%
-          );
-          -webkit-mask-image: linear-gradient(
-            90deg,
-            transparent 0,
-            #000 10px,
-            #000 calc(100% - 18px),
-            transparent 100%
-          );
-        }
-        .path::-webkit-scrollbar {
-          display: none;
         }
         .hop-wrap {
-          flex: none;
-          scroll-snap-align: start;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          max-width: 100%;
         }
         .hop {
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 8px 12px 8px 10px;
+          padding: 7px 12px 7px 10px;
           border-radius: var(--control-border-radius);
           background: rgba(var(--rgb-primary-text-color), 0.05);
-          flex: none;
-        }
-        .hop.linked {
           cursor: pointer;
+          min-width: 0;
+          transition: background 120ms ease;
         }
-        .hop.linked:hover {
+        .hop:hover,
+        .hop.expanded {
           background: rgba(var(--rgb-primary-text-color), 0.1);
         }
         .hop-icon {
@@ -783,11 +784,11 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        .hop-wrap {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          min-width: 0;
+        .hop-open {
+          --mdc-icon-size: 20px;
+          color: rgb(var(--rgb-primary-color, var(--rgb-blue)));
+          flex: none;
+          margin-left: 2px;
         }
         .path-arrow {
           --mdc-icon-size: 18px;
