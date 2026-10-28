@@ -1,16 +1,19 @@
 # ONU card (qoxi)
 
-A card for XGS-PON / GPON ONU sticks running the 8311 firmware, read through the
-[8311 ONU Monitor](https://github.com/pentafive/8311-ha-bridge) Home Assistant
-integration. The card discovers every `sensor.<prefix><serial>_*` entity itself,
-so a new stick shows up in the editor as soon as the integration creates it.
+A card for PON ONU sticks / modems. It is source-neutral: any integration that
+publishes entities following the ONU section of [docs/contract.md](../contract.md)
+works. Today that is the [8311 ONU Monitor](https://github.com/pentafive/8311-ha-bridge)
+integration (`sensor.8311_onu_<serial>_*`); a bridge for another stick either
+sets `metric: onu_<name>` + `serial` attributes or names its entities
+`sensor.net_onu_<serial>_<name>`. New sticks show up in the editor as soon as
+their entities exist.
 
 ## Configuration variables
 
 | Name                | Type    | Default                                    | Description                                                                        |
 | :------------------ | :------ | :----------------------------------------- | :--------------------------------------------------------------------------------- |
 | `serial`            | string  | first discovered ONU                       | ONU serial as it appears in the entity id (e.g. `sc26220140007`)                   |
-| `prefix`            | string  | `8311_onu_`                                | Entity id prefix used by the integration                                           |
+| `prefix`            | string  | —                                          | Extra entity id prefix to scan, in addition to `net_onu_` and `8311_onu_`          |
 | `name`              | string  | friendly name of the PON Link sensor       | Custom name                                                                        |
 | `icon`              | string  | `mdi:lan-connect`                          | Custom icon                                                                        |
 | `icon_color`        | string  | `green` online / disabled offline          | Custom icon color                                                                  |

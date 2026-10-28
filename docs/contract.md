@@ -78,4 +78,39 @@ OmadaBridge ≥ 2.4.4-qoxi.5 publishes the canonical `net_*` names directly; the
 | `net_wan_status`                         | sensor        | —      | desc, device_firmware_version, device_hw_version, device_ip, device_mac, device_model, device_name, device_show_model, device_status, device_subtype, device_type, device_version, device_version_upgrade, ip, name, port, proto, type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `net_wan_tx_rate`                        | sensor        | bit/s  | desc, device_firmware_version, device_hw_version, device_ip, device_mac, device_model, device_name, device_show_model, device_status, device_subtype, device_type, device_version, device_version_upgrade, ip, name, port, proto, type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
+## ONU metrics
+
+PON ONU sticks / modems are a second, independent family (`mushroom-onu-card`). They are not part of the bridge: any
+integration can be the source. Discovery (`src/cards/onu-card/onu-contract.ts`), in this order:
+
+1. **canonical** — entities with attributes `metric: onu_<name>` and `serial: <serial>` (optional `onu_name` for the
+   display name); entity ids are free. Use this for a new bridge.
+2. **by entity id** — `sensor.<prefix><serial>_<name>` / `binary_sensor.…` for the prefixes `net_onu_` and `8311_onu_`
+   (the [8311 ONU Monitor](https://github.com/pentafive/8311-ha-bridge) integration sets no attributes). The card option
+   `prefix` adds one more prefix.
+
+One stick = one `serial` (lower-case, as in the entity id). A canonical entity overrides an entity-id match for the same
+metric. Names follow the 8311 firmware vocabulary:
+
+| `<name>`                                                                                          | domain        | unit | meaning                                                                                    |
+| ------------------------------------------------------------------------------------------------- | ------------- | ---- | ------------------------------------------------------------------------------------------ |
+| `pon_link`                                                                                        | binary_sensor | —    | on = O5 operation (drives Online/Offline)                                                  |
+| `pon_alarms`                                                                                      | binary_sensor | —    | on = alarm raised                                                                          |
+| `pon_state`, `pon_previous_state`                                                                 | sensor        | —    | `O5 - Operation state` style text                                                          |
+| `pon_time_in_state`, `onu_uptime`                                                                 | sensor        | h    | unit attribute honoured (`s`, `min`, `h`, `d`)                                             |
+| `pon_mode`                                                                                        | sensor        | —    | `GPON` `XG-PON` `XGS-PON` `NG-PON2` `25G-PON` `50G-PON` (line rate derived from it)        |
+| `pon_vendor_id`, `gpon_serial`                                                                    | sensor        | —    | PON identity                                                                               |
+| `vendor`, `olt_vendor`, `part_number`, `hardware_revision`, `module_type`, `active_firmware_bank` | sensor        | —    | inventory                                                                                  |
+| `rx_power`, `tx_power`                                                                            | sensor        | dBm  | optics; RX colours orange ≤ -24, red ≤ -27                                                 |
+| `optic_temperature`, `cpu0_temperature`, `cpu1_temperature`                                       | sensor        | °C   | temperatures                                                                               |
+| `voltage`                                                                                         | sensor        | V    |                                                                                            |
+| `tx_bias_current`                                                                                 | sensor        | mA   |                                                                                            |
+| `cpu_load_1m`                                                                                     | sensor        | —    |                                                                                            |
+| `memory_usage`                                                                                    | sensor        | %    |                                                                                            |
+| `ethernet_speed`                                                                                  | sensor        | Mbps | host-side link                                                                             |
+| `gem_downstream`, `gem_upstream`                                                                  | sensor        | B    | monotonic byte counters, unit attribute honoured (B…TB); rates are derived between updates |
+| `gem_key_errors`, `gtc_bip_errors`, `gtc_fec_corrected`, `gtc_fec_uncorrected`, `gtc_lods_events` | sensor        | —    | monotonic error counters                                                                   |
+
+Only `pon_link` is required; every other metric is optional and its tile/row is simply absent.
+
 Generated from a live OmadaBridge 2.4.4-qoxi.6 install (2026-10-28); labels marked `device_*` repeat the owning device's inventory on every entity.

@@ -12,7 +12,6 @@ Note that Omada reports no RX/TX rates for virtual WANs (always 0).
 | Name                                                                  | Type   | Default                                     | Description                                                               |
 | :-------------------------------------------------------------------- | :----- | :------------------------------------------ | :------------------------------------------------------------------------ |
 | `wan`                                                                 | string | first discovered link                       | `slug` (e.g. `linkcom_sfp2`), WAN port number, `gateway:port` or the name |
-| `onu_prefix`                                                          | string | `8311_onu_`                                 | Entity prefix of the 8311 ONU Monitor integration                         |
 | `name`                                                                | string | WAN description                             | Custom name                                                               |
 | `icon`                                                                | string | `mdi:web`                                   | Custom icon                                                               |
 | `icon_color`                                                          | string | green / orange / red by state               | Custom icon color                                                         |

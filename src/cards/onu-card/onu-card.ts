@@ -39,6 +39,7 @@ import {
   shortPonState,
   ponLineRates,
 } from "./onu-model";
+import { ONU_ID_PREFIXES } from "./onu-contract";
 import "./onu-detail-dialog";
 import { showOnuDetailDialog } from "./onu-detail-dialog";
 import { showMoreInfo } from "../../shared/qoxi-sheet";
@@ -235,8 +236,8 @@ export class OnuCard
       return this.renderNotFound({
         ...this._config,
         entity: this._config.serial
-          ? `${this._config.prefix ?? "8311_onu_"}${this._config.serial}`
-          : "8311_onu_*",
+          ? `${this._config.prefix ?? ONU_ID_PREFIXES[0]}${this._config.serial}`
+          : `${ONU_ID_PREFIXES.join("|")}*`,
       });
     }
 

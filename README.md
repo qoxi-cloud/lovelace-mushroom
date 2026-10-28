@@ -2,7 +2,7 @@
 
 Fork of [piitaya/lovelace-mushroom](https://github.com/piitaya/lovelace-mushroom) with extra cards for the qoxi network dashboard. Everything upstream stays as is; the additions are:
 
-- [ONU card](docs/cards/onu.md) — XGS-PON ONU sticks via the 8311 ONU Monitor integration.
+- [ONU card](docs/cards/onu.md) — PON ONU sticks (8311 ONU Monitor today; any source that follows the ONU contract).
 - [ISP card](docs/cards/isp.md) — ISP / WAN links from OmadaBridge (virtual WANs included).
 - [Omada device card](docs/cards/omada-device.md) — gateway / switch / AP with ports, radios and clients in a detail sheet.
 - [Omada devices card](docs/cards/omada-devices.md) — auto list of every Omada device, one device card each.

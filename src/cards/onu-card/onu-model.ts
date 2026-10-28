@@ -1,8 +1,9 @@
-// qoxi: ONU sticks running 8311 firmware, exposed by the "8311 ONU Monitor"
-// Home Assistant integration as `sensor.<prefix><serial>_<metric>`.
+// qoxi: PON ONU sticks / modems. Sources are discovered through the
+// vendor-neutral contract in ./onu-contract.ts (attribute `metric: onu_*` or
+// entity-id prefixes such as the 8311 ONU Monitor's `8311_onu_`).
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant } from "../../ha";
-import { DEFAULT_ONU_PREFIX } from "./const";
+import { ONU_CANONICAL_PREFIX, ONU_ID_PREFIXES } from "./onu-contract";
 
 export interface OnuDevice {
   serial: string;
@@ -102,22 +103,59 @@ function escapeRegExp(value: string): string {
 
 export function collectOnuDevices(
   hass: HomeAssistant,
-  prefix: string = DEFAULT_ONU_PREFIX
+  prefix?: string
 ): OnuDevice[] {
-  const pattern = new RegExp(
-    `^(sensor|binary_sensor)\\.${escapeRegExp(prefix)}([a-z0-9]+)_(.+)$`
-  );
   const groups = new Map<string, Map<string, HassEntity>>();
-  for (const entity of Object.values(hass.states)) {
-    const match = pattern.exec(entity.entity_id);
-    if (!match) continue;
-    const [, , serial, metric] = match;
-    let group = groups.get(serial!);
+  const idPrefix = new Map<string, string>();
+  const names = new Map<string, string>();
+  const put = (
+    serial: string,
+    metric: string,
+    entity: HassEntity,
+    canonical: boolean
+  ) => {
+    let group = groups.get(serial);
     if (!group) {
       group = new Map();
-      groups.set(serial!, group);
+      groups.set(serial, group);
     }
-    group.set(metric!, entity);
+    // a canonical entity wins over one matched by entity id only
+    if (canonical || !group.has(metric)) group.set(metric, entity);
+  };
+
+  // 1. canonical: `metric: onu_<name>` + `serial`
+  for (const entity of Object.values(hass.states)) {
+    const metric = entity.attributes.metric;
+    const serial = entity.attributes.serial;
+    if (
+      typeof metric !== "string" ||
+      !metric.startsWith(ONU_CANONICAL_PREFIX) ||
+      typeof serial !== "string" ||
+      !serial
+    )
+      continue;
+    const key = serial.toLowerCase();
+    put(key, metric.slice(ONU_CANONICAL_PREFIX.length), entity, true);
+    const onuName = entity.attributes.onu_name;
+    if (typeof onuName === "string" && onuName && !names.has(key))
+      names.set(key, onuName);
+  }
+
+  // 2. by entity id: `<prefix><serial>_<name>`
+  const prefixes = Array.from(
+    new Set([...(prefix ? [prefix] : []), ...ONU_ID_PREFIXES])
+  );
+  for (const p of prefixes) {
+    const pattern = new RegExp(
+      `^(sensor|binary_sensor)\\.${escapeRegExp(p)}([a-z0-9]+)_(.+)$`
+    );
+    for (const entity of Object.values(hass.states)) {
+      const match = pattern.exec(entity.entity_id);
+      if (!match) continue;
+      const [, , serial, metric] = match;
+      put(serial!, metric!, entity, false);
+      if (!idPrefix.has(serial!)) idPrefix.set(serial!, p);
+    }
   }
 
   const devices: OnuDevice[] = [];
@@ -135,9 +173,11 @@ export function collectOnuDevices(
     };
     const num = (key: string) => toNumber(state(key));
     const link = get("pon_link");
-    const name = link
-      ? stripSuffix(String(link.attributes.friendly_name ?? ""), "PON Link")
-      : "";
+    const name =
+      names.get(serial) ??
+      (link
+        ? stripSuffix(String(link.attributes.friendly_name ?? ""), "PON Link")
+        : "");
     const uptime = get("onu_uptime");
     const inState = get("pon_time_in_state");
     const down = get("gem_downstream");
@@ -156,7 +196,8 @@ export function collectOnuDevices(
       ponMode: state("pon_mode"),
       gponSerial: state("gpon_serial"),
       linkEntityId:
-        link?.entity_id ?? `binary_sensor.${prefix}${serial}_pon_link`,
+        link?.entity_id ??
+        `binary_sensor.${idPrefix.get(serial) ?? prefixes[0]}${serial}_pon_link`,
       entities: group,
       metrics: {
         rx_power: num("rx_power"),
@@ -192,7 +233,7 @@ export function findOnu(
   prefix: string | undefined,
   serial: string | undefined
 ): OnuDevice | undefined {
-  const devices = collectOnuDevices(hass, prefix || DEFAULT_ONU_PREFIX);
+  const devices = collectOnuDevices(hass, prefix || undefined);
   if (!serial) return devices[0];
   const wanted = serial.toLowerCase();
   return devices.find((d) => d.serial === wanted);
