@@ -58,6 +58,7 @@ function ipTone(ip: string): StatTone {
 
 /** a failed run is a problem; a result older than 3 h means the job stopped */
 function speedtestTone(link: WanLink): StatTone {
+  if (link.state === "offline") return "normal";
   if (link.speedtestStatus === "error") return "danger";
   if (link.speedtestAt > 0 && Date.now() / 1000 - link.speedtestAt > 3 * 3600)
     return "warning";

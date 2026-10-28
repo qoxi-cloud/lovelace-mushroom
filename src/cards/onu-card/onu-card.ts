@@ -247,7 +247,9 @@ export class OnuCard
     const name = this._config.name || onu.name;
     const status = onu.online
       ? customLocalize("card.onu.online")
-      : customLocalize("card.onu.offline");
+      : onu.unknown
+        ? customLocalize("card.onu.no_data")
+        : customLocalize("card.onu.offline");
     const ponState = shortPonState(onu.ponState);
     const stateText = ponState ? `${status} · ${ponState}` : status;
     const stateObj = this._stateObj;
@@ -346,6 +348,7 @@ export class OnuCard
   }
 
   private renderOnuBadge(onu: OnuDevice) {
+    if (onu.unknown) return nothing;
     if (!onu.online) {
       return html`
         <mushroom-badge-icon

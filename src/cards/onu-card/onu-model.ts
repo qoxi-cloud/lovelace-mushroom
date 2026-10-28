@@ -9,6 +9,8 @@ export interface OnuDevice {
   serial: string;
   name: string;
   online: boolean;
+  /** the source has no usable state right now (unavailable/unknown): not an outage */
+  unknown: boolean;
   alarm: boolean;
   ponState: string;
   ponPreviousState: string;
@@ -187,6 +189,8 @@ export function collectOnuDevices(
       serial,
       name: name || `ONU ${serial.toUpperCase()}`,
       online: link?.state === "on",
+      unknown:
+        !link || link.state === "unavailable" || link.state === "unknown",
       alarm: get("pon_alarms")?.state === "on",
       ponState: state("pon_state"),
       ponPreviousState: state("pon_previous_state"),

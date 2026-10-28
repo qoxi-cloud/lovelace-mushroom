@@ -57,7 +57,8 @@
         "alarm": "Alarm",
         "alarm_active": "active",
         "alarm_none": "none"
-      }
+      },
+      "no_data": "No data"
     },
     "isp": {
       "state": {
