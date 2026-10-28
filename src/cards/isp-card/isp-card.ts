@@ -191,16 +191,6 @@ export class IspCard
     ]
       .filter(Boolean)
       .join(" · ");
-    // same text, but the IP coloured by scope (styles live inside mushroom-state-info, so inline)
-    const stateRich = showIp
-      ? html`${customLocalize(`card.isp.state.${link.state}`)} ·
-          <span
-            style=${styleMap({
-              color: `rgb(var(--rgb-${ipTone(link.ip) === "success" ? "success" : "warning"}))`,
-            })}
-            >${link.ip}</span
-          >`
-      : stateText;
     const stateObj = this._stateObj;
     const primary = stateObj
       ? computeInfoDisplay(
@@ -211,18 +201,15 @@ export class IspCard
           this.hass
         )
       : name;
-    const secondary =
-      appearance.secondary_info === "state"
-        ? stateRich
-        : stateObj
-          ? computeInfoDisplay(
-              appearance.secondary_info,
-              name,
-              stateText,
-              stateObj,
-              this.hass
-            )
-          : stateText;
+    const secondary = stateObj
+      ? computeInfoDisplay(
+          appearance.secondary_info,
+          name,
+          stateText,
+          stateObj,
+          this.hass
+        )
+      : stateText;
 
     return html`
       <ha-card
