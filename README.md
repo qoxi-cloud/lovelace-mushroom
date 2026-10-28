@@ -1,4 +1,12 @@
-# 🍄 Mushroom
+# 🍄 Mushroom (qoxi fork)
+
+Fork of [piitaya/lovelace-mushroom](https://github.com/piitaya/lovelace-mushroom) with extra cards for the qoxi network dashboard. Everything upstream stays as is; the additions are:
+
+- [ONU card](docs/cards/onu.md) — XGS-PON ONU sticks via the 8311 ONU Monitor integration.
+
+Upstream is merged with `git merge upstream/main`; the fork's own code lives in `src/cards/onu-card/` only.
+
+---
 
 [![hacs][hacs-badge]][hacs-url]
 [![release][release-badge]][release-url]

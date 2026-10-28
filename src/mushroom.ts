@@ -13,6 +13,7 @@ import "./cards/light-card/light-card";
 import "./cards/lock-card/lock-card";
 import "./cards/media-player-card/media-player-card";
 import "./cards/number-card/number-card";
+import "./cards/onu-card/onu-card";
 import "./cards/person-card/person-card";
 import "./cards/select-card/select-card";
 import "./cards/template-card/template-card";

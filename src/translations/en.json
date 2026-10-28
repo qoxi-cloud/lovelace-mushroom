@@ -1,6 +1,31 @@
 {
   "card": {
-    "not_found": "Entity not found"
+    "not_found": "Entity not found",
+    "onu": {
+      "online": "Online",
+      "offline": "Offline",
+      "stats": {
+        "rx_power": "RX",
+        "tx_power": "TX",
+        "down_rate": "Down",
+        "up_rate": "Up",
+        "down_total": "DL",
+        "up_total": "UL",
+        "optic_temp": "Optic",
+        "cpu_temp": "CPU",
+        "voltage": "Volt",
+        "tx_bias": "Bias",
+        "uptime": "Uptime",
+        "time_in_state": "State",
+        "fec_corrected": "FEC ok",
+        "fec_uncorrected": "FEC err",
+        "bip_errors": "BIP",
+        "lods_events": "LoDS",
+        "memory": "Memory",
+        "load_1m": "Load",
+        "ethernet_speed": "Eth"
+      }
+    }
   },
   "editor": {
     "section": {
@@ -129,6 +154,10 @@
       "weather": {
         "show_conditions": "Conditions?",
         "show_temperature": "Temperature?"
+      },
+      "onu": {
+        "serial": "ONU stick",
+        "stats": "Statistics"
       }
     },
     "badge": {
