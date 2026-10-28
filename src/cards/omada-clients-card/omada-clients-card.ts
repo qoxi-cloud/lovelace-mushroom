@@ -160,7 +160,16 @@ export class OmadaClientsCard
     const hidden = shown.length - visible.length;
     const rgb = computeRgbColor(this._config.icon_color ?? "blue");
     const name = this._config.name || t("title");
-    const summary = `${all.length} ${t("clients")} · ${wired} ${t("wired")} · ${wireless} ${t("wireless")}`;
+    const fixedFilter =
+      this._config.show_filters === false &&
+      this._config.filter &&
+      this._config.filter !== "all"
+        ? this._config.filter
+        : undefined;
+    // a card pinned to one type only reports its own count
+    const summary = fixedFilter
+      ? `${shown.length} ${t(fixedFilter)}`
+      : `${all.length} ${t("clients")} · ${wired} ${t("wired")} · ${wireless} ${t("wireless")}`;
 
     return html`
       <ha-card
