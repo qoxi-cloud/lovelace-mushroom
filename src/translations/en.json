@@ -58,6 +58,44 @@
         "alarm_active": "active",
         "alarm_none": "none"
       }
+    },
+    "isp": {
+      "state": {
+        "online": "Online",
+        "offline": "Offline",
+        "connecting": "Connecting",
+        "disconnecting": "Disconnecting",
+        "unknown": "Unknown"
+      },
+      "stats": {
+        "latency": "Latency",
+        "down_rate": "Down",
+        "up_rate": "Up",
+        "link_speed": "Link",
+        "ip": "IP",
+        "rx_power": "RX",
+        "tx_power": "TX",
+        "onu_uptime": "ONU up"
+      },
+      "detail": {
+        "wan": "WAN",
+        "onu": "ONU",
+        "latency": "Latency",
+        "down_rate": "Down",
+        "up_rate": "Up",
+        "link_speed": "Link speed",
+        "state": "State",
+        "isp_enabled": "ISP enabled",
+        "yes": "yes",
+        "no": "no",
+        "ip": "IP address",
+        "proto": "Protocol",
+        "gateway": "Gateway",
+        "port": "WAN port",
+        "max_bandwidth": "Max bandwidth",
+        "gw_rx": "Gateway RX",
+        "gw_tx": "Gateway TX"
+      }
     }
   },
   "editor": {
@@ -190,6 +228,10 @@
       },
       "onu": {
         "serial": "ONU stick",
+        "stats": "Statistics"
+      },
+      "isp": {
+        "wan": "WAN link",
         "stats": "Statistics"
       }
     },

@@ -231,3 +231,23 @@ export function formatDuration(seconds: number): string {
   if (h > 0) return `${h}h ${m}m`;
   return `${m}m`;
 }
+
+function nameTokens(value: string): string[] {
+  return value
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((t) => t.length >= 3);
+}
+
+/** Find the ONU serving a WAN/ISP by name tokens, e.g. "LinkCom_sfp2" ↔ "ONU LinkCom (sfp2)". */
+export function findOnuForLink(
+  onus: OnuDevice[],
+  linkName: string
+): OnuDevice | undefined {
+  const want = nameTokens(linkName);
+  if (want.length === 0) return undefined;
+  return onus.find((onu) => {
+    const have = new Set(nameTokens(onu.name));
+    return want.every((t) => have.has(t));
+  });
+}
