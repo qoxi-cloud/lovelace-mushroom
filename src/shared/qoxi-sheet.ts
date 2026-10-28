@@ -114,6 +114,13 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   @state() protected _params?: P;
   /** index of the path hop whose details are expanded (compact path chips) */
   @state() private _openHop: number | null = null;
+  /** phone layout: path chips are compact and expand on tap */
+  @state() private _compact = QoxiSheet._narrowQuery.matches;
+  private static _narrowQuery = window.matchMedia("(max-width: 640px)");
+  private _onNarrowChange = (ev: MediaQueryListEvent) => {
+    this._compact = ev.matches;
+    if (!ev.matches) this._openHop = null;
+  };
 
   public showDialog(params: P): void {
     this._params = params;
@@ -148,12 +155,15 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
     this.addEventListener("touchmove", this._onScrollIntent, {
       passive: false,
     });
+    QoxiSheet._narrowQuery.addEventListener("change", this._onNarrowChange);
+    this._compact = QoxiSheet._narrowQuery.matches;
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener("wheel", this._onScrollIntent);
     this.removeEventListener("touchmove", this._onScrollIntent);
+    QoxiSheet._narrowQuery.removeEventListener("change", this._onNarrowChange);
   }
 
   protected abstract renderHeader(): TemplateResult | typeof nothing;
@@ -233,7 +243,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
   protected renderPath(title: string, tag: string, hops: PathHop[]) {
     const toggle = (i: number, hop: PathHop) => (ev: Event) => {
       ev.stopPropagation();
-      if (!hop.subtitle && hop.onClick) {
+      if ((!this._compact || !hop.subtitle) && hop.onClick) {
         hop.onClick();
         return;
       }
@@ -251,7 +261,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         </div>
         <div class="path">
           ${hops.map((hop, i) => {
-            const expanded = this._openHop === i;
+            const expanded = !this._compact || this._openHop === i;
             return html`
               <div class="hop-wrap">
                 ${i > 0
@@ -261,7 +271,11 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
                     ></ha-icon>`
                   : nothing}
                 <div
-                  class=${classMap({ hop: true, expanded })}
+                  class=${classMap({
+                    hop: true,
+                    expanded: this._compact && expanded,
+                    linked: !this._compact && !!hop.onClick,
+                  })}
                   @click=${toggle(i, hop)}
                 >
                   <ha-icon class="hop-icon" .icon=${hop.icon}></ha-icon>
@@ -271,7 +285,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
                       ? html`<span class="hop-sub">${hop.subtitle}</span>`
                       : nothing}
                   </div>
-                  ${expanded && hop.onClick
+                  ${this._compact && expanded && hop.onClick
                     ? html`<ha-icon
                         class="hop-open"
                         icon="mdi:arrow-right-circle"
@@ -754,7 +768,14 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           min-width: 0;
           transition: background 120ms ease;
         }
-        .hop:hover,
+        .hop {
+          cursor: default;
+        }
+        .hop.linked,
+        .hop.expanded {
+          cursor: pointer;
+        }
+        .hop.linked:hover,
         .hop.expanded {
           background: rgba(var(--rgb-primary-text-color), 0.1);
         }
