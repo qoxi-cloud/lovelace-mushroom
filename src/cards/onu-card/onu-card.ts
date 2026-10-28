@@ -307,14 +307,10 @@ export class OnuCard
     if (this._config?.show_pon_mode === false || layout === "vertical")
       return nothing;
     if (!onu.ponMode) return nothing;
-    const entity = onu.entities.get("pon_mode");
     return html`
-      <span
-        class="trail"
-        title="PON mode"
-        @click=${() => entity && showMoreInfo(this, entity.entity_id)}
-      >
-        ${onu.ponMode}
+      <span class="trail" title="PON mode">
+        <ha-icon icon="mdi:cable-data"></ha-icon>
+        <span>${onu.ponMode}</span>
       </span>
     `;
   }
@@ -420,6 +416,10 @@ export class OnuCard
           min-width: 0;
         }
         .trail {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          --mdc-icon-size: 15px;
           flex: none;
           /* sit on the name line: state-item has var(--spacing) top padding, the
              primary line is 20px tall vs the trail's 16px */
@@ -428,7 +428,6 @@ export class OnuCard
           line-height: 16px;
           font-weight: 600;
           color: var(--secondary-text-color);
-          cursor: pointer;
           white-space: nowrap;
         }
         mushroom-shape-icon {

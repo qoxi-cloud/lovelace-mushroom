@@ -201,7 +201,7 @@ export class IspCard
           this.hass
         )
       : name;
-    const secondary = stateObj
+    let secondary: string | TemplateResult = stateObj
       ? computeInfoDisplay(
           appearance.secondary_info,
           name,
@@ -210,6 +210,12 @@ export class IspCard
           this.hass
         )
       : stateText;
+    if (secondary === stateText && showIp && link.ip) {
+      // public address green, private / CGNAT orange (same rule as the IP tile)
+      const tone = ipTone(link.ip);
+      secondary = html`${customLocalize(`card.isp.state.${link.state}`)} ·
+        <span style="color: rgb(var(--rgb-${tone}))">${link.ip}</span>`;
+    }
 
     return html`
       <ha-card
