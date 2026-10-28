@@ -7,6 +7,7 @@ Fork of [piitaya/lovelace-mushroom](https://github.com/piitaya/lovelace-mushroom
 - [Omada device card](docs/cards/omada-device.md) — gateway / switch / AP with ports, radios and clients in a detail sheet.
 - [Omada devices card](docs/cards/omada-devices.md) — auto list of every Omada device, one device card each.
 - [Omada clients card](docs/cards/omada-clients.md) — client list with filters, rate, signal and a client sheet.
+- [`themes/qoxi-ios.yaml`](themes/qoxi-ios.yaml) — Apple Home–like theme (SF font, 18px radius, iOS palette, light/dark) tuned for these cards.
 
 Upstream is merged with `git merge upstream/main`; the fork's own code lives in `src/cards/onu-card/`, `src/cards/isp-card/`, `src/cards/omada-device-card/`, `src/cards/omada-devices-card/`, `src/cards/omada-clients-card/`, `src/shared/qoxi-sheet.ts` and the dashboard model copied from omada_exporter in `src/shared/omada/`.
 
