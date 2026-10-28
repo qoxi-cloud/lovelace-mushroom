@@ -210,8 +210,39 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       { label: t("upload"), value: formatBytes(m.omada_device_upload ?? 0) },
     ];
 
+    const [portsUpCount, portsTotal] = portsUp(device);
+    const uplinkMbps = device.ports.reduce(
+      (max, port) => Math.max(max, portSpeedMbps(port)),
+      0
+    );
+    const radar = this.renderRadar(t("health"), t("health_tag"), [
+      {
+        label: t("cpu"),
+        value: m.omada_device_cpu_percentage ?? 0,
+      },
+      {
+        label: t("mem"),
+        value: m.omada_device_mem_percentage ?? 0,
+      },
+      {
+        label: t("ports"),
+        value: portsTotal ? (portsUpCount / portsTotal) * 100 : 0,
+        detail: portsTotal ? `${portsUpCount}/${portsTotal}` : "—",
+      },
+      {
+        label: t("clients"),
+        value: Math.min(device.clients.length * 12, 100),
+        detail: String(device.clients.length),
+      },
+      {
+        label: t("uplink"),
+        value: Math.min(uplinkMbps / 100, 100),
+        detail: uplinkMbps ? formatSpeedMbps(uplinkMbps) : "—",
+      },
+    ]);
     const sections = [
       this.renderSection(t("device"), device.type.toUpperCase(), info),
+      radar,
     ];
     const tables: unknown[] = [];
 

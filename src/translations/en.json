@@ -136,7 +136,10 @@
         "name": "Name",
         "via": "Via",
         "ip_short": "IP",
-        "rate": "Rate"
+        "rate": "Rate",
+        "health": "Health profile",
+        "health_tag": "now",
+        "uplink": "Uplink"
       }
     },
     "omada_clients": {
@@ -178,7 +181,8 @@
         "up_activity": "Upload activity",
         "link_rate": "Link rate ↓ / ↑",
         "status": "Status",
-        "connected": "Connected"
+        "connected": "Connected",
+        "path": "Path"
       },
       "idle": "idle",
       "less": "Show less"

@@ -7,7 +7,15 @@ import {
   formatSpeedMbps,
   qualityLabel,
 } from "../../shared/omada/format";
-import { QoxiSheet, SheetRow, showSheet } from "../../shared/qoxi-sheet";
+import {
+  PathHop,
+  QoxiSheet,
+  SheetRow,
+  showSheet,
+} from "../../shared/qoxi-sheet";
+import { listDevices } from "../omada-device-card/device-model";
+import { showOmadaDeviceDetailDialog } from "../omada-device-card/omada-device-detail-dialog";
+import { DEVICE_TYPE_ICONS } from "../omada-device-card/const";
 import { computeRgbColor } from "../../utils/colors";
 import {
   ClientRecord,
@@ -82,6 +90,72 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
   private get _client(): ClientRecord | undefined {
     if (!this._params || !this.hass) return undefined;
     return findClient(this.hass, this._params.client, this._params.site);
+  }
+
+  /** client → attachment device (AP / switch port) → gateway; hops open the device sheet */
+  private buildPath(client: ClientRecord, t: (k: string) => string): PathHop[] {
+    const devices = listDevices(this.hass, this._params?.site);
+    const byName = (name: string) =>
+      devices.find((d) => d.name.toLowerCase() === name.toLowerCase());
+    const openDevice = (name: string) => () =>
+      showOmadaDeviceDetailDialog(this, {
+        device: name,
+        site: this._params?.site,
+      });
+    const hops: PathHop[] = [
+      {
+        icon: clientIcon(client),
+        title: client.name || client.hostName || client.mac,
+        subtitle: client.ip || undefined,
+      },
+    ];
+    const band = (mode: string) =>
+      /a$/.test(mode) || /ax$/.test(mode)
+        ? "5 GHz"
+        : /(g|n)$/.test(mode)
+          ? "2.4 GHz"
+          : "";
+    if (client.wireless && client.apName) {
+      hops.push({
+        icon: DEVICE_TYPE_ICONS.ap,
+        title: client.apName,
+        subtitle: [client.ssid, band(client.wifiMode), client.wifiMode]
+          .filter(Boolean)
+          .join(" · "),
+        onClick: byName(client.apName) ? openDevice(client.apName) : undefined,
+      });
+    } else if (client.switchName) {
+      hops.push({
+        icon: DEVICE_TYPE_ICONS.switch,
+        title: client.switchName,
+        subtitle: [
+          client.attachmentLagId
+            ? `LAG ${client.attachmentLagId}`
+            : client.attachmentPort
+              ? `${t("port")} ${client.attachmentPort}`
+              : "",
+          client.attachmentLinkSpeedMbps
+            ? formatSpeedMbps(client.attachmentLinkSpeedMbps)
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" · "),
+        onClick: byName(client.switchName)
+          ? openDevice(client.switchName)
+          : undefined,
+      });
+    }
+    const gateway = devices.find((d) => d.type === "gateway");
+    const gatewayName = client.gatewayName || gateway?.name;
+    if (gatewayName && gatewayName !== hops[hops.length - 1].title) {
+      hops.push({
+        icon: DEVICE_TYPE_ICONS.gateway,
+        title: gatewayName,
+        subtitle: client.vlanId ? `VLAN ${client.vlanId}` : undefined,
+        onClick: byName(gatewayName) ? openDevice(gatewayName) : undefined,
+      });
+    }
+    return hops;
   }
 
   protected renderHeader() {
@@ -233,8 +307,15 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
       },
     ];
 
+    const path = this.buildPath(client, t);
     return html`
       <div class="hero">${hero.map((r) => this.renderStat(r))}</div>
+      ${this.renderPath(
+        t("path"),
+        client.wireless ? "Wi-Fi" : t("wired"),
+        path
+      )}
+      <div style="height: 16px"></div>
       <div class="columns">
         ${this.renderSection(
           t("client"),

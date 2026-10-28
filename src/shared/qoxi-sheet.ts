@@ -73,6 +73,21 @@ export interface SheetTable {
   onRow?: (key: string) => void;
 }
 
+export interface PathHop {
+  icon: string;
+  title: string;
+  subtitle?: string;
+  onClick?: () => void;
+}
+
+export interface RadarAxis {
+  label: string;
+  /** 0..100 */
+  value: number;
+  /** text shown under the label, e.g. "62%" */
+  detail?: string;
+}
+
 export abstract class QoxiSheet<P> extends MushroomBaseElement {
   @state() protected _params?: P;
 
@@ -154,6 +169,117 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           <span class="subtitle">${subtitle}</span>
         </div>
       </div>
+    `;
+  }
+
+  protected renderPath(title: string, tag: string, hops: PathHop[]) {
+    return html`
+      <section>
+        <div class="section-title">
+          <span>${title}</span>
+          <span class="tag">${tag}</span>
+        </div>
+        <div class="path">
+          ${hops.map(
+            (hop, i) => html`
+              ${i > 0
+                ? html`<ha-icon
+                    class="path-arrow"
+                    icon="mdi:chevron-right"
+                  ></ha-icon>`
+                : nothing}
+              <div
+                class=${classMap({ hop: true, linked: !!hop.onClick })}
+                @click=${hop.onClick}
+              >
+                <ha-icon class="hop-icon" .icon=${hop.icon}></ha-icon>
+                <div class="hop-text">
+                  <span class="hop-title">${hop.title}</span>
+                  ${hop.subtitle
+                    ? html`<span class="hop-sub">${hop.subtitle}</span>`
+                    : nothing}
+                </div>
+              </div>
+            `
+          )}
+        </div>
+      </section>
+    `;
+  }
+
+  /** 5-ish axis radar, values 0..100, drawn as inline SVG so no chart library is needed */
+  protected renderRadar(title: string, tag: string, axes: RadarAxis[]) {
+    const n = axes.length;
+    const cx = 150;
+    const cy = 112;
+    const r = 74;
+    const angle = (i: number) => -Math.PI / 2 + (i * 2 * Math.PI) / n;
+    const pt = (i: number, k: number) =>
+      `${(cx + r * k * Math.cos(angle(i))).toFixed(1)},${(cy + r * k * Math.sin(angle(i))).toFixed(1)}`;
+    const ring = (k: number) =>
+      Array.from({ length: n }, (_, i) => pt(i, k)).join(" ");
+    const data = axes
+      .map((a, i) => pt(i, Math.max(0, Math.min(100, a.value)) / 100))
+      .join(" ");
+    return html`
+      <section>
+        <div class="section-title">
+          <span>${title}</span>
+          <span class="tag">${tag}</span>
+        </div>
+        <div class="radar">
+          <svg viewBox="0 0 300 224" role="img" aria-label=${title}>
+            ${[0.25, 0.5, 0.75, 1].map(
+              (k) => html`<polygon class="radar-ring" points=${ring(k)} />`
+            )}
+            ${axes.map(
+              (_, i) =>
+                html`<line
+                  class="radar-axis"
+                  x1=${cx}
+                  y1=${cy}
+                  x2=${pt(i, 1).split(",")[0]}
+                  y2=${pt(i, 1).split(",")[1]}
+                />`
+            )}
+            <polygon class="radar-area" points=${data} />
+            ${axes.map((a, i) => {
+              const p = pt(i, Math.max(0, Math.min(100, a.value)) / 100).split(
+                ","
+              );
+              return html`<circle
+                class="radar-dot"
+                cx=${p[0]}
+                cy=${p[1]}
+                r="3.5"
+              />`;
+            })}
+            ${axes.map((a, i) => {
+              const lx = cx + (r + 26) * Math.cos(angle(i));
+              const ly = cy + (r + 22) * Math.sin(angle(i));
+              const anchor =
+                Math.abs(Math.cos(angle(i))) < 0.2
+                  ? "middle"
+                  : Math.cos(angle(i)) > 0
+                    ? "start"
+                    : "end";
+              return html`
+                <text class="radar-label" x=${lx} y=${ly} text-anchor=${anchor}>
+                  ${a.label}
+                </text>
+                <text
+                  class="radar-detail"
+                  x=${lx}
+                  y=${ly + 12}
+                  text-anchor=${anchor}
+                >
+                  ${a.detail ?? `${Math.round(a.value)}%`}
+                </text>
+              `;
+            })}
+          </svg>
+        </div>
+      </section>
     `;
   }
 
@@ -474,6 +600,96 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+        .path {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px;
+        }
+        .hop {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 12px 8px 10px;
+          border-radius: var(--control-border-radius);
+          background: rgba(var(--rgb-primary-text-color), 0.05);
+          min-width: 0;
+        }
+        .hop.linked {
+          cursor: pointer;
+        }
+        .hop.linked:hover {
+          background: rgba(var(--rgb-primary-text-color), 0.1);
+        }
+        .hop-icon {
+          --mdc-icon-size: 20px;
+          color: rgb(var(--rgb-primary-color, var(--rgb-blue)));
+          flex: none;
+        }
+        .hop-text {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+        }
+        .hop-title {
+          font-size: 13px;
+          line-height: 17px;
+          font-weight: 600;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .hop-sub {
+          font-size: 11px;
+          line-height: 14px;
+          color: var(--secondary-text-color);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .path-arrow {
+          --mdc-icon-size: 18px;
+          color: var(--secondary-text-color);
+          flex: none;
+        }
+        .radar {
+          border-radius: var(--control-border-radius);
+          background: rgba(var(--rgb-primary-text-color), 0.04);
+          padding: 6px 4px 2px;
+        }
+        .radar svg {
+          width: 100%;
+          height: auto;
+          display: block;
+          max-height: 240px;
+        }
+        .radar-ring {
+          fill: rgba(var(--rgb-primary-text-color), 0.025);
+          stroke: rgba(var(--rgb-primary-text-color), 0.12);
+          stroke-width: 1;
+        }
+        .radar-axis {
+          stroke: rgba(var(--rgb-primary-text-color), 0.12);
+          stroke-width: 1;
+        }
+        .radar-area {
+          fill: rgba(var(--rgb-primary-color, var(--rgb-blue)), 0.22);
+          stroke: rgb(var(--rgb-primary-color, var(--rgb-blue)));
+          stroke-width: 2;
+          stroke-linejoin: round;
+        }
+        .radar-dot {
+          fill: rgb(var(--rgb-primary-color, var(--rgb-blue)));
+        }
+        .radar-label {
+          font-size: 11px;
+          font-weight: 600;
+          fill: var(--primary-text-color);
+        }
+        .radar-detail {
+          font-size: 10px;
+          fill: var(--secondary-text-color);
         }
         .table {
           border-radius: var(--control-border-radius);
