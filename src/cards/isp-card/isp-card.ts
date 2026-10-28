@@ -201,7 +201,7 @@ export class IspCard
           this.hass
         )
       : name;
-    let secondary: string | TemplateResult = stateObj
+    let secondary: string | TemplateResult | undefined = stateObj
       ? computeInfoDisplay(
           appearance.secondary_info,
           name,
