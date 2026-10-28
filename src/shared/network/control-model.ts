@@ -51,9 +51,9 @@ function macKey(value: unknown): string {
 export function isControlEntity(entity: HassEntity): boolean {
   return (
     entity.entity_id.startsWith("button.") &&
-    (entity.attributes.omada_control === "reboot_device" ||
-      entity.attributes.omada_control === "reconnect_client" ||
-      entity.attributes.omada_control === "power_cycle_poe")
+    (entity.attributes.net_control === "reboot_device" ||
+      entity.attributes.net_control === "reconnect_client" ||
+      entity.attributes.net_control === "power_cycle_poe")
   );
 }
 
@@ -106,7 +106,7 @@ export function controlTarget(
 function poeTarget(entity: HassEntity): PoeControlTarget | undefined {
   if (
     !isControlEntity(entity) ||
-    entity.attributes.omada_control !== "power_cycle_poe"
+    entity.attributes.net_control !== "power_cycle_poe"
   )
     return undefined;
   const attrs = entity.attributes;
@@ -213,7 +213,7 @@ export function poePoweredTarget(
   const matches = Object.values(hass.states).filter(
     (entity) =>
       isControlEntity(entity) &&
-      entity.attributes.omada_control === "power_cycle_poe" &&
+      entity.attributes.net_control === "power_cycle_poe" &&
       macKey(entity.attributes.powered_device_mac) === mac &&
       matchesScope(entity.attributes, scope)
   );
@@ -230,7 +230,7 @@ export function findControlEntity(
   const matches = Object.values(hass.states).filter((entity) => {
     if (
       !isControlEntity(entity) ||
-      entity.attributes.omada_control !== target.action
+      entity.attributes.net_control !== target.action
     )
       return false;
     if (
