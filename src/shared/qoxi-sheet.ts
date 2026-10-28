@@ -35,6 +35,25 @@ export interface SheetRow {
   tone?: Tone;
 }
 
+export interface TableCell {
+  text: string;
+  tone?: Tone;
+  /** status dot before the text */
+  dot?: Tone;
+  /** mdi icon before the text */
+  icon?: string;
+  muted?: boolean;
+}
+
+export interface SheetTable {
+  title: string;
+  tag: string;
+  /** CSS grid-template-columns, e.g. "56px 1fr 90px 70px" */
+  columns: string;
+  headers: string[];
+  rows: TableCell[][];
+}
+
 export abstract class QoxiSheet<P> extends MushroomBaseElement {
   @state() protected _params?: P;
 
@@ -141,6 +160,49 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
               <div class=${classMap({ row: true, [r.tone ?? "normal"]: true })}>
                 <span class="row-label">${r.label}</span>
                 <span class="row-value">${r.value}</span>
+              </div>
+            `
+          )}
+        </div>
+      </section>
+    `;
+  }
+
+  protected renderTable(table: SheetTable) {
+    const style = `--table-columns: ${table.columns}`;
+    return html`
+      <section>
+        <div class="section-title">
+          <span>${table.title}</span>
+          <span class="tag">${table.tag}</span>
+        </div>
+        <div class="table" style=${style}>
+          <div class="table-head">
+            ${table.headers.map((h) => html`<span>${h}</span>`)}
+          </div>
+          ${table.rows.map(
+            (cells) => html`
+              <div class="table-row">
+                ${cells.map(
+                  (c) => html`
+                    <span
+                      class=${classMap({
+                        cell: true,
+                        muted: !!c.muted,
+                        [c.tone ?? "normal"]: true,
+                      })}
+                    >
+                      ${c.dot ? html`<i class="dot ${c.dot}"></i>` : nothing}
+                      ${c.icon
+                        ? html`<ha-icon
+                            class="cell-icon"
+                            .icon=${c.icon}
+                          ></ha-icon>`
+                        : nothing}
+                      <span class="cell-text">${c.text}</span>
+                    </span>
+                  `
+                )}
               </div>
             `
           )}
@@ -301,6 +363,15 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         .columns.single {
           grid-template-columns: 1fr;
         }
+        .tables {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-top: 16px;
+        }
+        .tables:empty {
+          display: none;
+        }
         .section-title {
           display: flex;
           justify-content: space-between;
@@ -341,6 +412,85 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+        .table {
+          border-radius: var(--control-border-radius);
+          overflow: hidden;
+          background: rgba(var(--rgb-primary-text-color), 0.04);
+        }
+        .table-head,
+        .table-row {
+          display: grid;
+          grid-template-columns: var(--table-columns);
+          gap: 8px;
+          align-items: center;
+          padding: 8px 12px;
+          min-width: 0;
+        }
+        .table-head {
+          font-size: 10px;
+          line-height: 12px;
+          font-weight: 500;
+          letter-spacing: 0.4px;
+          text-transform: uppercase;
+          color: var(--secondary-text-color);
+          background: rgba(var(--rgb-primary-text-color), 0.04);
+        }
+        .table-row + .table-row {
+          border-top: 1px solid rgba(var(--rgb-primary-text-color), 0.06);
+        }
+        .cell {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          min-width: 0;
+          font-size: 13px;
+          line-height: 18px;
+          font-weight: 500;
+          font-variant-numeric: tabular-nums;
+          color: var(--primary-text-color);
+        }
+        .cell-text {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .cell.muted {
+          color: var(--secondary-text-color);
+          font-weight: 400;
+        }
+        .cell.success {
+          color: rgb(var(--rgb-success));
+        }
+        .cell.warning {
+          color: rgb(var(--rgb-warning));
+        }
+        .cell.danger {
+          color: rgb(var(--rgb-danger));
+        }
+        .cell-icon {
+          --mdc-icon-size: 14px;
+          color: rgb(var(--rgb-warning));
+          flex: none;
+        }
+        .dot {
+          flex: none;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: rgb(var(--rgb-disabled));
+        }
+        .dot.success {
+          background: rgb(var(--rgb-success));
+          box-shadow: 0 0 6px rgba(var(--rgb-success), 0.7);
+        }
+        .dot.danger {
+          background: rgb(var(--rgb-danger));
+          box-shadow: 0 0 6px rgba(var(--rgb-danger), 0.7);
+        }
+        .dot.warning {
+          background: rgb(var(--rgb-warning));
+          box-shadow: 0 0 6px rgba(var(--rgb-warning), 0.7);
         }
         @media (max-width: 640px) {
           :host {

@@ -129,7 +129,14 @@
         "uplink_packets": "Uplink packets ↓ / ↑",
         "uplink_errors": "Uplink dropped + errors",
         "port": "Port",
-        "port_down": "down"
+        "port_down": "down",
+        "port_up": "Connected",
+        "speed": "Speed",
+        "client": "Client",
+        "name": "Name",
+        "via": "Via",
+        "ip_short": "IP",
+        "rate": "Rate"
       }
     }
   },
