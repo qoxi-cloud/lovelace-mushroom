@@ -68,6 +68,8 @@ export class OmadaClientsCard
 {
   @state() private _filter?: ClientFilter;
 
+  @state() private _expanded = false;
+
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     await import("./omada-clients-card-editor");
     return document.createElement(
@@ -84,6 +86,7 @@ export class OmadaClientsCard
   setConfig(config: OmadaClientsCardConfig): void {
     this._config = config;
     this._filter = undefined;
+    this._expanded = false;
   }
 
   public getGridOptions(): LovelaceGridOptions {
@@ -127,6 +130,10 @@ export class OmadaClientsCard
     return { all, shown };
   }
 
+  private _toggleExpanded = () => {
+    this._expanded = !this._expanded;
+  };
+
   private _setFilter(filter: ClientFilter) {
     this._filter = filter;
   }
@@ -148,7 +155,8 @@ export class OmadaClientsCard
     const wired = all.filter((c) => !c.wireless).length;
     const wireless = all.length - wired;
     const limit = this._config.limit ?? 20;
-    const visible = limit > 0 ? shown.slice(0, limit) : shown;
+    const visible =
+      limit > 0 && !this._expanded ? shown.slice(0, limit) : shown;
     const hidden = shown.length - visible.length;
     const rgb = computeRgbColor(this._config.icon_color ?? "blue");
     const name = this._config.name || t("title");
@@ -187,10 +195,14 @@ export class OmadaClientsCard
           <div class="list">
             ${visible.map((client) => this.renderRow(client, t))}
             ${hidden > 0
-              ? html`<div class="more">
+              ? html`<button class="more" @click=${this._toggleExpanded}>
                   ${t("more").replace("{n}", String(hidden))}
-                </div>`
-              : nothing}
+                </button>`
+              : this._expanded && limit > 0 && shown.length > limit
+                ? html`<button class="more" @click=${this._toggleExpanded}>
+                    ${t("less")}
+                  </button>`
+                : nothing}
             ${visible.length === 0
               ? html`<div class="more">${t("empty")}</div>`
               : nothing}
@@ -401,10 +413,19 @@ export class OmadaClientsCard
           opacity: 1;
         }
         .more {
+          appearance: none;
+          border: none;
+          background: none;
+          font: inherit;
+          cursor: pointer;
           text-align: center;
           font-size: 11px;
-          color: var(--secondary-text-color);
-          padding: 6px 0 2px;
+          font-weight: 500;
+          color: rgb(var(--rgb-primary));
+          padding: 8px 0 2px;
+        }
+        .more:hover {
+          text-decoration: underline;
         }
         @media (max-width: 480px) {
           .row-ip {

@@ -145,7 +145,7 @@
       "all": "All",
       "wired": "Wired",
       "wireless": "Wireless",
-      "more": "and {n} more",
+      "more": "Show {n} more",
       "empty": "No clients",
       "detail": {
         "client": "Client",
@@ -178,7 +178,8 @@
         "up_activity": "Upload activity",
         "link_rate": "Link rate ↓ / ↑"
       },
-      "idle": "idle"
+      "idle": "idle",
+      "less": "Show less"
     }
   },
   "editor": {
