@@ -400,10 +400,8 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
           label: t("uplink_packets"),
           value: `${uplink.down.packets ?? 0} / ${uplink.up.packets ?? 0}`,
         });
-        const packets =
-          (uplink.down.packets ?? 0) + (uplink.up.packets ?? 0);
-        const dropped =
-          (uplink.down.dropped ?? 0) + (uplink.up.dropped ?? 0);
+        const packets = (uplink.down.packets ?? 0) + (uplink.up.packets ?? 0);
+        const dropped = (uplink.down.dropped ?? 0) + (uplink.up.dropped ?? 0);
         const errors = (uplink.down.errors ?? 0) + (uplink.up.errors ?? 0);
         // Linux counts frames nobody consumes (LLDP, foreign VLAN tags) as
         // rx_dropped, so a steady trickle is normal; only a share of traffic
@@ -411,10 +409,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         const droppedShare = packets > 0 ? (dropped / packets) * 100 : 0;
         radios.push({
           label: t("uplink_dropped"),
-          value:
-            dropped > 0
-              ? `${dropped} (${droppedShare.toFixed(2)}%)`
-              : "0",
+          value: dropped > 0 ? `${dropped} (${droppedShare.toFixed(2)}%)` : "0",
           tone: droppedShare > 0.5 ? "warning" : "normal",
         });
         radios.push({
