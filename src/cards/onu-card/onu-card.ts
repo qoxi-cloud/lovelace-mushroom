@@ -37,6 +37,7 @@ import {
   OnuDevice,
   onuStatEntityId,
   shortPonState,
+  ponLineRates,
 } from "./onu-model";
 import "./onu-detail-dialog";
 import { showOnuDetailDialog } from "./onu-detail-dialog";
@@ -307,11 +308,19 @@ export class OnuCard
     if (this._config?.show_pon_mode === false || layout === "vertical")
       return nothing;
     if (!onu.ponMode) return nothing;
+    const rates = ponLineRates(onu.ponMode);
     return html`
-      <span class="trail" title="PON mode">
-        <ha-icon icon="mdi:cable-data"></ha-icon>
-        <span>${onu.ponMode}</span>
-      </span>
+      <div class="trail" title="PON mode">
+        <span class="trail-main">
+          <ha-icon icon="mdi:cable-data"></ha-icon>
+          <span>${onu.ponMode}</span>
+        </span>
+        ${rates
+          ? html`<span class="trail-sub"
+              >${rates.down} / ${rates.up} Gbit/s</span
+            >`
+          : nothing}
+      </div>
     `;
   }
 
@@ -416,19 +425,30 @@ export class OnuCard
           min-width: 0;
         }
         .trail {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          flex: none;
+          /* same top padding as the state item, so the two lines sit on the
+             name (20px) and state (16px) lines of mushroom-state-info */
+          padding: calc(var(--spacing) + 4px) var(--spacing) 0 4px;
+          color: var(--secondary-text-color);
+          white-space: nowrap;
+        }
+        .trail-main {
           display: inline-flex;
           align-items: center;
           gap: 4px;
           --mdc-icon-size: 15px;
-          flex: none;
-          /* sit on the name line: state-item has var(--spacing) top padding, the
-             primary line is 20px tall vs the trail's 16px */
-          padding: calc(var(--spacing) + 6px) var(--spacing) 0 4px;
           font-size: 13px;
-          line-height: 16px;
+          line-height: 20px;
           font-weight: 600;
-          color: var(--secondary-text-color);
-          white-space: nowrap;
+        }
+        .trail-sub {
+          font-size: 12px;
+          line-height: 16px;
+          font-weight: 400;
+          font-variant-numeric: tabular-nums;
         }
         mushroom-shape-icon {
           --icon-color: rgb(var(--rgb-state-entity));

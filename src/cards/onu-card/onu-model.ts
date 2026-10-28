@@ -199,6 +199,23 @@ export function findOnu(
 }
 
 /** "O5 - Operation state" -> "O5 Operation" */
+/** nominal downstream / upstream line rate (Gbit/s) of a PON technology */
+export function ponLineRates(
+  ponMode: string
+): { down: number; up: number } | undefined {
+  const mode = ponMode.toUpperCase().replace(/[\s_-]/g, "");
+  const table: Record<string, [number, number]> = {
+    GPON: [2.5, 1.25],
+    XGPON: [10, 2.5],
+    XGSPON: [10, 10],
+    NGPON2: [10, 10],
+    "25GPON": [25, 25],
+    "50GPON": [50, 25],
+  };
+  const hit = table[mode];
+  return hit ? { down: hit[0], up: hit[1] } : undefined;
+}
+
 export function shortPonState(ponState: string): string {
   return ponState
     .replace(/\s*-\s*/, " ")
