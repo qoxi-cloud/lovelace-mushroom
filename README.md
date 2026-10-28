@@ -9,7 +9,7 @@ Fork of [piitaya/lovelace-mushroom](https://github.com/piitaya/lovelace-mushroom
 - [Omada clients card](docs/cards/omada-clients.md) — client list with filters, rate, signal and a client sheet.
 - [`themes/qoxi-ios.yaml`](themes/qoxi-ios.yaml) — Apple Home–like theme (SF font, 18px radius, iOS palette, light/dark) tuned for these cards.
 
-The network cards are vendor-neutral: they read bridge entities that follow [docs/contract.md](docs/contract.md) (`omada_*` / `unifi_*` prefixes are canonicalised to `net_*`). Upstream is merged with `git merge upstream/main`; the fork's own code lives in `src/cards/onu-card/`, `src/cards/isp-card/`, `src/cards/omada-device-card/`, `src/cards/omada-devices-card/`, `src/cards/omada-clients-card/`, `src/shared/qoxi-sheet.ts` and the dashboard model copied from omada_exporter in `src/shared/omada/`.
+The network cards are vendor-neutral: they read bridge entities that follow [docs/contract.md](docs/contract.md) (`net_*` metrics only, no vendor prefixes). Upstream is merged with `git merge upstream/main`; the fork's own code lives in `src/cards/onu-card/`, `src/cards/isp-card/`, `src/cards/omada-device-card/`, `src/cards/omada-devices-card/`, `src/cards/omada-clients-card/`, `src/shared/qoxi-sheet.ts` and the dashboard model copied from omada_exporter in `src/shared/omada/`.
 
 ---
 

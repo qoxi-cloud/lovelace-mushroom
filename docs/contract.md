@@ -2,12 +2,12 @@
 
 Cards in this fork read Home Assistant entities created by a _bridge_ (OmadaBridge today) through MQTT discovery.
 They never talk to a controller. A bridge for another vendor (UniFi, …) only has to publish entities that follow this contract;
-OmadaBridge ≥ 2.4.4-qoxi.5 publishes the canonical `net_*` names directly; the cards still accept legacy vendor prefixes (`omada_`, `unifi_` → `net_`, see `src/shared/network/contract.ts`).
+OmadaBridge ≥ 2.4.4-qoxi.5 publishes the `net_*` names directly. There are no vendor prefixes: the cards read `net_*` only.
 
 ## Entity shape
 
 - one HA entity per metric per object (`sensor.*` for numbers, `binary_sensor.*` for 0/1 states)
-- attribute `metric`: `net_<name>` from the table below (a vendor prefix such as `unifi_<name>` is tolerated)
+- attribute `metric`: `net_<name>` from the table below
 - entity identity = metric + owner (`device_mac` for devices/ports/WANs, `mac` for clients) + qualifier (`port`, `lag_id`, `radio_band`, `direction`, `source`); everything else is an attribute and may change without renaming the entity
 - `unique_id` = `net_bridge_<object_id>` (device trackers: `net_client_<mac>`)
 - entity id as produced by the OmadaBridge publisher: `<device_name>_<name>[_port_<port>_<slug>]` (ISP cards find WANs by `*_wan_latency_port_<n>_<slug>`)

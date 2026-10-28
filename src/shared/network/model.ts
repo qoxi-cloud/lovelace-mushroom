@@ -1059,8 +1059,7 @@ export function buildDashboardModel(
     const deviceMac = attrString(entity, "device_mac");
     if (
       deviceMac &&
-      (metric.startsWith("net_device_") ||
-        metric.startsWith("omada_controller_"))
+      (metric.startsWith("net_device_") || metric.startsWith("net_controller_"))
     ) {
       const key = scopedEntityKey(entity, normalizeMacKey(deviceMac));
       const previous = infrastructureEntityByMac.get(key);
@@ -1133,7 +1132,7 @@ export function buildDashboardModel(
       continue;
     }
 
-    if (metric.startsWith("omada_controller_")) {
+    if (metric.startsWith("net_controller_")) {
       const device = ensureControllerDevice(devices, entity);
       setLatestMetric(device, metric, value, entity);
       continue;
@@ -1209,7 +1208,7 @@ export function buildDashboardModel(
       const infrastructureEntity = infrastructureEntityByMac.get(mac);
       if (infrastructureEntity) {
         const infrastructureMetric = getMetric(infrastructureEntity);
-        const device = infrastructureMetric.startsWith("omada_controller_")
+        const device = infrastructureMetric.startsWith("net_controller_")
           ? ensureControllerDevice(devices, infrastructureEntity)
           : ensureDevice(devices, infrastructureEntity);
         setLatestMetric(device, metric, value, entity);
