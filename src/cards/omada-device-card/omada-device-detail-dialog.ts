@@ -2,6 +2,7 @@ import { html } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import setupCustomlocalize from "../../localize";
 import {
+  PathHop,
   QoxiSheet,
   SheetRow,
   showSheet,
@@ -16,10 +17,15 @@ import {
 import { computeRgbColor } from "../../utils/colors";
 import { DEFAULT_DEVICE_ICON, DEVICE_TYPE_ICONS } from "./const";
 import {
+  childrenByPort,
   ClientRecord,
   clientRate,
+  deviceChain,
   DeviceRecord,
   deviceOnline,
+  deviceUplink,
+  uplinkLabel,
+  uplinkPortsOf,
   deviceRate,
   deviceStatEntityId,
   deviceUptime,
@@ -186,6 +192,8 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       });
     }
 
+    const uplink = deviceUplink(this.hass, device);
+    const chain = deviceChain(this.hass, device, this._params?.site);
     const info: SheetRow[] = [
       {
         label: t("status"),
@@ -203,6 +211,15 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
           : t("upgrade_none"),
         tone: m.omada_device_need_upgrade ? "warning" : "normal",
       },
+      ...(uplink
+        ? [
+            {
+              label: t("uplink"),
+              value: `${uplink.parentName} · ${uplinkLabel(uplink, t("port"))}`,
+              entityId: uplink.entityId,
+            },
+          ]
+        : []),
       {
         label: t("download"),
         value: formatBytes(m.omada_device_download ?? 0),
@@ -245,6 +262,24 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       radar,
     ];
     const tables: unknown[] = [];
+    const openDevice = (name: string) => () =>
+      showOmadaDeviceDetailDialog(this, {
+        device: name,
+        site: this._params?.site,
+      });
+    const pathHops: PathHop[] = [
+      {
+        icon: DEVICE_TYPE_ICONS[device.type] ?? DEFAULT_DEVICE_ICON,
+        title: device.name,
+        subtitle: device.ip || undefined,
+      },
+      ...chain.map(({ device: hop, via }) => ({
+        icon: DEVICE_TYPE_ICONS[hop.type] ?? DEFAULT_DEVICE_ICON,
+        title: hop.name,
+        subtitle: uplinkLabel(via, t("port")),
+        onClick: openDevice(hop.name),
+      })),
+    ];
 
     if (device.type === "ap") {
       const radios: SheetRow[] = [];
@@ -299,6 +334,8 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       const hasPoe = device.ports.some(
         (port) => port.poe || port.metrics.omada_port_power_watts !== undefined
       );
+      const children = childrenByPort(this.hass, device, this._params?.site);
+      const ownUplinkPorts = uplinkPortsOf(this.hass, device);
       const rows: TableCell[][] = device.ports.map((port: PortRecord) => {
         const up = portUp(port);
         const speed = portSpeedMbps(port);
@@ -311,7 +348,17 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         const custom =
           port.name && !/^port\s*\d+$/i.test(port.name) ? port.name : "";
         // port name (e.g. "SFP+ WAN1") goes with the client column so the port column stays narrow
-        const clientText = [custom, who].filter(Boolean).join(" · ");
+        const kids = children.get(port.port) ?? [];
+        const kidText = kids.map((k) => k.name).join(", ");
+        const isUplink = ownUplinkPorts.has(port.port);
+        const clientText = [
+          isUplink && uplink ? uplink.parentName : "",
+          kidText,
+          custom,
+          who,
+        ]
+          .filter(Boolean)
+          .join(" · ");
         const cells: TableCell[] = [
           { text: port.port },
           {
@@ -330,7 +377,15 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
               : { text: "—", muted: true }
           );
         }
-        cells.push({ text: clientText || "—", muted: !who });
+        cells.push({
+          text: clientText || "—",
+          muted: !who && !kids.length && !isUplink,
+          icon: isUplink
+            ? "mdi:arrow-up-bold"
+            : kids.length
+              ? (DEVICE_TYPE_ICONS[kids[0].type] ?? "mdi:lan")
+              : undefined,
+        });
         return cells;
       });
       const [up, total] = portsUp(device);
@@ -392,6 +447,10 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
 
     return html`
       <div class="hero">${hero.map((r) => this.renderStat(r))}</div>
+      ${chain.length
+        ? html`${this.renderPath(t("path"), t("path_tag"), pathHops)}
+            <div style="height: 16px"></div>`
+        : ""}
       <div class="columns ${sections.length === 1 ? "single" : ""}">
         ${sections}
       </div>

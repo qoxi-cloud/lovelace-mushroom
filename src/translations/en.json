@@ -139,7 +139,9 @@
         "rate": "Rate",
         "health": "Health profile",
         "health_tag": "now",
-        "uplink": "Uplink"
+        "uplink": "Uplink",
+        "path": "Path",
+        "path_tag": "to gateway"
       }
     },
     "omada_clients": {

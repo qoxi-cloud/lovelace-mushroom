@@ -1,6 +1,10 @@
 // qoxi: thin adapter over the OmadaBridge dashboard model for one device.
 import { HomeAssistant as MushroomHass } from "../../ha";
-import { formatRateBits, formatUptimeSeconds } from "../../shared/omada/format";
+import {
+  formatRateBits,
+  formatSpeedMbps,
+  formatUptimeSeconds,
+} from "../../shared/omada/format";
 import {
   getDashboardModel,
   isDeviceConnected,
@@ -183,4 +187,171 @@ export function clientDownRate(client: ClientRecord): number {
 
 export function clientUpRate(client: ClientRecord): number {
   return (client.metrics.omada_client_upload_activity_bytes ?? 0) * 8;
+}
+
+// ---- wired topology (OmadaBridge >= 2.4.4-qoxi.3: omada_device_uplink_link_speed_mbps)
+
+export interface DeviceUplink {
+  parentMac: string;
+  parentName: string;
+  parentType: string;
+  /** port number on the parent, or "LAG n" */
+  parentPort: string;
+  /** own port number (empty for APs) */
+  localPort: string;
+  lagId: string;
+  /** own LAG member ports */
+  lagPorts: string[];
+  speedMbps: number;
+  entityId: string;
+}
+
+function entityForDevice(
+  hass: MushroomHass,
+  mac: string,
+  metric: string,
+  extra?: (attrs: Record<string, unknown>) => boolean
+): HassEntityLike | undefined {
+  const wanted = normalizeMacKey(mac);
+  for (const entity of Object.values(hass.states)) {
+    const a = entity.attributes as Record<string, unknown>;
+    if (
+      a.metric === metric &&
+      normalizeMacKey(String(a.device_mac ?? "")) === wanted &&
+      (!extra || extra(a))
+    ) {
+      return entity as unknown as HassEntityLike;
+    }
+  }
+  return undefined;
+}
+
+interface HassEntityLike {
+  entity_id: string;
+  state: string;
+  attributes: Record<string, unknown>;
+}
+
+export function deviceUplink(
+  hass: MushroomHass,
+  device: DeviceRecord
+): DeviceUplink | undefined {
+  const entity = entityForDevice(
+    hass,
+    device.mac,
+    "omada_device_uplink_link_speed_mbps"
+  );
+  if (!entity) return undefined;
+  const a = entity.attributes;
+  const parentMac = String(a.uplink_mac ?? "");
+  if (!parentMac) return undefined;
+  return {
+    parentMac,
+    parentName: String(a.uplink_name ?? ""),
+    parentType: String(a.uplink_type ?? ""),
+    parentPort: String(a.uplink_port ?? ""),
+    localPort: String(a.uplink_local_port ?? ""),
+    lagId: String(a.uplink_lag_id ?? ""),
+    lagPorts: String(a.uplink_lag_ports ?? "")
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean),
+    speedMbps: Number(entity.state) || 0,
+    entityId: entity.entity_id,
+  };
+}
+
+/** member ports of a LAG on a switch, from the bridge's omada_lag_* entities */
+export function lagMemberPorts(
+  hass: MushroomHass,
+  deviceMac: string,
+  lagId: string
+): string[] {
+  const entity = entityForDevice(
+    hass,
+    deviceMac,
+    "omada_lag_link_status",
+    (a) => String(a.lag_id ?? "") === lagId
+  );
+  return String(entity?.attributes.lag_ports ?? "")
+    .split(",")
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
+/** parent, grandparent, … up to the gateway (cycle-safe) */
+export function deviceChain(
+  hass: MushroomHass,
+  device: DeviceRecord,
+  site?: string
+): { device: DeviceRecord; via: DeviceUplink }[] {
+  const devices = listDevices(hass, site);
+  const byMac = new Map(devices.map((d) => [normalizeMacKey(d.mac), d]));
+  const chain: { device: DeviceRecord; via: DeviceUplink }[] = [];
+  const seen = new Set<string>([normalizeMacKey(device.mac)]);
+  let current = device;
+  for (let i = 0; i < 8; i++) {
+    const up = deviceUplink(hass, current);
+    if (!up) break;
+    const parent = byMac.get(normalizeMacKey(up.parentMac));
+    if (!parent || seen.has(normalizeMacKey(parent.mac))) break;
+    seen.add(normalizeMacKey(parent.mac));
+    chain.push({ device: parent, via: up });
+    current = parent;
+  }
+  return chain;
+}
+
+/** "Port 3 · 2.5 Gbps" — how `child` plugs into its parent */
+export function uplinkLabel(up: DeviceUplink, portWord: string): string {
+  const port = /^LAG/i.test(up.parentPort)
+    ? up.parentPort
+    : `${portWord} ${up.parentPort}`;
+  return [port, up.speedMbps ? formatSpeedMbps(up.speedMbps) : ""]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+/** child devices hanging off each port of `device` (LAG parents expanded to member ports) */
+export function childrenByPort(
+  hass: MushroomHass,
+  device: DeviceRecord,
+  site?: string
+): Map<string, { name: string; type: string; speedMbps: number }[]> {
+  const result = new Map<
+    string,
+    { name: string; type: string; speedMbps: number }[]
+  >();
+  const mac = normalizeMacKey(device.mac);
+  for (const other of listDevices(hass, site)) {
+    if (normalizeMacKey(other.mac) === mac) continue;
+    const up = deviceUplink(hass, other);
+    if (!up || normalizeMacKey(up.parentMac) !== mac) continue;
+    const lag = /^LAG\s*(\d+)/i.exec(up.parentPort);
+    const ports = lag
+      ? lagMemberPorts(hass, device.mac, lag[1])
+      : [up.parentPort];
+    for (const port of ports) {
+      const list = result.get(port) ?? [];
+      list.push({
+        name: other.name,
+        type: other.type,
+        speedMbps: up.speedMbps,
+      });
+      result.set(port, list);
+    }
+  }
+  return result;
+}
+
+/** own ports that form this device's uplink */
+export function uplinkPortsOf(
+  hass: MushroomHass,
+  device: DeviceRecord
+): Set<string> {
+  const up = deviceUplink(hass, device);
+  if (!up) return new Set();
+  return new Set(
+    up.lagPorts.length ? up.lagPorts : up.localPort ? [up.localPort] : []
+  );
 }

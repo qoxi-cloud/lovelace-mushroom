@@ -13,7 +13,11 @@ import {
   SheetRow,
   showSheet,
 } from "../../shared/qoxi-sheet";
-import { listDevices } from "../omada-device-card/device-model";
+import {
+  deviceChain,
+  listDevices,
+  uplinkLabel,
+} from "../omada-device-card/device-model";
 import { showOmadaDeviceDetailDialog } from "../omada-device-card/omada-device-detail-dialog";
 import { DEVICE_TYPE_ICONS } from "../omada-device-card/const";
 import { computeRgbColor } from "../../utils/colors";
@@ -144,6 +148,23 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
           ? openDevice(client.switchName)
           : undefined,
       });
+    }
+    // follow the wired topology from the attachment device up to the gateway
+    const attached =
+      hops.length > 1 ? byName(hops[hops.length - 1].title) : undefined;
+    if (attached) {
+      for (const { device: hop, via } of deviceChain(
+        this.hass,
+        attached,
+        this._params?.site
+      )) {
+        hops.push({
+          icon: DEVICE_TYPE_ICONS[hop.type] ?? "mdi:lan",
+          title: hop.name,
+          subtitle: uplinkLabel(via, t("port")),
+          onClick: openDevice(hop.name),
+        });
+      }
     }
     const gateway = devices.find((d) => d.type === "gateway");
     const gatewayName = client.gatewayName || gateway?.name;
