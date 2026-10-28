@@ -1,6 +1,6 @@
 // qoxi: shared bottom-sheet / dialog base for the network cards (ONU, ISP…).
 // Opened through HA's dialog manager (`show-dialog`), so hass keeps flowing in.
-import { css, CSSResultGroup, html, nothing, TemplateResult } from "lit";
+import { css, CSSResultGroup, html, nothing, svg, TemplateResult } from "lit";
 import { state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { fireEvent } from "../ha";
@@ -230,11 +230,11 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         <div class="radar">
           <svg viewBox="0 0 300 224" role="img" aria-label=${title}>
             ${[0.25, 0.5, 0.75, 1].map(
-              (k) => html`<polygon class="radar-ring" points=${ring(k)} />`
+              (k) => svg`<polygon class="radar-ring" points=${ring(k)} />`
             )}
             ${axes.map(
               (_, i) =>
-                html`<line
+                svg`<line
                   class="radar-axis"
                   x1=${cx}
                   y1=${cy}
@@ -247,7 +247,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
               const p = pt(i, Math.max(0, Math.min(100, a.value)) / 100).split(
                 ","
               );
-              return html`<circle
+              return svg`<circle
                 class="radar-dot"
                 cx=${p[0]}
                 cy=${p[1]}
@@ -263,7 +263,7 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
                   : Math.cos(angle(i)) > 0
                     ? "start"
                     : "end";
-              return html`
+              return svg`
                 <text class="radar-label" x=${lx} y=${ly} text-anchor=${anchor}>
                   ${a.label}
                 </text>
