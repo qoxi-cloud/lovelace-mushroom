@@ -176,7 +176,9 @@
         "up_total": "Uploaded",
         "down_activity": "Download activity",
         "up_activity": "Upload activity",
-        "link_rate": "Link rate ↓ / ↑"
+        "link_rate": "Link rate ↓ / ↑",
+        "status": "Status",
+        "connected": "Connected"
       },
       "idle": "idle",
       "less": "Show less"

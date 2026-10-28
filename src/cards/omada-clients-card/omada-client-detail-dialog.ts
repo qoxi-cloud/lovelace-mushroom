@@ -45,6 +45,31 @@ export function clientIcon(client: ClientRecord): string {
   return client.wireless ? "mdi:wifi" : "mdi:ethernet";
 }
 
+export function linkSpeedTone(mbps: number): SheetRow["tone"] {
+  if (mbps <= 0) return "normal";
+  if (mbps < 100) return "danger";
+  if (mbps < 1000) return "warning";
+  return "success";
+}
+
+function rssiTone(dbm: number): SheetRow["tone"] {
+  if (!dbm) return "normal";
+  if (dbm <= -75) return "danger";
+  if (dbm <= -65) return "warning";
+  return "success";
+}
+
+function snrTone(db: number): SheetRow["tone"] {
+  if (!db) return "normal";
+  if (db < 15) return "danger";
+  if (db < 25) return "warning";
+  return "success";
+}
+
+function activeTone(bps: number): SheetRow["tone"] {
+  return bps > 0 ? "success" : "normal";
+}
+
 export function signalTone(pct: number): SheetRow["tone"] {
   if (pct <= 0) return "normal";
   if (pct < 40) return "danger";
@@ -82,10 +107,12 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
       {
         label: t("down_rate"),
         value: formatRateBits(clientDownRate(client)),
+        tone: activeTone(clientDownRate(client)),
       },
       {
         label: t("up_rate"),
         value: formatRateBits(clientUpRate(client)),
+        tone: activeTone(clientUpRate(client)),
       },
     ];
     if (client.wireless) {
@@ -100,6 +127,7 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
           m.omada_client_rssi_dbm !== undefined
             ? `${m.omada_client_rssi_dbm.toFixed(0)} dBm`
             : "—",
+        tone: rssiTone(m.omada_client_rssi_dbm ?? 0),
       });
     } else {
       hero.push({
@@ -107,6 +135,7 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
         value: client.attachmentLinkSpeedMbps
           ? formatSpeedMbps(client.attachmentLinkSpeedMbps)
           : "—",
+        tone: linkSpeedTone(client.attachmentLinkSpeedMbps ?? 0),
       });
       hero.push({ label: t("vlan"), value: client.vlanId || "—" });
     }
@@ -128,6 +157,7 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
 
     const conn: SheetRow[] = client.wireless
       ? [
+          { label: t("status"), value: t("connected"), tone: "success" },
           { label: t("type"), value: "Wi-Fi" },
           { label: t("ssid"), value: client.ssid || "—" },
           { label: t("ap"), value: client.apName || "—" },
@@ -149,6 +179,7 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
               m.omada_client_rssi_dbm !== undefined
                 ? `${m.omada_client_rssi_dbm.toFixed(0)} dBm`
                 : "—",
+            tone: rssiTone(m.omada_client_rssi_dbm ?? 0),
           },
           {
             label: t("snr"),
@@ -156,9 +187,11 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
               m.omada_client_snr_dbm !== undefined
                 ? `${m.omada_client_snr_dbm.toFixed(0)} dB`
                 : "—",
+            tone: snrTone(m.omada_client_snr_dbm ?? 0),
           },
         ]
       : [
+          { label: t("status"), value: t("connected"), tone: "success" },
           { label: t("type"), value: t("wired") },
           {
             label: t("device"),
@@ -175,6 +208,7 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
             value: client.attachmentLinkSpeedMbps
               ? formatSpeedMbps(client.attachmentLinkSpeedMbps)
               : "—",
+            tone: linkSpeedTone(client.attachmentLinkSpeedMbps ?? 0),
           },
         ];
 
@@ -189,11 +223,13 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
       },
       {
         label: t("down_activity"),
-        value: formatBytes(m.omada_client_download_activity_bytes ?? 0),
+        value: `${formatBytes(m.omada_client_download_activity_bytes ?? 0)}/s`,
+        tone: activeTone(m.omada_client_download_activity_bytes ?? 0),
       },
       {
         label: t("up_activity"),
-        value: formatBytes(m.omada_client_upload_activity_bytes ?? 0),
+        value: `${formatBytes(m.omada_client_upload_activity_bytes ?? 0)}/s`,
+        tone: activeTone(m.omada_client_upload_activity_bytes ?? 0),
       },
     ];
 
