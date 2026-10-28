@@ -187,6 +187,22 @@ export function ispStatEntityId(
   return key ? link.entities[key]?.entity_id : undefined;
 }
 
+/** RFC1918, CGNAT (100.64/10), link-local, loopback and unset addresses are "local". */
+export function isLocalIp(ip: string): boolean {
+  const m = /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/.exec(ip.trim());
+  if (!m) return true;
+  const [a, b] = [Number(m[1]), Number(m[2])];
+  return (
+    a === 0 ||
+    a === 10 ||
+    a === 127 ||
+    (a === 100 && b >= 64 && b <= 127) ||
+    (a === 169 && b === 254) ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 168)
+  );
+}
+
 export function wanStateColor(link: WanLink): string {
   switch (link.state) {
     case "online":

@@ -34,12 +34,11 @@ import {
   formatBitRate,
   formatLatency,
   formatMbps,
-  ispStatEntityId,
+  isLocalIp,
   latencyTone,
   WanLink,
   wanStateColor,
 } from "./isp-model";
-import { showMoreInfo } from "../../shared/qoxi-sheet";
 
 registerCustomCard({
   type: ISP_CARD_NAME,
@@ -47,7 +46,13 @@ registerCustomCard({
   description: "Card for an ISP / WAN link (OmadaBridge, optional 8311 ONU)",
 });
 
-type StatTone = "normal" | "warning" | "danger";
+type StatTone = "normal" | "warning" | "danger" | "success";
+
+/** public WAN address = green, private / CGNAT / unset = orange (like the PoE icon) */
+function ipTone(ip: string): StatTone {
+  if (!ip) return "normal";
+  return isLocalIp(ip) ? "warning" : "success";
+}
 
 interface StatView {
   key: IspStat;
@@ -78,6 +83,7 @@ function computeStat(
       break;
     case "ip":
       value = link.ip || "—";
+      tone = ipTone(link.ip);
       break;
     case "isp_enabled":
       value = link.ispEnabled ? t("yes") : t("no");
@@ -146,6 +152,16 @@ export class IspCard
     return this.getGridOptions().rows ?? 1;
   }
 
+  /** tiles behave like a tap on the card: latency history */
+  private _handleTap = () => {
+    handleAction(
+      this,
+      this.hass!,
+      { ...this._config!, entity: this._link?.latencyEntityId },
+      "tap"
+    );
+  };
+
   private _handleAction(ev: ActionHandlerEvent) {
     handleAction(
       this,
@@ -168,12 +184,23 @@ export class IspCard
     const appearance = computeAppearance(this._config);
     const rtl = computeRTL(this.hass);
     const name = this._config.name || link.name;
+    const showIp = !!link.ip && link.ip !== "0.0.0.0";
     const stateText = [
       customLocalize(`card.isp.state.${link.state}`),
-      link.ip && link.ip !== "0.0.0.0" ? link.ip : undefined,
+      showIp ? link.ip : undefined,
     ]
       .filter(Boolean)
       .join(" · ");
+    // same text, but the IP coloured by scope (styles live inside mushroom-state-info, so inline)
+    const stateRich = showIp
+      ? html`${customLocalize(`card.isp.state.${link.state}`)} ·
+          <span
+            style=${styleMap({
+              color: `rgb(var(--rgb-${ipTone(link.ip) === "success" ? "success" : "warning"}))`,
+            })}
+            >${link.ip}</span
+          >`
+      : stateText;
     const stateObj = this._stateObj;
     const primary = stateObj
       ? computeInfoDisplay(
@@ -184,15 +211,18 @@ export class IspCard
           this.hass
         )
       : name;
-    const secondary = stateObj
-      ? computeInfoDisplay(
-          appearance.secondary_info,
-          name,
-          stateText,
-          stateObj,
-          this.hass
-        )
-      : stateText;
+    const secondary =
+      appearance.secondary_info === "state"
+        ? stateRich
+        : stateObj
+          ? computeInfoDisplay(
+              appearance.secondary_info,
+              name,
+              stateText,
+              stateObj,
+              this.hass
+            )
+          : stateText;
 
     return html`
       <ha-card
@@ -271,26 +301,17 @@ export class IspCard
     const stats = this._stats;
     if (stats.length === 0) return nothing;
     return html`
-      <div class="actions stats" ?rtl=${computeRTL(this.hass)}>
+      <div
+        class="actions stats"
+        ?rtl=${computeRTL(this.hass)}
+        @click=${this._handleTap}
+      >
         ${stats.map((key) => {
           const stat = computeStat(link, key, (k) =>
             customLocalize(`card.isp.${k}`)
           );
-          const entityId = ispStatEntityId(link, key);
           return html`
-            <div
-              class=${classMap({
-                stat: true,
-                linked: !!entityId,
-                [stat.tone]: true,
-              })}
-              @click=${entityId
-                ? (ev: Event) => {
-                    ev.stopPropagation();
-                    showMoreInfo(this, entityId);
-                  }
-                : undefined}
-            >
+            <div class=${classMap({ stat: true, [stat.tone]: true })}>
               <span class="stat-label"
                 >${customLocalize(`card.isp.stats.${key}`)}</span
               >
@@ -334,11 +355,11 @@ export class IspCard
           background: rgba(var(--rgb-primary-text-color), 0.05);
           --stat-color: var(--primary-text-color);
         }
-        .stat.linked {
+        .stats {
           cursor: pointer;
         }
-        .stat.linked:hover {
-          background: rgba(var(--rgb-primary-text-color), 0.1);
+        .stat.success {
+          --stat-color: rgb(var(--rgb-success));
         }
         .stat.warning {
           background: rgba(var(--rgb-warning), 0.15);
