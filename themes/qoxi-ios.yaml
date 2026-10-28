@@ -3,36 +3,278 @@
 # then Settings → Profile → Theme, or `frontend.set_theme`.
 qoxi iOS Gradient:
   # ---- typography (SF on Apple devices, system sans elsewhere)
+  ha-font-family-body: &fontA "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Inter, Roboto, sans-serif"
+  ha-font-family-heading: *fontA
+  primary-font-family: *fontA
+  paper-font-common-base_-_font-family: *fontA
+  paper-font-body1_-_font-family: *fontA
+  paper-font-headline_-_font-family: *fontA
+  paper-font-title_-_font-family: *fontA
+  paper-font-subhead_-_font-family: *fontA
+  mdc-typography-font-family: *fontA
+  ha-font-smoothing: antialiased
 
   # ---- shapes
+  ha-card-border-radius: 18px
+  ha-card-border-width: 0px
+  ha-card-box-shadow: none
+  ha-dialog-border-radius: 22px
+  ha-bottom-sheet-border-radius: 22px
+  ha-badge-border-radius: 999px
+  ha-button-border-radius: 12px
+  ha-section-grid-row-gap: 10px
+  ha-section-grid-column-gap: 10px
+  ha-view-sections-column-gap: 24px
 
   # ---- mushroom tokens
+  mush-spacing: 12px
+  mush-control-border-radius: 14px
+  mush-control-height: 42px
+  mush-icon-border-radius: 50%
+  mush-icon-size: 40px
+  mush-card-primary-font-size: 15px
+  mush-card-secondary-font-size: 13px
+  mush-card-primary-font-weight: 600
+  mush-card-primary-letter-spacing: -0.2px
+  mush-card-secondary-letter-spacing: 0px
+  mush-title-font-weight: 700
+  mush-title-letter-spacing: -0.4px
+  mush-chip-border-radius: 999px
+  mush-chip-border-width: 0px
+  mush-chip-box-shadow: none
   # iOS system palette (used by Mushroom icons/badges/tones)
+  mush-rgb-red: 255, 69, 58
+  mush-rgb-pink: 255, 55, 95
+  mush-rgb-purple: 191, 90, 242
+  mush-rgb-deep-purple: 94, 92, 230
+  mush-rgb-indigo: 94, 92, 230
+  mush-rgb-blue: 10, 132, 255
+  mush-rgb-light-blue: 100, 210, 255
+  mush-rgb-cyan: 100, 210, 255
+  mush-rgb-teal: 64, 200, 224
+  mush-rgb-green: 48, 209, 88
+  mush-rgb-light-green: 48, 209, 88
+  mush-rgb-lime: 48, 209, 88
+  mush-rgb-yellow: 255, 214, 10
+  mush-rgb-amber: 255, 214, 10
+  mush-rgb-orange: 255, 159, 10
+  mush-rgb-deep-orange: 255, 105, 97
+  mush-rgb-brown: 172, 142, 104
+  mush-rgb-grey: 142, 142, 147
+  mush-rgb-blue-grey: 142, 142, 147
+  mush-rgb-disabled: 142, 142, 147
 
   # ---- accent
+  primary-color: "#0a84ff"
+  accent-color: "#0a84ff"
+  rgb-primary-color: 10, 132, 255
+  rgb-accent-color: 10, 132, 255
+  light-primary-color: "#64d2ff"
+  dark-primary-color: "#0a84ff"
+  switch-checked-color: "#30d158"
+  switch-checked-button-color: "#ffffff"
+  switch-checked-track-color: "#30d158"
+  state-icon-active-color: "#ffd60a"
+  success-color: "#30d158"
+  warning-color: "#ff9f0a"
+  error-color: "#ff453a"
+  info-color: "#0a84ff"
+  rgb-success-color: 48, 209, 88
+  rgb-warning-color: 255, 159, 10
+  rgb-error-color: 255, 69, 58
+  rgb-info-color: 10, 132, 255
 
   modes:
     light:
+      primary-background-color: "#f2f2f7"
+      secondary-background-color: "#e5e5ea"
+      card-background-color: "#ffffff"
+      ha-card-background: "#ffffff"
+      app-header-background-color: "#f2f2f7"
+      app-header-text-color: "#1c1c1e"
+      sidebar-background-color: "#f2f2f7"
+      sidebar-text-color: "#1c1c1e"
+      sidebar-icon-color: "#6e6e73"
+      sidebar-selected-icon-color: "#0a84ff"
+      sidebar-selected-text-color: "#0a84ff"
+      primary-text-color: "#1c1c1e"
+      secondary-text-color: "#6e6e73"
+      disabled-text-color: "#aeaeb2"
+      divider-color: "rgba(60, 60, 67, 0.12)"
+      ha-card-border-color: "rgba(60, 60, 67, 0.12)"
+      input-fill-color: "#ffffff"
+      ha-dialog-surface-background: "#f2f2f7"
+      mdc-dialog-background-color: "#f2f2f7"
+      rgb-primary-text-color: 28, 28, 30
+      rgb-secondary-text-color: 110, 110, 115
+      rgb-card-background-color: 255, 255, 255
     dark:
+      primary-background-color: "#0b0b0f"
+      secondary-background-color: "#1c1c1e"
+      card-background-color: "#1c1c1e"
+      ha-card-background: "#1c1c1e"
+      app-header-text-color: "#ffffff"
+      sidebar-text-color: "#ffffff"
+      sidebar-icon-color: "#98989d"
+      sidebar-selected-icon-color: "#0a84ff"
+      sidebar-selected-text-color: "#0a84ff"
+      primary-text-color: "#ffffff"
+      secondary-text-color: "#98989d"
+      disabled-text-color: "#636366"
+      divider-color: "rgba(84, 84, 88, 0.55)"
+      ha-card-border-color: "rgba(84, 84, 88, 0.55)"
+      input-fill-color: "#1c1c1e"
+      ha-dialog-surface-background: "#1c1c1e"
+      mdc-dialog-background-color: "#1c1c1e"
+      rgb-primary-text-color: 255, 255, 255
+      rgb-secondary-text-color: 152, 152, 157
+      rgb-card-background-color: 28, 28, 30
+      mdc-theme-surface: "#1c1c1e"
+      lovelace-background: "linear-gradient(180deg, #11162a 0%, #0a0b12 45%, #050507 100%)"
+      app-header-background-color: "#11162a"
+      sidebar-background-color: "#0d1020"
 
+      code-editor-background-color: "#1c1c1e"
 
 # qoxi iOS — Apple Home–like theme for Home Assistant + the qoxi Mushroom fork.
 # Install: copy to <config>/themes/ (configuration.yaml: frontend: themes: !include_dir_merge_named themes),
 # then Settings → Profile → Theme, or `frontend.set_theme`.
 qoxi iOS:
   # ---- typography (SF on Apple devices, system sans elsewhere)
+  ha-font-family-body: &fontB "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Inter, Roboto, sans-serif"
+  ha-font-family-heading: *fontB
+  primary-font-family: *fontB
+  paper-font-common-base_-_font-family: *fontB
+  paper-font-body1_-_font-family: *fontB
+  paper-font-headline_-_font-family: *fontB
+  paper-font-title_-_font-family: *fontB
+  paper-font-subhead_-_font-family: *fontB
+  mdc-typography-font-family: *fontB
+  ha-font-smoothing: antialiased
 
   # ---- shapes
+  ha-card-border-radius: 18px
+  ha-card-border-width: 0px
+  ha-card-box-shadow: none
+  ha-dialog-border-radius: 22px
+  ha-bottom-sheet-border-radius: 22px
+  ha-badge-border-radius: 999px
+  ha-button-border-radius: 12px
+  ha-section-grid-row-gap: 10px
+  ha-section-grid-column-gap: 10px
+  ha-view-sections-column-gap: 24px
 
   # ---- mushroom tokens
+  mush-spacing: 12px
+  mush-control-border-radius: 14px
+  mush-control-height: 42px
+  mush-icon-border-radius: 50%
+  mush-icon-size: 40px
+  mush-card-primary-font-size: 15px
+  mush-card-secondary-font-size: 13px
+  mush-card-primary-font-weight: 600
+  mush-card-primary-letter-spacing: -0.2px
+  mush-card-secondary-letter-spacing: 0px
+  mush-title-font-weight: 700
+  mush-title-letter-spacing: -0.4px
+  mush-chip-border-radius: 999px
+  mush-chip-border-width: 0px
+  mush-chip-box-shadow: none
   # iOS system palette (used by Mushroom icons/badges/tones)
+  mush-rgb-red: 255, 69, 58
+  mush-rgb-pink: 255, 55, 95
+  mush-rgb-purple: 191, 90, 242
+  mush-rgb-deep-purple: 94, 92, 230
+  mush-rgb-indigo: 94, 92, 230
+  mush-rgb-blue: 10, 132, 255
+  mush-rgb-light-blue: 100, 210, 255
+  mush-rgb-cyan: 100, 210, 255
+  mush-rgb-teal: 64, 200, 224
+  mush-rgb-green: 48, 209, 88
+  mush-rgb-light-green: 48, 209, 88
+  mush-rgb-lime: 48, 209, 88
+  mush-rgb-yellow: 255, 214, 10
+  mush-rgb-amber: 255, 214, 10
+  mush-rgb-orange: 255, 159, 10
+  mush-rgb-deep-orange: 255, 105, 97
+  mush-rgb-brown: 172, 142, 104
+  mush-rgb-grey: 142, 142, 147
+  mush-rgb-blue-grey: 142, 142, 147
+  mush-rgb-disabled: 142, 142, 147
 
   # ---- accent
+  primary-color: "#0a84ff"
+  accent-color: "#0a84ff"
+  rgb-primary-color: 10, 132, 255
+  rgb-accent-color: 10, 132, 255
+  light-primary-color: "#64d2ff"
+  dark-primary-color: "#0a84ff"
+  switch-checked-color: "#30d158"
+  switch-checked-button-color: "#ffffff"
+  switch-checked-track-color: "#30d158"
+  state-icon-active-color: "#ffd60a"
+  success-color: "#30d158"
+  warning-color: "#ff9f0a"
+  error-color: "#ff453a"
+  info-color: "#0a84ff"
+  rgb-success-color: 48, 209, 88
+  rgb-warning-color: 255, 159, 10
+  rgb-error-color: 255, 69, 58
+  rgb-info-color: 10, 132, 255
 
   modes:
     light:
+      primary-background-color: "#f2f2f7"
+      secondary-background-color: "#e5e5ea"
+      card-background-color: "#ffffff"
+      ha-card-background: "#ffffff"
+      app-header-background-color: "#f2f2f7"
+      app-header-text-color: "#1c1c1e"
+      sidebar-background-color: "#f2f2f7"
+      sidebar-text-color: "#1c1c1e"
+      sidebar-icon-color: "#6e6e73"
+      sidebar-selected-icon-color: "#0a84ff"
+      sidebar-selected-text-color: "#0a84ff"
+      primary-text-color: "#1c1c1e"
+      secondary-text-color: "#6e6e73"
+      disabled-text-color: "#aeaeb2"
+      divider-color: "rgba(60, 60, 67, 0.12)"
+      ha-card-border-color: "rgba(60, 60, 67, 0.12)"
+      input-fill-color: "#ffffff"
+      ha-dialog-surface-background: "#f2f2f7"
+      mdc-dialog-background-color: "#f2f2f7"
+      rgb-primary-text-color: 28, 28, 30
+      rgb-secondary-text-color: 110, 110, 115
+      rgb-card-background-color: 255, 255, 255
     dark:
+      primary-background-color: "#0b0b0f"
+      secondary-background-color: "#1c2030"
+      card-background-color: "rgba(30, 34, 50, 0.8)"
+      ha-card-background: "rgba(30, 34, 50, 0.8)"
+      app-header-background-color: "#000000"
+      app-header-text-color: "#ffffff"
+      sidebar-background-color: "#000000"
+      sidebar-text-color: "#ffffff"
+      sidebar-icon-color: "#98989d"
+      sidebar-selected-icon-color: "#0a84ff"
+      sidebar-selected-text-color: "#0a84ff"
+      primary-text-color: "#ffffff"
+      secondary-text-color: "#98989d"
+      disabled-text-color: "#636366"
+      divider-color: "rgba(84, 84, 88, 0.55)"
+      ha-card-border-color: "rgba(84, 84, 88, 0.55)"
+      input-fill-color: "#1c2030"
+      ha-dialog-surface-background: "#1c2030"
+      mdc-dialog-background-color: "#1c2030"
+      rgb-primary-text-color: 255, 255, 255
+      rgb-secondary-text-color: 152, 152, 157
+      rgb-card-background-color: 30, 34, 50
+      mdc-theme-surface: "#1c2030"
+      lovelace-background: "radial-gradient(at 18% 8%, rgba(46, 86, 170, 0.75) 0px, transparent 55%), radial-gradient(at 88% 0%, rgba(96, 56, 150, 0.7) 0px, transparent 50%), radial-gradient(at 28% 100%, rgba(28, 104, 114, 0.7) 0px, transparent 55%), radial-gradient(at 90% 90%, rgba(128, 56, 92, 0.6) 0px, transparent 50%), #0a0a0e"
+      app-header-background-color: "#0e1222"
+      sidebar-background-color: "#0c0e18"
 
+      code-editor-background-color: "#1c2030"
 
 # qoxi iOS — Apple Home–like theme for Home Assistant + the qoxi Mushroom fork.
 # Install: copy to <config>/themes/ (configuration.yaml: frontend: themes: !include_dir_merge_named themes),
@@ -149,7 +391,9 @@ qoxi iOS Graphite:
       secondary-background-color: "#1c1c1e"
       card-background-color: "#1e1e21"
       ha-card-background: "#1e1e21"
+      app-header-background-color: "#000000"
       app-header-text-color: "#ffffff"
+      sidebar-background-color: "#000000"
       sidebar-text-color: "#ffffff"
       sidebar-icon-color: "#98989d"
       sidebar-selected-icon-color: "#0a84ff"
