@@ -274,28 +274,48 @@ export class OnuCard
         class=${classMap({ "fill-container": appearance.fill_container })}
       >
         <mushroom-card .appearance=${appearance} ?rtl=${rtl}>
-          <mushroom-state-item
-            ?rtl=${rtl}
-            .appearance=${appearance}
-            @action=${this._handleAction}
-            .actionHandler=${actionHandler({
-              hasHold: hasAction(this._config.hold_action),
-              hasDoubleClick: hasAction(this._config.double_tap_action),
-            })}
-          >
-            ${appearance.icon_type !== "none"
-              ? this.renderOnuIcon(onu)
-              : nothing}
-            ${this.renderOnuBadge(onu)}
-            <mushroom-state-info
-              slot="info"
-              .primary=${primary}
-              .secondary=${secondary}
-            ></mushroom-state-info>
-          </mushroom-state-item>
+          <div class="head">
+            <mushroom-state-item
+              ?rtl=${rtl}
+              .appearance=${appearance}
+              @action=${this._handleAction}
+              .actionHandler=${actionHandler({
+                hasHold: hasAction(this._config.hold_action),
+                hasDoubleClick: hasAction(this._config.double_tap_action),
+              })}
+            >
+              ${appearance.icon_type !== "none"
+                ? this.renderOnuIcon(onu)
+                : nothing}
+              ${this.renderOnuBadge(onu)}
+              <mushroom-state-info
+                slot="info"
+                .primary=${primary}
+                .secondary=${secondary}
+              ></mushroom-state-info>
+            </mushroom-state-item>
+            ${this.renderPonModeTrail(onu, appearance.layout)}
+          </div>
           ${this.renderStats(onu, customLocalize)}
         </mushroom-card>
       </ha-card>
+    `;
+  }
+
+  /** PON mode (XG-PON / GPON …) at the right end of the header, aligned with the name line */
+  private renderPonModeTrail(onu: OnuDevice, layout: string) {
+    if (this._config?.show_pon_mode === false || layout === "vertical")
+      return nothing;
+    if (!onu.ponMode) return nothing;
+    const entity = onu.entities.get("pon_mode");
+    return html`
+      <span
+        class="trail"
+        title="PON mode"
+        @click=${() => entity && showMoreInfo(this, entity.entity_id)}
+      >
+        ${onu.ponMode}
+      </span>
     `;
   }
 
@@ -388,6 +408,28 @@ export class OnuCard
       css`
         mushroom-state-item {
           cursor: pointer;
+        }
+        .head {
+          display: flex;
+          align-items: flex-start;
+          flex: 1;
+          min-width: 0;
+        }
+        .head > mushroom-state-item {
+          flex: 1;
+          min-width: 0;
+        }
+        .trail {
+          flex: none;
+          /* sit on the name line: state-item has var(--spacing) top padding, the
+             primary line is 20px tall vs the trail's 16px */
+          padding: calc(var(--spacing) + 6px) var(--spacing) 0 4px;
+          font-size: 13px;
+          line-height: 16px;
+          font-weight: 600;
+          color: var(--secondary-text-color);
+          cursor: pointer;
+          white-space: nowrap;
         }
         mushroom-shape-icon {
           --icon-color: rgb(var(--rgb-state-entity));

@@ -18,7 +18,7 @@ import {
 } from "./onu-card-config";
 import { collectOnuDevices } from "./onu-model";
 
-const ONU_LABELS = ["serial", "stats"];
+const ONU_LABELS = ["serial", "stats", "show_pon_mode"];
 
 const computeSchema = memoizeOne(
   (
@@ -48,6 +48,7 @@ const computeSchema = memoizeOne(
       ],
     },
     ...computeAppearanceFormSchema(customLocalize),
+    { name: "show_pon_mode", selector: { boolean: {} } },
     {
       name: "stats",
       selector: {

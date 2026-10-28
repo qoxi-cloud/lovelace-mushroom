@@ -355,7 +355,8 @@
       },
       "onu": {
         "serial": "ONU stick",
-        "stats": "Statistics"
+        "stats": "Statistics",
+        "show_pon_mode": "PON mode in header"
       },
       "isp": {
         "wan": "WAN link",

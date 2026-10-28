@@ -1,4 +1,12 @@
-import { array, assign, enums, object, optional, string } from "superstruct";
+import {
+  array,
+  assign,
+  boolean,
+  enums,
+  object,
+  optional,
+  string,
+} from "superstruct";
 import {
   ActionsSharedConfig,
   actionsSharedConfigStruct,
@@ -50,6 +58,7 @@ export type OnuCardConfig = LovelaceCardConfig &
     icon?: string;
     icon_color?: string;
     stats?: OnuStat[];
+    show_pon_mode?: boolean;
   };
 
 export const onuCardConfigStruct = assign(
@@ -62,5 +71,6 @@ export const onuCardConfigStruct = assign(
     icon: optional(string()),
     icon_color: optional(string()),
     stats: optional(array(enums(ONU_STATS))),
+    show_pon_mode: optional(boolean()),
   })
 );
