@@ -27,6 +27,16 @@ export interface WanLink {
   maxBandwidthMbps: number;
   rxRate: number; // bit/s
   txRate: number;
+  /** last Ookla run from the bridge (net_wan_speedtest_*); 0 / "" when never run */
+  speedtestDownMbps: number;
+  speedtestUpMbps: number;
+  speedtestLatency: number; // ms
+  speedtestJitter: number; // ms
+  speedtestLoss: number; // %
+  speedtestAt: number; // unix seconds
+  speedtestServer: string;
+  speedtestStatus: string; // ok | error | ""
+  speedtestError: string;
   statusEntityId: string;
   /** latency sensor: the natural "history" entity for an ISP link */
   latencyEntityId: string;
@@ -60,6 +70,16 @@ function bitRate(entity?: HassEntity): number {
   if (!entity) return 0;
   const unit = String(entity.attributes.unit_of_measurement ?? "bit/s");
   return numState(entity) * (BITS[unit] ?? 1);
+}
+
+/** unix seconds from a timestamp sensor (ISO state) or a plain numeric state */
+function timestampState(entity?: HassEntity): number {
+  if (!entity || entity.state === "unknown" || entity.state === "unavailable")
+    return 0;
+  const n = Number(entity.state);
+  if (Number.isFinite(n)) return n > 1e12 ? n / 1000 : n;
+  const t = Date.parse(entity.state);
+  return Number.isFinite(t) ? t / 1000 : 0;
 }
 
 function wanState(status: number, internet: number, isp: number): WanState {
@@ -99,7 +119,14 @@ export function collectWanLinks(hass: HomeAssistant): WanLink[] {
       isp: get("isp_status", "binary_sensor"),
       ispDown: get("isp_download_speed"),
       ispUp: get("isp_upload_speed"),
+      stDown: get("wan_speedtest_download_mbps"),
+      stUp: get("wan_speedtest_upload_mbps"),
+      stLatency: get("wan_speedtest_latency_ms"),
+      stJitter: get("wan_speedtest_jitter_ms"),
+      stLoss: get("wan_speedtest_packet_loss_percentage"),
+      stRun: get("wan_speedtest_last_run_timestamp"),
     };
+    const stAttrs = entities.stRun?.attributes ?? {};
     const attrs = (entities.status ?? entity).attributes;
     const ispAttrs = entities.isp?.attributes ?? {};
     const name = String(attrs.desc ?? attrs.name ?? slug).replace(/_/g, " ");
@@ -125,6 +152,17 @@ export function collectWanLinks(hass: HomeAssistant): WanLink[] {
       maxBandwidthMbps: toNumber(ispAttrs.max_bandwidth),
       rxRate: bitRate(entities.rx),
       txRate: bitRate(entities.tx),
+      speedtestDownMbps: numState(entities.stDown),
+      speedtestUpMbps: numState(entities.stUp),
+      speedtestLatency: numState(entities.stLatency),
+      speedtestJitter: numState(entities.stJitter),
+      speedtestLoss: numState(entities.stLoss),
+      speedtestAt: timestampState(entities.stRun),
+      speedtestServer: [stAttrs.server_name, stAttrs.server_location]
+        .filter(Boolean)
+        .join(", "),
+      speedtestStatus: String(stAttrs.speedtest_status ?? ""),
+      speedtestError: String(stAttrs.error ?? ""),
       statusEntityId: (entities.status ?? entity).entity_id,
       latencyEntityId: entity.entity_id,
       entities,
@@ -167,6 +205,23 @@ export function formatMbps(mbps: number): string {
   return mbps >= 1000 ? `${(mbps / 1000).toFixed(0)} Gbit/s` : `${mbps} Mbit/s`;
 }
 
+/** measured throughput: keeps decimals, e.g. 937 Mbit/s, 1.24 Gbit/s */
+export function formatMeasuredMbps(mbps: number): string {
+  if (mbps <= 0) return "—";
+  if (mbps >= 1000) return `${(mbps / 1000).toFixed(2)} Gbit/s`;
+  return `${mbps >= 100 ? mbps.toFixed(0) : mbps.toFixed(1)} Mbit/s`;
+}
+
+/** "5 min", "2 h", "3 d" since a unix-seconds timestamp; "" when unknown */
+export function formatAge(unixSeconds: number, now = Date.now()): string {
+  if (unixSeconds <= 0) return "";
+  const s = Math.max(0, now / 1000 - unixSeconds);
+  if (s < 90) return "now";
+  if (s < 3600) return `${Math.round(s / 60)} min`;
+  if (s < 86400) return `${Math.round(s / 3600)} h`;
+  return `${Math.round(s / 86400)} d`;
+}
+
 const ISP_STAT_ENTITY: Record<string, string> = {
   latency: "latency",
   link_speed: "linkSpeed",
@@ -177,6 +232,10 @@ const ISP_STAT_ENTITY: Record<string, string> = {
   ip: "status",
   port: "status",
   proto: "status",
+  speedtest_down: "stDown",
+  speedtest_up: "stUp",
+  speedtest_latency: "stLatency",
+  speedtest_age: "stRun",
 };
 
 export function ispStatEntityId(

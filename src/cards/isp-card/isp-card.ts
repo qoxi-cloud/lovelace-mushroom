@@ -29,14 +29,16 @@ import { computeInfoDisplay } from "../../utils/info";
 import { DEFAULT_ISP_ICON, ISP_CARD_EDITOR_NAME, ISP_CARD_NAME } from "./const";
 import { DEFAULT_ISP_STATS, IspCardConfig, IspStat } from "./isp-card-config";
 import {
+  WanLink,
   collectWanLinks,
   findWanLink,
+  formatAge,
   formatBitRate,
   formatLatency,
   formatMbps,
+  formatMeasuredMbps,
   isLocalIp,
   latencyTone,
-  WanLink,
   wanStateColor,
 } from "./isp-model";
 
@@ -52,6 +54,14 @@ type StatTone = "normal" | "warning" | "danger" | "success";
 function ipTone(ip: string): StatTone {
   if (!ip) return "normal";
   return isLocalIp(ip) ? "warning" : "success";
+}
+
+/** a failed run is a problem; a result older than 3 h means the job stopped */
+function speedtestTone(link: WanLink): StatTone {
+  if (link.speedtestStatus === "error") return "danger";
+  if (link.speedtestAt > 0 && Date.now() / 1000 - link.speedtestAt > 3 * 3600)
+    return "warning";
+  return "normal";
 }
 
 interface StatView {
@@ -97,6 +107,22 @@ function computeStat(
       break;
     case "tx_rate":
       value = formatBitRate(link.txRate);
+      break;
+    case "speedtest_down":
+      value = formatMeasuredMbps(link.speedtestDownMbps);
+      tone = speedtestTone(link);
+      break;
+    case "speedtest_up":
+      value = formatMeasuredMbps(link.speedtestUpMbps);
+      tone = speedtestTone(link);
+      break;
+    case "speedtest_latency":
+      value = formatLatency(link.speedtestLatency);
+      tone = speedtestTone(link);
+      break;
+    case "speedtest_age":
+      value = formatAge(link.speedtestAt) || "—";
+      tone = speedtestTone(link);
       break;
   }
   return { key, value, tone };

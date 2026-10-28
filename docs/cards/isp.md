@@ -23,6 +23,9 @@ Note that Omada reports no RX/TX rates for virtual WANs (always 0).
 ### `stats` values
 
 `latency` `link_speed` `port` `proto` `ip` `isp_enabled` `max_bandwidth` `rx_rate` `tx_rate`
+`speedtest_down` `speedtest_up` `speedtest_latency` `speedtest_age` (last Ookla run from the bridge, see the
+"Speed test" section of [docs/contract.md](../contract.md); tiles turn red on a failed run and orange when the
+result is older than 3 h)
 
 Latency turns orange at ≥ 40 ms and red at ≥ 100 ms.
 
