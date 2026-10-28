@@ -9,7 +9,7 @@ import {
   LovelaceGridOptions,
 } from "../../ha";
 import setupCustomlocalize from "../../localize";
-import { normalizeMacKey } from "../../shared/omada/model";
+import { normalizeMacKey } from "../../shared/network/model";
 import { MushroomBaseCard } from "../../utils/base-card";
 import { registerCustomCard } from "../../utils/custom-cards";
 import {
@@ -133,7 +133,7 @@ export class OmadaDevicesCard
   protected render() {
     if (!this._config || !this.hass) return nothing;
     const customLocalize = setupCustomlocalize(this.hass);
-    const t = (key: string) => customLocalize(`card.omada_devices.${key}`);
+    const t = (key: string) => customLocalize(`card.net_devices.${key}`);
     const devices = this._devices();
     const all = this._pool();
     const online = all.filter(deviceOnline).length;

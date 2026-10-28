@@ -24,7 +24,7 @@ import {
   formatBytes,
   formatPercent,
   formatRateBits,
-} from "../../shared/omada/format";
+} from "../../shared/network/format";
 import { computeAppearance } from "../../utils/appearance";
 import { MushroomBaseCard } from "../../utils/base-card";
 import { cardStyle } from "../../utils/card-styles";
@@ -83,12 +83,12 @@ function computeStat(
   let tone: StatTone = "normal";
   switch (key) {
     case "cpu":
-      value = formatPercent(m.omada_device_cpu_percentage ?? 0);
-      tone = pctTone(m.omada_device_cpu_percentage ?? 0);
+      value = formatPercent(m.net_device_cpu_percentage ?? 0);
+      tone = pctTone(m.net_device_cpu_percentage ?? 0);
       break;
     case "mem":
-      value = formatPercent(m.omada_device_mem_percentage ?? 0);
-      tone = pctTone(m.omada_device_mem_percentage ?? 0);
+      value = formatPercent(m.net_device_mem_percentage ?? 0);
+      tone = pctTone(m.net_device_mem_percentage ?? 0);
       break;
     case "clients":
       value = String(device.clients.length);
@@ -97,10 +97,10 @@ function computeStat(
       value = deviceUptime(device);
       break;
     case "rx_rate":
-      value = formatRateBits(m.omada_device_rx_rate ?? 0);
+      value = formatRateBits(m.net_device_rx_rate ?? 0);
       break;
     case "tx_rate":
-      value = formatRateBits(m.omada_device_tx_rate ?? 0);
+      value = formatRateBits(m.net_device_tx_rate ?? 0);
       break;
     case "ports_up": {
       const [up, total] = portsUp(device);
@@ -108,14 +108,14 @@ function computeStat(
       break;
     }
     case "temp":
-      if (m.omada_device_temp !== undefined) {
-        value = `${m.omada_device_temp.toFixed(0)} °C`;
-        tone = m.omada_device_temp >= 70 ? "warning" : "normal";
+      if (m.net_device_temp !== undefined) {
+        value = `${m.net_device_temp.toFixed(0)} °C`;
+        tone = m.net_device_temp >= 70 ? "warning" : "normal";
       }
       break;
     case "poe_remain":
-      if (m.omada_device_poe_remain_watts !== undefined)
-        value = `${m.omada_device_poe_remain_watts.toFixed(1)} W`;
+      if (m.net_device_poe_remain_watts !== undefined)
+        value = `${m.net_device_poe_remain_watts.toFixed(1)} W`;
       break;
     case "poe": {
       const budget = poeBudget(hass, device);
@@ -139,18 +139,18 @@ function computeStat(
       break;
     }
     case "util_2g":
-      if (m.omada_device_2g_rx_util !== undefined)
-        value = `${(m.omada_device_2g_rx_util ?? 0).toFixed(0)}/${(m.omada_device_2g_tx_util ?? 0).toFixed(0)}%`;
+      if (m.net_device_2g_rx_util !== undefined)
+        value = `${(m.net_device_2g_rx_util ?? 0).toFixed(0)}/${(m.net_device_2g_tx_util ?? 0).toFixed(0)}%`;
       break;
     case "util_5g":
-      if (m.omada_device_5g_rx_util !== undefined)
-        value = `${(m.omada_device_5g_rx_util ?? 0).toFixed(0)}/${(m.omada_device_5g_tx_util ?? 0).toFixed(0)}%`;
+      if (m.net_device_5g_rx_util !== undefined)
+        value = `${(m.net_device_5g_rx_util ?? 0).toFixed(0)}/${(m.net_device_5g_tx_util ?? 0).toFixed(0)}%`;
       break;
     case "download":
-      value = formatBytes(m.omada_device_download ?? 0);
+      value = formatBytes(m.net_device_download ?? 0);
       break;
     case "upload":
-      value = formatBytes(m.omada_device_upload ?? 0);
+      value = formatBytes(m.net_device_upload ?? 0);
       break;
     case "model":
       value = device.model || "—";
@@ -376,7 +376,7 @@ export class OmadaDeviceCard
         ></mushroom-badge-icon>
       `;
     }
-    if (device.metrics.omada_device_need_upgrade) {
+    if (device.metrics.net_device_need_upgrade) {
       return html`
         <mushroom-badge-icon
           slot="badge"
@@ -418,7 +418,7 @@ export class OmadaDeviceCard
                 : undefined}
             >
               <span class="stat-label"
-                >${customLocalize(`card.omada_device.stats.${key}`)}</span
+                >${customLocalize(`card.net_device.stats.${key}`)}</span
               >
               <span class="stat-value">${stat.value}</span>
             </div>

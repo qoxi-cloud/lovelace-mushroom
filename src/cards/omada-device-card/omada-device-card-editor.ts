@@ -56,7 +56,7 @@ const computeSchema = memoizeOne(
           multiple: true,
           options: DEVICE_STATS.map((key) => ({
             value: key,
-            label: customLocalize(`card.omada_device.stats.${key}`),
+            label: customLocalize(`card.net_device.stats.${key}`),
           })),
         },
       },
@@ -86,7 +86,7 @@ export class OmadaDeviceCardEditor
   private _computeLabel = (schema: HaFormSchema) => {
     const customLocalize = setupCustomlocalize(this.hass!);
     if (DEVICE_LABELS.includes(schema.name)) {
-      return customLocalize(`editor.card.omada_device.${schema.name}`);
+      return customLocalize(`editor.card.net_device.${schema.name}`);
     }
     if (GENERIC_LABELS.includes(schema.name)) {
       return customLocalize(`editor.card.generic.${schema.name}`);

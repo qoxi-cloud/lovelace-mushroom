@@ -19,11 +19,11 @@ export function wanDisplayStatus(
   label: "Online" | "Offline" | "Connecting" | "Disconnecting" | "Unknown";
   className: "status-up" | "status-down" | "status-unknown";
 } {
-  if (wan?.metrics.omada_wan_status === 0) {
+  if (wan?.metrics.net_wan_status === 0) {
     return { label: "Offline", className: "status-down" };
   }
   // Omada's WAN UI distinguishes connection transitions from connected state.
-  switch (wan?.metrics.omada_wan_internet_state) {
+  switch (wan?.metrics.net_wan_internet_state) {
     case 0:
       return { label: "Offline", className: "status-down" };
     case 1:
@@ -34,7 +34,7 @@ export function wanDisplayStatus(
       return { label: "Disconnecting", className: "status-unknown" };
   }
   // Other ISP codes (including Fusion's 2) are not binary connectivity states.
-  switch (isp.metrics.omada_isp_status) {
+  switch (isp.metrics.net_isp_status) {
     case 0:
       return { label: "Offline", className: "status-down" };
     case 1:

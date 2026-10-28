@@ -1,27 +1,28 @@
 // qoxi: thin adapter over the OmadaBridge dashboard model for one device.
 import { HomeAssistant as MushroomHass } from "../../ha";
+import { canonicalMetric } from "../../shared/network/contract";
 import {
   formatRateBits,
   formatSpeedMbps,
   formatUptimeSeconds,
-} from "../../shared/omada/format";
+} from "../../shared/network/format";
 import {
   getDashboardModel,
   isDeviceConnected,
   normalizeMacKey,
-} from "../../shared/omada/model";
+} from "../../shared/network/model";
 import type {
   ClientRecord,
   DeviceRecord,
   HomeAssistant as OmadaHass,
   PortRecord,
-} from "../../shared/omada/ha-types";
+} from "../../shared/network/ha-types";
 
 export type {
   DeviceRecord,
   PortRecord,
   ClientRecord,
-} from "../../shared/omada/ha-types";
+} from "../../shared/network/ha-types";
 
 function omadaHass(hass: MushroomHass): OmadaHass {
   return hass as unknown as OmadaHass;
@@ -60,7 +61,7 @@ export function portUp(port: PortRecord): boolean {
 
 export function portSpeedMbps(port: PortRecord): number {
   return (
-    port.metrics.omada_port_link_speed_mbps ??
+    port.metrics.net_port_link_speed_mbps ??
     Number(port.attrs.link_speed ?? 0) ??
     0
   );
@@ -73,11 +74,11 @@ export function portsUp(device: DeviceRecord): [number, number] {
 }
 
 export function deviceUptime(device: DeviceRecord): string {
-  return formatUptimeSeconds(device.metrics.omada_device_uptime_seconds ?? 0);
+  return formatUptimeSeconds(device.metrics.net_device_uptime_seconds ?? 0);
 }
 
 export function deviceRate(device: DeviceRecord, dir: "rx" | "tx"): string {
-  return formatRateBits(device.metrics[`omada_device_${dir}_rate`] ?? 0);
+  return formatRateBits(device.metrics[`net_device_${dir}_rate`] ?? 0);
 }
 
 export interface DeviceHealth {
@@ -93,12 +94,12 @@ export interface DeviceHealth {
   entityId: string;
 }
 
-/** omada_device_health_score (OmadaBridge >= 2.4.4-qoxi.4) */
+/** net_device_health_score (OmadaBridge >= 2.4.4-qoxi.4) */
 export function deviceHealth(
   hass: MushroomHass,
   device: DeviceRecord
 ): DeviceHealth | undefined {
-  const entity = entityForDevice(hass, device.mac, "omada_device_health_score");
+  const entity = entityForDevice(hass, device.mac, "net_device_health_score");
   if (!entity) return undefined;
   const a = entity.attributes;
   const n = (k: string) => Number(a[k] ?? 0) || 0;
@@ -124,7 +125,7 @@ export function poeBudget(
   const entity = entityForDevice(
     hass,
     device.mac,
-    "omada_device_poe_remain_watts"
+    "net_device_poe_remain_watts"
   );
   if (!entity) return undefined;
   return {
@@ -148,8 +149,8 @@ export interface ApRadio {
 /** per-band radio settings from the AP's device_wpXg_* attributes */
 export function apRadios(hass: MushroomHass, device: DeviceRecord): ApRadio[] {
   const entity =
-    entityForDevice(hass, device.mac, "omada_device_5g_rx_util") ??
-    entityForDevice(hass, device.mac, "omada_device_2g_rx_util");
+    entityForDevice(hass, device.mac, "net_device_5g_rx_util") ??
+    entityForDevice(hass, device.mac, "net_device_2g_rx_util");
   if (!entity) return [];
   const a = entity.attributes;
   const out: ApRadio[] = [];
@@ -177,19 +178,19 @@ export function apRadios(hass: MushroomHass, device: DeviceRecord): ApRadio[] {
 }
 
 const DEVICE_STAT_METRIC: Record<string, string> = {
-  health: "omada_device_health_score",
-  poe: "omada_device_poe_remain_watts",
-  cpu: "omada_device_cpu_percentage",
-  mem: "omada_device_mem_percentage",
-  uptime: "omada_device_uptime_seconds",
-  rx_rate: "omada_device_rx_rate",
-  tx_rate: "omada_device_tx_rate",
-  temp: "omada_device_temp",
-  poe_remain: "omada_device_poe_remain_watts",
-  download: "omada_device_download",
-  upload: "omada_device_upload",
-  util_2g: "omada_device_2g_rx_util",
-  util_5g: "omada_device_5g_rx_util",
+  health: "net_device_health_score",
+  poe: "net_device_poe_remain_watts",
+  cpu: "net_device_cpu_percentage",
+  mem: "net_device_mem_percentage",
+  uptime: "net_device_uptime_seconds",
+  rx_rate: "net_device_rx_rate",
+  tx_rate: "net_device_tx_rate",
+  temp: "net_device_temp",
+  poe_remain: "net_device_poe_remain_watts",
+  download: "net_device_download",
+  upload: "net_device_upload",
+  util_2g: "net_device_2g_rx_util",
+  util_5g: "net_device_5g_rx_util",
 };
 
 /** entity id of the OmadaBridge sensor behind a device stat (for more-info / history) */
@@ -204,7 +205,7 @@ export function deviceStatEntityId(
   for (const entity of Object.values(hass.states)) {
     const a = entity.attributes as Record<string, unknown>;
     if (
-      a.metric === metric &&
+      canonicalMetric(a.metric) === metric &&
       normalizeMacKey(String(a.device_mac ?? "")) === mac
     ) {
       return entity.entity_id;
@@ -222,7 +223,7 @@ export function deviceEntityId(
   for (const entity of Object.values(hass.states)) {
     const a = entity.attributes as Record<string, unknown>;
     if (
-      a.metric === "omada_device_uptime_seconds" &&
+      canonicalMetric(a.metric) === "net_device_uptime_seconds" &&
       normalizeMacKey(String(a.device_mac ?? "")) === mac
     ) {
       return entity.entity_id;
@@ -274,21 +275,21 @@ export function clientVia(client: ClientRecord, short = false): string {
 /** Real throughput in bit/s: Omada's client "activity" counters are bytes per second. */
 export function clientRate(client: ClientRecord): number {
   return (
-    ((client.metrics.omada_client_download_activity_bytes ?? 0) +
-      (client.metrics.omada_client_upload_activity_bytes ?? 0)) *
+    ((client.metrics.net_client_download_activity_bytes ?? 0) +
+      (client.metrics.net_client_upload_activity_bytes ?? 0)) *
     8
   );
 }
 
 export function clientDownRate(client: ClientRecord): number {
-  return (client.metrics.omada_client_download_activity_bytes ?? 0) * 8;
+  return (client.metrics.net_client_download_activity_bytes ?? 0) * 8;
 }
 
 export function clientUpRate(client: ClientRecord): number {
-  return (client.metrics.omada_client_upload_activity_bytes ?? 0) * 8;
+  return (client.metrics.net_client_upload_activity_bytes ?? 0) * 8;
 }
 
-// ---- wired topology (OmadaBridge >= 2.4.4-qoxi.3: omada_device_uplink_link_speed_mbps)
+// ---- wired topology (OmadaBridge >= 2.4.4-qoxi.3: net_device_uplink_link_speed_mbps)
 
 export interface DeviceUplink {
   parentMac: string;
@@ -315,7 +316,7 @@ function entityForDevice(
   for (const entity of Object.values(hass.states)) {
     const a = entity.attributes as Record<string, unknown>;
     if (
-      a.metric === metric &&
+      canonicalMetric(a.metric) === metric &&
       normalizeMacKey(String(a.device_mac ?? "")) === wanted &&
       (!extra || extra(a))
     ) {
@@ -338,7 +339,7 @@ export function deviceUplink(
   const entity = entityForDevice(
     hass,
     device.mac,
-    "omada_device_uplink_link_speed_mbps"
+    "net_device_uplink_link_speed_mbps"
   );
   if (!entity) return undefined;
   const a = entity.attributes;
@@ -360,7 +361,7 @@ export function deviceUplink(
   };
 }
 
-/** member ports of a LAG on a switch, from the bridge's omada_lag_* entities */
+/** member ports of a LAG on a switch, from the bridge's net_lag_* entities */
 export function lagMemberPorts(
   hass: MushroomHass,
   deviceMac: string,
@@ -369,7 +370,7 @@ export function lagMemberPorts(
   const entity = entityForDevice(
     hass,
     deviceMac,
-    "omada_lag_link_status",
+    "net_lag_link_status",
     (a) => String(a.lag_id ?? "") === lagId
   );
   return String(entity?.attributes.lag_ports ?? "")

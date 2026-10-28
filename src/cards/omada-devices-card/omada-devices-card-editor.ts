@@ -43,7 +43,7 @@ const computeSchema = memoizeOne(
           multiple: true,
           options: DEVICE_TYPES.map((type) => ({
             value: type,
-            label: customLocalize(`card.omada_devices.${type}`),
+            label: customLocalize(`card.net_devices.${type}`),
           })),
         },
       },
@@ -70,7 +70,7 @@ const computeSchema = memoizeOne(
           multiple: true,
           options: DEVICE_STATS.map((key) => ({
             value: key,
-            label: customLocalize(`card.omada_device.stats.${key}`),
+            label: customLocalize(`card.net_device.stats.${key}`),
           })),
         },
       },
@@ -86,7 +86,7 @@ const computeSchema = memoizeOne(
               mode: "dropdown",
               options: DEVICE_SORTS.map((s) => ({
                 value: s,
-                label: customLocalize(`editor.card.omada_devices.sort_${s}`),
+                label: customLocalize(`editor.card.net_devices.sort_${s}`),
               })),
             },
           },
@@ -119,7 +119,7 @@ export class OmadaDevicesCardEditor
   private _computeLabel = (schema: HaFormSchema) => {
     const customLocalize = setupCustomlocalize(this.hass!);
     if (LABELS.includes(schema.name)) {
-      return customLocalize(`editor.card.omada_devices.${schema.name}`);
+      return customLocalize(`editor.card.net_devices.${schema.name}`);
     }
     if (GENERIC_LABELS.includes(schema.name)) {
       return customLocalize(`editor.card.generic.${schema.name}`);

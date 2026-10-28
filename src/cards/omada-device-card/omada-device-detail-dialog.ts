@@ -15,7 +15,7 @@ import {
   formatPercent,
   formatRateBits,
   formatSpeedMbps,
-} from "../../shared/omada/format";
+} from "../../shared/network/format";
 import { computeRgbColor } from "../../utils/colors";
 import { DEFAULT_DEVICE_ICON, DEVICE_TYPE_ICONS } from "./const";
 import {
@@ -126,21 +126,21 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     const device = this._device;
     const localize = setupCustomlocalize(this.hass);
     if (!device) return html`<p>${localize("card.not_found")}</p>`;
-    const t = (key: string) => localize(`card.omada_device.detail.${key}`);
+    const t = (key: string) => localize(`card.net_device.detail.${key}`);
     const m = device.metrics;
 
     const hero: SheetRow[] = [
       {
         label: t("cpu"),
         entityId: deviceStatEntityId(this.hass, device, "cpu"),
-        value: formatPercent(m.omada_device_cpu_percentage ?? 0),
-        tone: pctTone(m.omada_device_cpu_percentage ?? 0),
+        value: formatPercent(m.net_device_cpu_percentage ?? 0),
+        tone: pctTone(m.net_device_cpu_percentage ?? 0),
       },
       {
         label: t("mem"),
         entityId: deviceStatEntityId(this.hass, device, "mem"),
-        value: formatPercent(m.omada_device_mem_percentage ?? 0),
-        tone: pctTone(m.omada_device_mem_percentage ?? 0),
+        value: formatPercent(m.net_device_mem_percentage ?? 0),
+        tone: pctTone(m.net_device_mem_percentage ?? 0),
       },
       { label: t("clients"), value: String(device.clients.length) },
       {
@@ -153,24 +153,24 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         label: t("rx_rate"),
         entityId: deviceStatEntityId(this.hass, device, "rx_rate"),
         value: deviceRate(device, "rx"),
-        tone: (m.omada_device_rx_rate ?? 0) > 0 ? "success" : "normal",
+        tone: (m.net_device_rx_rate ?? 0) > 0 ? "success" : "normal",
       },
       {
         label: t("tx_rate"),
         entityId: deviceStatEntityId(this.hass, device, "tx_rate"),
         value: deviceRate(device, "tx"),
-        tone: (m.omada_device_tx_rate ?? 0) > 0 ? "success" : "normal",
+        tone: (m.net_device_tx_rate ?? 0) > 0 ? "success" : "normal",
       },
     ];
-    if (m.omada_device_temp !== undefined) {
+    if (m.net_device_temp !== undefined) {
       hero.push({
         label: t("temp"),
         entityId: deviceStatEntityId(this.hass, device, "temp"),
-        value: `${m.omada_device_temp.toFixed(0)} °C`,
+        value: `${m.net_device_temp.toFixed(0)} °C`,
         tone:
-          m.omada_device_temp >= 80
+          m.net_device_temp >= 80
             ? "danger"
-            : m.omada_device_temp >= 70
+            : m.net_device_temp >= 70
               ? "warning"
               : "success",
       });
@@ -252,10 +252,10 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         : []),
       {
         label: t("upgrade"),
-        value: m.omada_device_need_upgrade
+        value: m.net_device_need_upgrade
           ? t("upgrade_available")
           : t("upgrade_none"),
-        tone: m.omada_device_need_upgrade ? "warning" : "normal",
+        tone: m.net_device_need_upgrade ? "warning" : "normal",
       },
       ...(uplink
         ? [
@@ -268,9 +268,9 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         : []),
       {
         label: t("download"),
-        value: formatBytes(m.omada_device_download ?? 0),
+        value: formatBytes(m.net_device_download ?? 0),
       },
-      { label: t("upload"), value: formatBytes(m.omada_device_upload ?? 0) },
+      { label: t("upload"), value: formatBytes(m.net_device_upload ?? 0) },
     ];
 
     const [portsUpCount, portsTotal] = portsUp(device);
@@ -296,11 +296,11 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       [
         {
           label: t("cpu"),
-          value: m.omada_device_cpu_percentage ?? 0,
+          value: m.net_device_cpu_percentage ?? 0,
         },
         {
           label: t("mem"),
-          value: m.omada_device_mem_percentage ?? 0,
+          value: m.net_device_mem_percentage ?? 0,
         },
         {
           label: t("ports"),
@@ -349,8 +349,8 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         apRadios(this.hass, device).map((r) => [r.band, r])
       );
       for (const band of ["2g", "5g", "5g2", "6g"] as const) {
-        const rx = m[`omada_device_${band}_rx_util`];
-        const tx = m[`omada_device_${band}_tx_util`];
+        const rx = m[`net_device_${band}_rx_util`];
+        const tx = m[`net_device_${band}_tx_util`];
         const radio = settings.get(band);
         if (rx === undefined && tx === undefined && !radio) continue;
         const label =
@@ -418,14 +418,14 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     if (device.ports.length) {
       // PoE column only when the device has at least one PoE-capable port.
       const hasPoe = device.ports.some(
-        (port) => port.poe || port.metrics.omada_port_power_watts !== undefined
+        (port) => port.poe || port.metrics.net_port_power_watts !== undefined
       );
       const children = childrenByPort(this.hass, device, this._params?.site);
       const ownUplinkPorts = uplinkPortsOf(this.hass, device);
       const rows: TableCell[][] = device.ports.map((port: PortRecord) => {
         const up = portUp(port);
         const speed = portSpeedMbps(port);
-        const poe = port.metrics.omada_port_power_watts;
+        const poe = port.metrics.net_port_power_watts;
         const who = port.clients
           .map((c) => c.name)
           .filter(Boolean)

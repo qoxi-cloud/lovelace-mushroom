@@ -14,8 +14,8 @@ import "../../shared/card";
 import "../../shared/shape-icon";
 import "../../shared/state-info";
 import "../../shared/state-item";
-import { formatRateBits } from "../../shared/omada/format";
-import { normalizeMacKey } from "../../shared/omada/model";
+import { formatRateBits } from "../../shared/network/format";
+import { normalizeMacKey } from "../../shared/network/model";
 import { computeAppearance } from "../../utils/appearance";
 import { MushroomBaseCard } from "../../utils/base-card";
 import { cardStyle } from "../../utils/card-styles";
@@ -148,7 +148,7 @@ export class OmadaClientsCard
   protected render() {
     if (!this._config || !this.hass) return nothing;
     const customLocalize = setupCustomlocalize(this.hass);
-    const t = (key: string) => customLocalize(`card.omada_clients.${key}`);
+    const t = (key: string) => customLocalize(`card.net_clients.${key}`);
     const appearance = computeAppearance(this._config);
     const rtl = computeRTL(this.hass);
     const { all, shown } = this._clients();
@@ -205,7 +205,7 @@ export class OmadaClientsCard
             ${visible.map((client) => this.renderRow(client, t))}
             ${hidden > 0
               ? html`<button class="more" @click=${this._toggleExpanded}>
-                  ${t("more").replace("{n}", String(hidden))}
+                  ${customLocalize("card.net_clients.more", { n: hidden })}
                 </button>`
               : this._expanded && limit > 0 && shown.length > limit
                 ? html`<button class="more" @click=${this._toggleExpanded}>
@@ -246,7 +246,7 @@ export class OmadaClientsCard
 
   private renderRow(client: ClientRecord, t: (k: string) => string) {
     const rate = clientRate(client);
-    const signal = client.metrics.omada_client_signal_pct ?? 0;
+    const signal = client.metrics.net_client_signal_pct ?? 0;
     const tone = client.wireless ? signalTone(signal) : "normal";
     return html`
       <div class="row" @click=${() => this._openClient(client)}>

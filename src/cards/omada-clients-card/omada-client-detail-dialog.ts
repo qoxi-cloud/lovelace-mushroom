@@ -7,7 +7,7 @@ import {
   formatSpeedMbps,
   formatUptimeSeconds,
   qualityLabel,
-} from "../../shared/omada/format";
+} from "../../shared/network/format";
 import {
   PathHop,
   QoxiSheet,
@@ -201,9 +201,9 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
     const client = this._client;
     const localize = setupCustomlocalize(this.hass);
     if (!client) return html`<p>${localize("card.not_found")}</p>`;
-    const t = (key: string) => localize(`card.omada_clients.detail.${key}`);
+    const t = (key: string) => localize(`card.net_clients.detail.${key}`);
     const m = client.metrics;
-    const signal = m.omada_client_signal_pct ?? 0;
+    const signal = m.net_client_signal_pct ?? 0;
 
     const hero: SheetRow[] = [
       {
@@ -226,10 +226,10 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
       hero.push({
         label: t("rssi"),
         value:
-          m.omada_client_rssi_dbm !== undefined
-            ? `${m.omada_client_rssi_dbm.toFixed(0)} dBm`
+          m.net_client_rssi_dbm !== undefined
+            ? `${m.net_client_rssi_dbm.toFixed(0)} dBm`
             : "—",
-        tone: rssiTone(m.omada_client_rssi_dbm ?? 0),
+        tone: rssiTone(m.net_client_rssi_dbm ?? 0),
       });
     } else {
       hero.push({
@@ -327,30 +327,30 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
           { label: t("wifi_mode"), value: client.wifiMode || "—" },
           {
             label: t("link_rate"),
-            value: `${formatRateBits(m.omada_client_rx_rate ?? 0)} / ${formatRateBits(m.omada_client_tx_rate ?? 0)}`,
+            value: `${formatRateBits(m.net_client_rx_rate ?? 0)} / ${formatRateBits(m.net_client_tx_rate ?? 0)}`,
           },
           {
             label: t("signal"),
             value: signal
-              ? `${signal.toFixed(0)} % · ${qualityLabel(signal, m.omada_client_rssi_dbm ?? 0)}`
+              ? `${signal.toFixed(0)} % · ${qualityLabel(signal, m.net_client_rssi_dbm ?? 0)}`
               : "—",
             tone: signalTone(signal),
           },
           {
             label: t("rssi"),
             value:
-              m.omada_client_rssi_dbm !== undefined
-                ? `${m.omada_client_rssi_dbm.toFixed(0)} dBm`
+              m.net_client_rssi_dbm !== undefined
+                ? `${m.net_client_rssi_dbm.toFixed(0)} dBm`
                 : "—",
-            tone: rssiTone(m.omada_client_rssi_dbm ?? 0),
+            tone: rssiTone(m.net_client_rssi_dbm ?? 0),
           },
           {
             label: t("snr"),
             value:
-              m.omada_client_snr_dbm !== undefined
-                ? `${m.omada_client_snr_dbm.toFixed(0)} dB`
+              m.net_client_snr_dbm !== undefined
+                ? `${m.net_client_snr_dbm.toFixed(0)} dB`
                 : "—",
-            tone: snrTone(m.omada_client_snr_dbm ?? 0),
+            tone: snrTone(m.net_client_snr_dbm ?? 0),
           },
         ]
       : [
@@ -378,21 +378,21 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
     const traffic: SheetRow[] = [
       {
         label: t("down_total"),
-        value: formatBytes(m.omada_client_traffic_down_bytes ?? 0),
+        value: formatBytes(m.net_client_traffic_down_bytes ?? 0),
       },
       {
         label: t("up_total"),
-        value: formatBytes(m.omada_client_traffic_up_bytes ?? 0),
+        value: formatBytes(m.net_client_traffic_up_bytes ?? 0),
       },
       {
         label: t("down_activity"),
-        value: `${formatBytes(m.omada_client_download_activity_bytes ?? 0)}/s`,
-        tone: activeTone(m.omada_client_download_activity_bytes ?? 0),
+        value: `${formatBytes(m.net_client_download_activity_bytes ?? 0)}/s`,
+        tone: activeTone(m.net_client_download_activity_bytes ?? 0),
       },
       {
         label: t("up_activity"),
-        value: `${formatBytes(m.omada_client_upload_activity_bytes ?? 0)}/s`,
-        tone: activeTone(m.omada_client_upload_activity_bytes ?? 0),
+        value: `${formatBytes(m.net_client_upload_activity_bytes ?? 0)}/s`,
+        tone: activeTone(m.net_client_upload_activity_bytes ?? 0),
       },
     ];
 

@@ -5,21 +5,21 @@ import type {
   UplinkPacketCounts,
 } from "./ha-types";
 
-const interferenceMetric = "omada_ap_interference_percentage";
-const availableMetric = "omada_network_quality_available";
-const successMetric = "omada_network_quality_scrape_success";
+const interferenceMetric = "net_ap_interference_percentage";
+const availableMetric = "net_network_quality_available";
+const successMetric = "net_network_quality_scrape_success";
 const uplinkMetrics: Record<string, keyof UplinkPacketCounts> = {
-  omada_ap_uplink_packets_total: "packets",
-  omada_ap_uplink_dropped_packets_total: "dropped",
-  omada_ap_uplink_error_packets_total: "errors",
+  net_ap_uplink_packets_total: "packets",
+  net_ap_uplink_dropped_packets_total: "dropped",
+  net_ap_uplink_error_packets_total: "errors",
 };
 const wanMetrics = {
-  omada_gateway_wan_quality_latency_average_seconds: "latencySeconds",
-  omada_gateway_wan_quality_jitter_average_seconds: "jitterSeconds",
-  omada_gateway_wan_quality_packet_loss_average_percentage:
+  net_gateway_wan_quality_latency_average_seconds: "latencySeconds",
+  net_gateway_wan_quality_jitter_average_seconds: "jitterSeconds",
+  net_gateway_wan_quality_packet_loss_average_percentage:
     "packetLossPercentage",
-  omada_gateway_wan_quality_mos_average: "mos",
-  omada_gateway_wan_quality_window_seconds: "windowSeconds",
+  net_gateway_wan_quality_mos_average: "mos",
+  net_gateway_wan_quality_window_seconds: "windowSeconds",
 } as const;
 
 type Sample = {

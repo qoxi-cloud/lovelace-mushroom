@@ -58,7 +58,7 @@ const computeSchema = memoizeOne(
               mode: "dropdown",
               options: CLIENT_FILTERS.map((f) => ({
                 value: f,
-                label: customLocalize(`card.omada_clients.${f}`),
+                label: customLocalize(`card.net_clients.${f}`),
               })),
             },
           },
@@ -70,7 +70,7 @@ const computeSchema = memoizeOne(
               mode: "dropdown",
               options: CLIENT_SORTS.map((f) => ({
                 value: f,
-                label: customLocalize(`editor.card.omada_clients.sort_${f}`),
+                label: customLocalize(`editor.card.net_clients.sort_${f}`),
               })),
             },
           },
@@ -106,7 +106,7 @@ export class OmadaClientsCardEditor
   private _computeLabel = (schema: HaFormSchema) => {
     const customLocalize = setupCustomlocalize(this.hass!);
     if (CLIENTS_LABELS.includes(schema.name)) {
-      return customLocalize(`editor.card.omada_clients.${schema.name}`);
+      return customLocalize(`editor.card.net_clients.${schema.name}`);
     }
     if (GENERIC_LABELS.includes(schema.name)) {
       return customLocalize(`editor.card.generic.${schema.name}`);

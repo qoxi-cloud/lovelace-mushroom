@@ -1,4 +1,4 @@
-// qoxi: ISP / WAN links published by OmadaBridge (omada_exporter) through MQTT
+// qoxi: ISP / WAN links published by OmadaBridge (net_exporter) through MQTT
 // discovery as `sensor.<gateway>_wan_<metric>_port_<port>_<slug>` plus
 // `binary_sensor.<gateway>_isp_status_port_<port>_<slug>`.
 import { HassEntity } from "home-assistant-js-websocket";

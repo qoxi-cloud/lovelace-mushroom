@@ -81,7 +81,7 @@
         "tx_rate": "TX"
       }
     },
-    "omada_device": {
+    "net_device": {
       "stats": {
         "cpu": "CPU",
         "mem": "RAM",
@@ -161,7 +161,7 @@
         "health_profile": "Health profile"
       }
     },
-    "omada_clients": {
+    "net_clients": {
       "title": "Clients",
       "clients": "clients",
       "all": "All",
@@ -214,7 +214,7 @@
       "idle": "idle",
       "less": "Show less"
     },
-    "omada_devices": {
+    "net_devices": {
       "title": "Devices",
       "online": "online",
       "all": "All",
@@ -361,12 +361,12 @@
         "wan": "WAN link",
         "stats": "Statistics"
       },
-      "omada_device": {
+      "net_device": {
         "device": "Omada device",
         "stats": "Statistics",
         "show_health": "Health score in header"
       },
-      "omada_clients": {
+      "net_clients": {
         "device": "Only clients of device",
         "filter": "Filter",
         "show_filters": "Show filter chips",
@@ -376,7 +376,7 @@
         "sort_name": "By name",
         "sort_ip": "By IP"
       },
-      "omada_devices": {
+      "net_devices": {
         "types": "Device types",
         "exclude": "Exclude devices",
         "stats": "Statistics (each tile)",

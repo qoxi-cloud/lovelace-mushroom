@@ -15,6 +15,7 @@ import type {
   SiteSummary,
 } from "./ha-types";
 import { toNumber } from "./format";
+import { canonicalMetric, isBridgeMetric } from "./contract";
 import {
   attachNetworkQuality,
   isNetworkQualityMetric,
@@ -76,7 +77,7 @@ function setLatestMetric(
 }
 
 function getMetric(entity: HassEntity): string {
-  return String(entity.attributes.metric ?? "");
+  return canonicalMetric(entity.attributes.metric);
 }
 
 function attrString(entity: HassEntity, key: string): string {
@@ -119,7 +120,7 @@ export function isDeviceConnected(status: string): boolean {
 function isDashboardEntity(entity: HassEntity): boolean {
   return (
     isControlEntity(entity) ||
-    getMetric(entity).startsWith("omada_") ||
+    isBridgeMetric(entity.attributes.metric) ||
     isClientTrackerEntity(entity) ||
     looksLikeClientEntity(entity)
   );
@@ -241,13 +242,12 @@ function vpnRowKey(entity: HassEntity): string {
 
 function isVpnMetric(metric: string): boolean {
   return (
-    metric.startsWith("omada_vpn_") ||
-    metric.startsWith("omada_site_to_site_vpn_")
+    metric.startsWith("net_vpn_") || metric.startsWith("net_site_to_site_vpn_")
   );
 }
 
 function isVpnPeerMetric(metric: string): boolean {
-  return metric.startsWith("omada_site_to_site_vpn_peer_");
+  return metric.startsWith("net_site_to_site_vpn_peer_");
 }
 
 function vpnPeerRowKey(entity: HassEntity): string {
@@ -303,27 +303,26 @@ export function vpnModeLabel(row: LinkRow): string {
 
 export function vpnTotalBytes(row: LinkRow): number {
   const tunnelTotal =
-    (row.metrics.omada_vpn_up_bytes ?? 0) +
-    (row.metrics.omada_vpn_down_bytes ?? 0);
+    (row.metrics.net_vpn_up_bytes ?? 0) + (row.metrics.net_vpn_down_bytes ?? 0);
   const siteToSiteTotal =
-    (row.metrics.omada_site_to_site_vpn_up_bytes ?? 0) +
-    (row.metrics.omada_site_to_site_vpn_down_bytes ?? 0);
+    (row.metrics.net_site_to_site_vpn_up_bytes ?? 0) +
+    (row.metrics.net_site_to_site_vpn_down_bytes ?? 0);
   const directPeerTotal =
-    (row.metrics.omada_site_to_site_vpn_peer_up_bytes ?? 0) +
-    (row.metrics.omada_site_to_site_vpn_peer_down_bytes ?? 0);
+    (row.metrics.net_site_to_site_vpn_peer_up_bytes ?? 0) +
+    (row.metrics.net_site_to_site_vpn_peer_down_bytes ?? 0);
   const peerTotal =
-    (row.metrics.omada_site_to_site_vpn_peer_up_bytes_total ?? 0) +
-    (row.metrics.omada_site_to_site_vpn_peer_down_bytes_total ?? 0);
+    (row.metrics.net_site_to_site_vpn_peer_up_bytes_total ?? 0) +
+    (row.metrics.net_site_to_site_vpn_peer_down_bytes_total ?? 0);
 
   return tunnelTotal || siteToSiteTotal || directPeerTotal || peerTotal;
 }
 
 export function vpnUptimeSeconds(row: LinkRow): number {
-  return row.metrics.omada_vpn_uptime ?? 0;
+  return row.metrics.net_vpn_uptime ?? 0;
 }
 
 export function vpnPeerLoginSeconds(row: LinkRow): number {
-  return row.metrics.omada_site_to_site_vpn_peer_login_timestamp ?? 0;
+  return row.metrics.net_site_to_site_vpn_peer_login_timestamp ?? 0;
 }
 
 function normalizeScope(
@@ -762,8 +761,8 @@ function summaryFrom(
         return device;
       }
 
-      return (device.metrics.omada_device_cpu_percentage ?? 0) >
-        (max.metrics.omada_device_cpu_percentage ?? 0)
+      return (device.metrics.net_device_cpu_percentage ?? 0) >
+        (max.metrics.net_device_cpu_percentage ?? 0)
         ? device
         : max;
     },
@@ -775,15 +774,15 @@ function summaryFrom(
         return device;
       }
 
-      return (device.metrics.omada_device_mem_percentage ?? 0) >
-        (max.metrics.omada_device_mem_percentage ?? 0)
+      return (device.metrics.net_device_mem_percentage ?? 0) >
+        (max.metrics.net_device_mem_percentage ?? 0)
         ? device
         : max;
     },
     undefined
   );
-  const maxCpu = maxCpuDevice?.metrics.omada_device_cpu_percentage ?? 0;
-  const maxMem = maxMemDevice?.metrics.omada_device_mem_percentage ?? 0;
+  const maxCpu = maxCpuDevice?.metrics.net_device_cpu_percentage ?? 0;
+  const maxMem = maxMemDevice?.metrics.net_device_mem_percentage ?? 0;
 
   return {
     site: siteName,
@@ -804,10 +803,10 @@ function summaryFrom(
 }
 
 const dpiMetrics = new Set([
-  "omada_dpi_total_traffic_bytes",
-  "omada_dpi_scrape_window_seconds",
-  "omada_dpi_category_traffic_bytes",
-  "omada_dpi_application_traffic_bytes",
+  "net_dpi_total_traffic_bytes",
+  "net_dpi_scrape_window_seconds",
+  "net_dpi_category_traffic_bytes",
+  "net_dpi_application_traffic_bytes",
 ]);
 
 function dpiValue(entity: HassEntity): number | undefined {
@@ -879,11 +878,11 @@ function buildDpiSummary(entities: HassEntity[]): DpiSummary {
       attrString(entity, "application_name").trim();
     const rowKey = JSON.stringify([
       metric,
-      metric === "omada_dpi_category_traffic_bytes" ||
-      metric === "omada_dpi_application_traffic_bytes"
+      metric === "net_dpi_category_traffic_bytes" ||
+      metric === "net_dpi_application_traffic_bytes"
         ? family
         : "",
-      metric === "omada_dpi_application_traffic_bytes" ? application : "",
+      metric === "net_dpi_application_traffic_bytes" ? application : "",
     ]);
     const previous = group.entities.get(rowKey);
     if (!previous || dpiObservedAt(entity) >= dpiObservedAt(previous)) {
@@ -899,8 +898,8 @@ function buildDpiSummary(entities: HassEntity[]): DpiSummary {
     const snapshotTimes = Array.from(group.entities.values())
       .filter((entity) =>
         [
-          "omada_dpi_total_traffic_bytes",
-          "omada_dpi_scrape_window_seconds",
+          "net_dpi_total_traffic_bytes",
+          "net_dpi_scrape_window_seconds",
         ].includes(getMetric(entity))
       )
       .map(dpiSnapshotTimestamp)
@@ -933,11 +932,11 @@ function buildDpiSummary(entities: HassEntity[]): DpiSummary {
         continue;
       }
       const metric = getMetric(entity);
-      if (metric === "omada_dpi_total_traffic_bytes") {
+      if (metric === "net_dpi_total_traffic_bytes") {
         site.totalBytes = value;
         continue;
       }
-      if (metric === "omada_dpi_scrape_window_seconds") {
+      if (metric === "net_dpi_scrape_window_seconds") {
         site.windowSeconds = value;
         continue;
       }
@@ -950,7 +949,7 @@ function buildDpiSummary(entities: HassEntity[]): DpiSummary {
         name: attrString(entity, "family_name").trim() || "Unknown category",
         bytes: value,
       };
-      if (metric === "omada_dpi_category_traffic_bytes") {
+      if (metric === "net_dpi_category_traffic_bytes") {
         site.categories.push(category);
       } else {
         const application: DpiApplicationRecord = {
@@ -1060,7 +1059,7 @@ export function buildDashboardModel(
     const deviceMac = attrString(entity, "device_mac");
     if (
       deviceMac &&
-      (metric.startsWith("omada_device_") ||
+      (metric.startsWith("net_device_") ||
         metric.startsWith("omada_controller_"))
     ) {
       const key = scopedEntityKey(entity, normalizeMacKey(deviceMac));
@@ -1123,12 +1122,12 @@ export function buildDashboardModel(
       continue;
     }
 
-    if (metric.startsWith("omada_dpi_")) {
+    if (metric.startsWith("net_dpi_")) {
       dpiEntities.push(entity);
       continue;
     }
 
-    if (metric.startsWith("omada_device_")) {
+    if (metric.startsWith("net_device_")) {
       const device = ensureDevice(devices, entity);
       setLatestMetric(device, metric, value, entity);
       continue;
@@ -1140,17 +1139,14 @@ export function buildDashboardModel(
       continue;
     }
 
-    if (metric.startsWith("omada_port_")) {
+    if (metric.startsWith("net_port_")) {
       const port = ensurePort(ports, entity);
       portByDeviceMacAndPort.set(port.key, port);
       setLatestMetric(port, metric, value, entity);
       continue;
     }
 
-    if (
-      metric.startsWith("omada_radio_") ||
-      metric.startsWith("omada_ap_radio_")
-    ) {
+    if (metric.startsWith("net_radio_") || metric.startsWith("net_ap_radio_")) {
       const deviceMac = attrString(entity, "device_mac");
       const band =
         attrString(entity, "band") ||
@@ -1178,7 +1174,7 @@ export function buildDashboardModel(
       continue;
     }
 
-    if (metric.startsWith("omada_lag_")) {
+    if (metric.startsWith("net_lag_")) {
       const deviceMac = attrString(entity, "device_mac");
       const lagId = attrString(entity, "lag_id");
       const key = scopedEntityKey(
@@ -1204,9 +1200,9 @@ export function buildDashboardModel(
       continue;
     }
 
-    if (metric.startsWith("omada_client_")) {
+    if (metric.startsWith("net_client_")) {
       const rawMac = normalizeMacKey(attrString(entity, "mac"));
-      if (!rawMac || metric === "omada_client_connected_total") {
+      if (!rawMac || metric === "net_client_connected_total") {
         continue;
       }
       const mac = scopedEntityKey(entity, rawMac);
@@ -1231,7 +1227,7 @@ export function buildDashboardModel(
       continue;
     }
 
-    if (metric.startsWith("omada_isp_")) {
+    if (metric.startsWith("net_isp_")) {
       const row = ensureLinkRow(isps, entity, [
         joinKeyParts(attrString(entity, "name"), attrString(entity, "port")),
         attrString(entity, "ip"),
@@ -1261,14 +1257,14 @@ export function buildDashboardModel(
       peer.metrics[metric] = value;
 
       const parent = ensureVpnParentRow(vpns, entity);
-      if (metric === "omada_site_to_site_vpn_peer_down_bytes") {
-        parent.metrics.omada_site_to_site_vpn_peer_down_bytes_total =
-          (parent.metrics.omada_site_to_site_vpn_peer_down_bytes_total ?? 0) +
+      if (metric === "net_site_to_site_vpn_peer_down_bytes") {
+        parent.metrics.net_site_to_site_vpn_peer_down_bytes_total =
+          (parent.metrics.net_site_to_site_vpn_peer_down_bytes_total ?? 0) +
           value;
       }
-      if (metric === "omada_site_to_site_vpn_peer_up_bytes") {
-        parent.metrics.omada_site_to_site_vpn_peer_up_bytes_total =
-          (parent.metrics.omada_site_to_site_vpn_peer_up_bytes_total ?? 0) +
+      if (metric === "net_site_to_site_vpn_peer_up_bytes") {
+        parent.metrics.net_site_to_site_vpn_peer_up_bytes_total =
+          (parent.metrics.net_site_to_site_vpn_peer_up_bytes_total ?? 0) +
           value;
       }
       continue;
@@ -1290,7 +1286,7 @@ export function buildDashboardModel(
       ]);
       const remoteIp = attrString(entity, "remote_ip");
       if (remoteIp) {
-        if (metric === "omada_vpn_status") {
+        if (metric === "net_vpn_status") {
           row.attrs.remote_ip_preferred = remoteIp;
         } else if (!row.attrs.remote_ip_runtime) {
           row.attrs.remote_ip_runtime = remoteIp;
@@ -1300,7 +1296,7 @@ export function buildDashboardModel(
       continue;
     }
 
-    if (metric.startsWith("omada_wan_")) {
+    if (metric.startsWith("net_wan_")) {
       const row = ensureLinkRow(wans, entity, [
         joinKeyParts(attrString(entity, "name"), attrString(entity, "port")),
         attrString(entity, "ip"),
@@ -1350,7 +1346,7 @@ export function buildDashboardModel(
       if (lag) {
         client.attachmentLagPorts = String(lag.attrs.lag_ports ?? "").trim();
         const linkSpeed =
-          lag.metrics.omada_lag_link_speed_mbps ??
+          lag.metrics.net_lag_link_speed_mbps ??
           Number(lag.attrs.link_speed ?? 0);
         if (Number.isFinite(linkSpeed)) {
           client.attachmentLinkSpeedMbps = linkSpeed;
@@ -1372,7 +1368,7 @@ export function buildDashboardModel(
         // qoxi: plain (non-LAG) ports carry the negotiated speed too.
         if (client.attachmentLinkSpeedMbps === undefined) {
           const linkSpeed =
-            port.metrics.omada_port_link_speed_mbps ??
+            port.metrics.net_port_link_speed_mbps ??
             Number(port.attrs.link_speed ?? 0);
           if (Number.isFinite(linkSpeed) && linkSpeed > 0) {
             client.attachmentLinkSpeedMbps = linkSpeed;
@@ -1415,8 +1411,8 @@ export function buildDashboardModel(
   });
 
   const clientList = Array.from(clients.values()).sort((left, right) => {
-    const leftSignal = left.metrics.omada_client_signal_pct ?? 0;
-    const rightSignal = right.metrics.omada_client_signal_pct ?? 0;
+    const leftSignal = left.metrics.net_client_signal_pct ?? 0;
+    const rightSignal = right.metrics.net_client_signal_pct ?? 0;
     if (leftSignal !== rightSignal) {
       return rightSignal - leftSignal;
     }
