@@ -1369,6 +1369,15 @@ export function buildDashboardModel(
       );
       if (port) {
         port.clients.push(client);
+        // qoxi: plain (non-LAG) ports carry the negotiated speed too.
+        if (client.attachmentLinkSpeedMbps === undefined) {
+          const linkSpeed =
+            port.metrics.omada_port_link_speed_mbps ??
+            Number(port.attrs.link_speed ?? 0);
+          if (Number.isFinite(linkSpeed) && linkSpeed > 0) {
+            client.attachmentLinkSpeedMbps = linkSpeed;
+          }
+        }
       }
     }
 

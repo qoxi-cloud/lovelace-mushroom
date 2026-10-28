@@ -11,6 +11,8 @@ import { QoxiSheet, SheetRow, showSheet } from "../../shared/qoxi-sheet";
 import { computeRgbColor } from "../../utils/colors";
 import {
   ClientRecord,
+  clientDownRate,
+  clientUpRate,
   clientVia,
   findClient,
 } from "../omada-device-card/device-model";
@@ -79,11 +81,11 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
     const hero: SheetRow[] = [
       {
         label: t("down_rate"),
-        value: formatRateBits(m.omada_client_rx_rate ?? 0),
+        value: formatRateBits(clientDownRate(client)),
       },
       {
         label: t("up_rate"),
-        value: formatRateBits(m.omada_client_tx_rate ?? 0),
+        value: formatRateBits(clientUpRate(client)),
       },
     ];
     if (client.wireless) {
@@ -130,6 +132,10 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
           { label: t("ssid"), value: client.ssid || "—" },
           { label: t("ap"), value: client.apName || "—" },
           { label: t("wifi_mode"), value: client.wifiMode || "—" },
+          {
+            label: t("link_rate"),
+            value: `${formatRateBits(m.omada_client_rx_rate ?? 0)} / ${formatRateBits(m.omada_client_tx_rate ?? 0)}`,
+          },
           {
             label: t("signal"),
             value: signal
