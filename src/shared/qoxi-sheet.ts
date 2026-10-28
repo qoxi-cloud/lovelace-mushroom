@@ -154,7 +154,8 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
     rgb: string,
     disabled: boolean,
     name: string,
-    subtitle: string
+    subtitle: string,
+    trailing?: TemplateResult | typeof nothing
   ) {
     return html`
       <div class="header">
@@ -168,7 +169,32 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           <span class="name">${name}</span>
           <span class="subtitle">${subtitle}</span>
         </div>
+        ${trailing ?? nothing}
       </div>
+    `;
+  }
+
+  /** small icon + text at the right end of the header, e.g. a health score */
+  protected renderHeaderTrail(
+    icon: string,
+    text: string,
+    tone: Tone = "normal",
+    onClick?: () => void,
+    title?: string
+  ) {
+    return html`
+      <span
+        class=${classMap({
+          "header-trail": true,
+          [tone]: true,
+          linked: !!onClick,
+        })}
+        title=${title ?? ""}
+        @click=${onClick}
+      >
+        <ha-icon .icon=${icon}></ha-icon>
+        <span>${text}</span>
+      </span>
     `;
   }
 
@@ -471,6 +497,29 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           display: flex;
           flex-direction: column;
           min-width: 0;
+          flex: 1;
+        }
+        .header-trail {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          flex: none;
+          margin-left: 8px;
+          font-size: 13px;
+          font-weight: 600;
+          font-variant-numeric: tabular-nums;
+          color: var(--secondary-text-color);
+          --mdc-icon-size: 15px;
+          white-space: nowrap;
+        }
+        .header-trail.linked {
+          cursor: pointer;
+        }
+        .header-trail.warning {
+          color: rgb(var(--rgb-warning));
+        }
+        .header-trail.danger {
+          color: rgb(var(--rgb-danger));
         }
         .name {
           font-size: 18px;

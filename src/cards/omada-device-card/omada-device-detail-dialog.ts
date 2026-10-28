@@ -5,6 +5,7 @@ import {
   PathHop,
   QoxiSheet,
   SheetRow,
+  showMoreInfo,
   showSheet,
   TableCell,
 } from "../../shared/qoxi-sheet";
@@ -109,6 +110,16 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     const subtitle = [device.status, device.model, device.ip]
       .filter(Boolean)
       .join(" · ");
+    const health = deviceHealth(this.hass, device);
+    const trail = health
+      ? this.renderHeaderTrail(
+          "mdi:heart-pulse",
+          `${health.score.toFixed(0)}/10`,
+          health.score < 5 ? "danger" : health.score < 8 ? "warning" : "normal",
+          () => showMoreInfo(this, health.entityId),
+          "Health"
+        )
+      : undefined;
     return this.renderTitle(
       this._params?.icon ??
         DEVICE_TYPE_ICONS[device.type] ??
@@ -116,7 +127,8 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       rgb,
       !online,
       name,
-      subtitle
+      subtitle,
+      trail
     );
   }
 
@@ -191,19 +203,6 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
       });
     }
     const health = deviceHealth(this.hass, device);
-    if (health) {
-      hero.push({
-        label: t("health"),
-        entityId: health.entityId,
-        value: `${health.score.toFixed(0)} / 10`,
-        tone:
-          health.score < 5
-            ? "danger"
-            : health.score < 8
-              ? "warning"
-              : "success",
-      });
-    }
     if (device.type === "switch" || device.type === "gateway") {
       const [up, total] = portsUp(device);
       hero.push({
