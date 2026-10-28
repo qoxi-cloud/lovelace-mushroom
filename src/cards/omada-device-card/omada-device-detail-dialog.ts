@@ -325,7 +325,7 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
     ];
     const tables: unknown[] = [];
     const openDevice = (name: string) => () =>
-      showOmadaDeviceDetailDialog(this, {
+      this.openSheet(OMADA_DEVICE_DETAIL_DIALOG_NAME, {
         device: name,
         site: this._params?.site,
       });

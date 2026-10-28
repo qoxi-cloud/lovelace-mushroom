@@ -19,7 +19,7 @@ import {
   listDevices,
   uplinkLabel,
 } from "../omada-device-card/device-model";
-import { showOmadaDeviceDetailDialog } from "../omada-device-card/omada-device-detail-dialog";
+import { OMADA_DEVICE_DETAIL_DIALOG_NAME } from "../omada-device-card/omada-device-detail-dialog";
 import { DEVICE_TYPE_ICONS } from "../omada-device-card/const";
 import { computeRgbColor } from "../../utils/colors";
 import {
@@ -103,7 +103,7 @@ export class OmadaClientDetailDialog extends QoxiSheet<OmadaClientDetailDialogPa
     const byName = (name: string) =>
       devices.find((d) => d.name.toLowerCase() === name.toLowerCase());
     const openDevice = (name: string) => () =>
-      showOmadaDeviceDetailDialog(this, {
+      this.openSheet(OMADA_DEVICE_DETAIL_DIALOG_NAME, {
         device: name,
         site: this._params?.site,
       });

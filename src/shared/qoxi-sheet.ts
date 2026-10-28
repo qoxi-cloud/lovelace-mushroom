@@ -220,6 +220,13 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
     `;
   }
 
+  /** close this sheet and open another one (HA reuses dialog elements, so a
+   *  sheet opened while this one is up would end up underneath it) */
+  protected openSheet(tag: string, params: unknown) {
+    this.closeDialog();
+    showSheet(this, tag, params);
+  }
+
   protected renderPath(title: string, tag: string, hops: PathHop[]) {
     return html`
       <section>
@@ -230,22 +237,24 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
         <div class="path">
           ${hops.map(
             (hop, i) => html`
-              ${i > 0
-                ? html`<ha-icon
-                    class="path-arrow"
-                    icon="mdi:chevron-right"
-                  ></ha-icon>`
-                : nothing}
-              <div
-                class=${classMap({ hop: true, linked: !!hop.onClick })}
-                @click=${hop.onClick}
-              >
-                <ha-icon class="hop-icon" .icon=${hop.icon}></ha-icon>
-                <div class="hop-text">
-                  <span class="hop-title">${hop.title}</span>
-                  ${hop.subtitle
-                    ? html`<span class="hop-sub">${hop.subtitle}</span>`
-                    : nothing}
+              <div class="hop-wrap">
+                ${i > 0
+                  ? html`<ha-icon
+                      class="path-arrow"
+                      icon="mdi:chevron-right"
+                    ></ha-icon>`
+                  : nothing}
+                <div
+                  class=${classMap({ hop: true, linked: !!hop.onClick })}
+                  @click=${hop.onClick}
+                >
+                  <ha-icon class="hop-icon" .icon=${hop.icon}></ha-icon>
+                  <div class="hop-text">
+                    <span class="hop-title">${hop.title}</span>
+                    ${hop.subtitle
+                      ? html`<span class="hop-sub">${hop.subtitle}</span>`
+                      : nothing}
+                  </div>
                 </div>
               </div>
             `
@@ -745,6 +754,12 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+        }
+        .hop-wrap {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          min-width: 0;
         }
         .path-arrow {
           --mdc-icon-size: 18px;
