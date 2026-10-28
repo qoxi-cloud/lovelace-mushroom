@@ -50,7 +50,7 @@ export function showOmadaDeviceDetailDialog(
 function pctTone(value: number): SheetRow["tone"] {
   if (value >= 90) return "danger";
   if (value >= 75) return "warning";
-  return "normal";
+  return "success";
 }
 
 function clientAttachment(client: ClientRecord): string {
@@ -111,26 +111,53 @@ export class OmadaDeviceDetailDialog extends QoxiSheet<OmadaDeviceDetailDialogPa
         tone: pctTone(m.omada_device_mem_percentage ?? 0),
       },
       { label: t("clients"), value: String(device.clients.length) },
-      { label: t("uptime"), value: deviceUptime(device) },
-      { label: t("rx_rate"), value: deviceRate(device, "rx") },
-      { label: t("tx_rate"), value: deviceRate(device, "tx") },
+      {
+        label: t("uptime"),
+        value: deviceUptime(device),
+        tone: deviceOnline(device) ? "success" : "danger",
+      },
+      {
+        label: t("rx_rate"),
+        value: deviceRate(device, "rx"),
+        tone: (m.omada_device_rx_rate ?? 0) > 0 ? "success" : "normal",
+      },
+      {
+        label: t("tx_rate"),
+        value: deviceRate(device, "tx"),
+        tone: (m.omada_device_tx_rate ?? 0) > 0 ? "success" : "normal",
+      },
     ];
     if (m.omada_device_temp !== undefined) {
       hero.push({
         label: t("temp"),
         value: `${m.omada_device_temp.toFixed(0)} °C`,
-        tone: m.omada_device_temp >= 70 ? "warning" : "normal",
+        tone:
+          m.omada_device_temp >= 80
+            ? "danger"
+            : m.omada_device_temp >= 70
+              ? "warning"
+              : "success",
       });
     }
     if (m.omada_device_poe_remain_watts !== undefined) {
       hero.push({
         label: t("poe_remain"),
         value: `${m.omada_device_poe_remain_watts.toFixed(1)} W`,
+        tone:
+          m.omada_device_poe_remain_watts < 20
+            ? "danger"
+            : m.omada_device_poe_remain_watts < 50
+              ? "warning"
+              : "success",
       });
     }
     if (device.type === "switch" || device.type === "gateway") {
       const [up, total] = portsUp(device);
-      hero.push({ label: t("ports_up"), value: `${up} / ${total}` });
+      hero.push({
+        label: t("ports_up"),
+        value: `${up} / ${total}`,
+        tone: up > 0 ? "success" : "warning",
+      });
     }
 
     const info: SheetRow[] = [
