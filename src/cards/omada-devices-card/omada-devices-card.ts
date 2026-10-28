@@ -121,6 +121,7 @@ export class OmadaDevicesCard
       device: device.mac || device.name,
       site: cfg.site,
       stats: cfg.stats,
+      show_health: cfg.show_health,
       layout: cfg.layout,
       fill_container: cfg.fill_container,
       primary_info: cfg.primary_info,

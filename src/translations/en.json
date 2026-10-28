@@ -363,7 +363,8 @@
       },
       "omada_device": {
         "device": "Omada device",
-        "stats": "Statistics"
+        "stats": "Statistics",
+        "show_health": "Health score in header"
       },
       "omada_clients": {
         "device": "Only clients of device",

@@ -18,7 +18,7 @@ import {
   omadaDeviceCardConfigStruct,
 } from "./omada-device-card-config";
 
-const DEVICE_LABELS = ["device", "stats"];
+const DEVICE_LABELS = ["device", "stats", "show_health"];
 
 const computeSchema = memoizeOne(
   (
@@ -61,6 +61,7 @@ const computeSchema = memoizeOne(
         },
       },
     },
+    { name: "show_health", selector: { boolean: {} } },
     ...computeActionsFormSchema(),
   ]
 );

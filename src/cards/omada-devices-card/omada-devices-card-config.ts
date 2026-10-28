@@ -32,6 +32,7 @@ export type OmadaDevicesCardConfig = LovelaceCardConfig &
     exclude?: string[];
     stats?: DeviceStat[];
     show_filters?: boolean;
+    show_health?: boolean;
     show_header?: boolean;
     sort?: DeviceSort;
   };
@@ -46,6 +47,7 @@ export const omadaDevicesCardConfigStruct = assign(
     exclude: optional(array(string())),
     stats: optional(array(enums(DEVICE_STATS))),
     show_filters: optional(boolean()),
+    show_health: optional(boolean()),
     show_header: optional(boolean()),
     sort: optional(enums(DEVICE_SORTS)),
   })

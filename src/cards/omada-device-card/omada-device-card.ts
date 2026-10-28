@@ -295,28 +295,49 @@ export class OmadaDeviceCard
         class=${classMap({ "fill-container": appearance.fill_container })}
       >
         <mushroom-card .appearance=${appearance} ?rtl=${rtl}>
-          <mushroom-state-item
-            ?rtl=${rtl}
-            .appearance=${appearance}
-            @action=${this._handleAction}
-            .actionHandler=${actionHandler({
-              hasHold: hasAction(this._config.hold_action),
-              hasDoubleClick: hasAction(this._config.double_tap_action),
-            })}
-          >
-            ${appearance.icon_type !== "none"
-              ? this.renderDeviceIcon(device)
-              : nothing}
-            ${this.renderDeviceBadge(device)}
-            <mushroom-state-info
-              slot="info"
-              .primary=${primary}
-              .secondary=${secondary}
-            ></mushroom-state-info>
-          </mushroom-state-item>
+          <div class="head">
+            <mushroom-state-item
+              ?rtl=${rtl}
+              .appearance=${appearance}
+              @action=${this._handleAction}
+              .actionHandler=${actionHandler({
+                hasHold: hasAction(this._config.hold_action),
+                hasDoubleClick: hasAction(this._config.double_tap_action),
+              })}
+            >
+              ${appearance.icon_type !== "none"
+                ? this.renderDeviceIcon(device)
+                : nothing}
+              ${this.renderDeviceBadge(device)}
+              <mushroom-state-info
+                slot="info"
+                .primary=${primary}
+                .secondary=${secondary}
+              ></mushroom-state-info>
+            </mushroom-state-item>
+            ${this.renderHealthTrail(device, appearance.layout)}
+          </div>
           ${this.renderStats(device, customLocalize)}
         </mushroom-card>
       </ha-card>
+    `;
+  }
+
+  /** "10 / 10" at the right end of the header row; coloured only when the score drops */
+  private renderHealthTrail(device: DeviceRecord, layout: string) {
+    if (this._config?.show_health === false || layout === "vertical")
+      return nothing;
+    const health = deviceHealth(this.hass, device);
+    if (!health) return nothing;
+    const tone =
+      health.score < 5 ? "danger" : health.score < 8 ? "warning" : "normal";
+    return html`
+      <span
+        class=${classMap({ trail: true, [tone]: true })}
+        title="Health"
+        @click=${() => showMoreInfo(this, health.entityId)}
+        >${health.score.toFixed(0)} / 10</span
+      >
     `;
   }
 
@@ -412,6 +433,33 @@ export class OmadaDeviceCard
       css`
         mushroom-state-item {
           cursor: pointer;
+        }
+        .head {
+          display: flex;
+          align-items: center;
+          flex: 1;
+          min-width: 0;
+        }
+        .head > mushroom-state-item {
+          flex: 1;
+          min-width: 0;
+        }
+        .trail {
+          flex: none;
+          padding: 0 var(--spacing) 0 4px;
+          font-size: 13px;
+          line-height: 16px;
+          font-weight: 600;
+          font-variant-numeric: tabular-nums;
+          color: var(--secondary-text-color);
+          cursor: pointer;
+          white-space: nowrap;
+        }
+        .trail.warning {
+          color: rgb(var(--rgb-warning));
+        }
+        .trail.danger {
+          color: rgb(var(--rgb-danger));
         }
         .offline {
           --main-color: rgb(var(--rgb-danger));

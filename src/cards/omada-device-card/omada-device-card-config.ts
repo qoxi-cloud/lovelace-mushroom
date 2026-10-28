@@ -1,4 +1,12 @@
-import { array, assign, enums, object, optional, string } from "superstruct";
+import {
+  array,
+  assign,
+  boolean,
+  enums,
+  object,
+  optional,
+  string,
+} from "superstruct";
 import {
   ActionsSharedConfig,
   actionsSharedConfigStruct,
@@ -48,6 +56,8 @@ export type OmadaDeviceCardConfig = LovelaceCardConfig &
     icon?: string;
     icon_color?: string;
     stats?: DeviceStat[];
+    /** controller health score as plain text on the header row (default true) */
+    show_health?: boolean;
   };
 
 export const omadaDeviceCardConfigStruct = assign(
@@ -60,5 +70,6 @@ export const omadaDeviceCardConfigStruct = assign(
     icon: optional(string()),
     icon_color: optional(string()),
     stats: optional(array(enums(DEVICE_STATS))),
+    show_health: optional(boolean()),
   })
 );
