@@ -177,19 +177,26 @@ export class CategoryBarCard
     `;
   }
 
-  private _scrolledFor = "";
+  private _pathSince = Date.now();
 
   protected updated(changed: Map<PropertyKey, unknown>) {
     super.updated(changed);
-    // keep the active pill in view when the row is wider than the screen
-    if (this._scrolledFor === this._path) return;
+    if (changed.has("_path")) this._pathSince = Date.now();
+    // keep the active pill in view when the row is wider than the screen;
+    // re-check for a moment because icons/fonts settle after first paint
+    if (Date.now() - this._pathSince > 2500) return;
+    const row = this.renderRoot?.querySelector<HTMLElement>(".pills");
     const active = this.renderRoot?.querySelector<HTMLElement>(".pill.active");
-    if (!active) return;
-    this._scrolledFor = this._path;
-    active.scrollIntoView({
-      inline: "center",
-      block: "nearest",
-    });
+    if (!row || !active) return;
+    const target = Math.max(
+      0,
+      Math.min(
+        row.scrollWidth - row.clientWidth,
+        active.offsetLeft - (row.clientWidth - active.offsetWidth) / 2
+      )
+    );
+    if (Math.abs(row.scrollLeft - target) > 2) row.scrollLeft = target;
+    window.setTimeout(() => this.requestUpdate(), 400);
   }
 
   protected render() {
