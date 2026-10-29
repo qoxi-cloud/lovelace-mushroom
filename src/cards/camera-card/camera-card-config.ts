@@ -19,8 +19,6 @@ export type CameraCardConfig = LovelaceCardConfig &
     live?: boolean;
     /** name band at the bottom (default true) */
     show_band?: boolean;
-    /** tap opens the full-screen viewer (default true) */
-    viewer?: boolean;
   };
 
 export const cameraCardConfigStruct = assign(
@@ -34,6 +32,5 @@ export const cameraCardConfigStruct = assign(
     show_age: optional(boolean()),
     live: optional(boolean()),
     show_band: optional(boolean()),
-    viewer: optional(boolean()),
   })
 );
