@@ -11,7 +11,9 @@ git add package.json
 git commit -m "$v" || true
 git tag "v$v"
 git push origin HEAD "v$v"
-gh release create "v$v" dist/mushroom.js --title "$v" --notes "qoxi fork release $v (asset: mushroom.js)"
+# gh resolves a fork to its upstream by default, so name our repo explicitly
+repo="$(git remote get-url origin | sed -E 's#.*github.com[:/]##; s#\.git$##')"
+gh release create "v$v" dist/mushroom.js -R "$repo" --title "$v" --notes "qoxi fork release $v (asset: mushroom.js)"
 if [ -n "${HA_MCP_URL:-}" ]; then
   python3 scripts/hamcp.py ha_call_write_tool '{"name":"ha_manage_hacs","arguments":{"action":"update_information","repository_id":"1437330511"}}' >/dev/null
   python3 scripts/hamcp.py ha_call_write_tool '{"name":"ha_manage_hacs","arguments":{"action":"download","repository_id":"1437330511"}}'
