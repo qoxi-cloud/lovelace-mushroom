@@ -2847,7 +2847,7 @@
        "entity": "camera.hallway",
        "name": "Hallway",
        "grid_options": {
-        "columns": 6
+        "columns": 12
        }
       },
       {
@@ -2855,7 +2855,7 @@
        "entity": "camera.basip_av_06m",
        "name": "Intercom",
        "grid_options": {
-        "columns": 6
+        "columns": 12
        }
       },
       {
@@ -2863,7 +2863,7 @@
        "entity": "camera.aqara_g100_90da",
        "name": "Children's",
        "grid_options": {
-        "columns": 6
+        "columns": 12
        }
       }
      ],
