@@ -32,7 +32,10 @@ declare global {
 
 const STREAM = 2; // CameraEntityFeature.STREAM
 
-function deepVideos(root: Element | ShadowRoot | null, out: HTMLVideoElement[] = []) {
+function deepVideos(
+  root: Element | ShadowRoot | null,
+  out: HTMLVideoElement[] = []
+) {
   if (!root) return out;
   root.querySelectorAll("video").forEach((v) => out.push(v));
   for (const el of root.querySelectorAll("*")) {
@@ -45,9 +48,6 @@ function deepVideo(root: Element | ShadowRoot | null): HTMLVideoElement | null {
   // prefer the element that actually carries the stream
   const all = deepVideos(root);
   return all.find((v) => v.srcObject || v.src) ?? all[0] ?? null;
-}
-  }
-  return null;
 }
 
 registerCustomCard({

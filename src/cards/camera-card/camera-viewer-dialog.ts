@@ -4,6 +4,7 @@
 import { css, CSSResultGroup, html, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
 import { PREFIX_NAME } from "../../const";
 import { QoxiSheet, showSheet } from "../../shared/qoxi-sheet";
 import { CAMERA_CARD_NAME } from "./const";
@@ -40,20 +41,57 @@ export class CameraViewerDialog extends QoxiSheet<CameraViewerParams> {
   }
 
   private _applyAudio() {
-    if (!this._params || this._grid) return;
-    const card = this._cards.get(this._current) as any;
-    card?.setMuted?.(this._muted);
+    // nothing to do: the main player is re-created with the new `muted`
   }
 
   private _toggleAudio() {
     this._muted = !this._muted;
-    this._applyAudio();
+  }
+
+  @state() private _streamReady = false;
+
+  private async _ensureStreamElement() {
+    if (customElements.get("ha-camera-stream")) {
+      this._streamReady = true;
+      return;
+    }
+    // ha-camera-stream is lazy-loaded by picture-entity (live); create one to import it
+    try {
+      const helpers = await window.loadCardHelpers?.();
+      helpers?.createCardElement({
+        type: "picture-entity",
+        entity: this._current,
+        camera_view: "live",
+      });
+      await customElements.whenDefined("ha-camera-stream");
+    } catch (e) {
+      /* fall back to the card below */
+    }
+    this._streamReady = !!customElements.get("ha-camera-stream");
+  }
+
+  private _renderMain() {
+    const stateObj = this.hass.states[this._current];
+    if (!this._streamReady || !stateObj) return this._card(this._current);
+    // keyed: toggling sound re-negotiates the stream with the audio track
+    return keyed(
+      `${this._current}:${this._muted}`,
+      html`<ha-camera-stream
+        class="stream"
+        .hass=${this.hass}
+        .stateObj=${stateObj}
+        .muted=${this._muted}
+        .fitMode=${"contain"}
+        .controls=${false}
+      ></ha-camera-stream>`
+    );
   }
 
   public showDialog(params: CameraViewerParams): void {
     this._current = params.entity;
     this._grid = false;
     this._muted = true;
+    this._ensureStreamElement();
     super.showDialog(params);
   }
 
@@ -160,7 +198,7 @@ export class CameraViewerDialog extends QoxiSheet<CameraViewerParams> {
               )}
             </div>`
           : html`
-              <div class="main">${this._card(this._current)}</div>
+              <div class="main">${this._renderMain()}</div>
               ${cams.length > 1
                 ? html`<div class="strip">
                     ${cams.map(
@@ -266,6 +304,11 @@ export class CameraViewerDialog extends QoxiSheet<CameraViewerParams> {
         }
         .main {
           margin: 0 -16px;
+        }
+        .stream {
+          width: 100%;
+          display: block;
+          --video-max-height: 70dvh;
         }
         .strip {
           display: flex;
