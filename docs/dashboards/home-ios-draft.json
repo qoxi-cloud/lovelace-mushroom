@@ -2853,37 +2853,28 @@
        "show_home_button": false
       },
       {
-       "type": "picture-entity",
+       "type": "custom:mushroom-camera-card",
        "entity": "camera.hallway",
-       "camera_view": "auto",
-       "show_name": true,
-       "show_state": false,
+       "name": "Hallway",
        "grid_options": {
         "columns": 6
-       },
-       "name": "Hallway"
+       }
       },
       {
-       "type": "picture-entity",
+       "type": "custom:mushroom-camera-card",
        "entity": "camera.basip_av_06m",
-       "camera_view": "auto",
-       "show_name": true,
-       "show_state": false,
+       "name": "Intercom",
        "grid_options": {
         "columns": 6
-       },
-       "name": "Intercom"
+       }
       },
       {
-       "type": "picture-entity",
+       "type": "custom:mushroom-camera-card",
        "entity": "camera.aqara_g100_90da",
-       "camera_view": "auto",
-       "show_name": true,
-       "show_state": false,
+       "name": "Children's",
        "grid_options": {
         "columns": 6
-       },
-       "name": "Children's"
+       }
       }
      ]
     }
