@@ -272,7 +272,8 @@ export class IspCard
     `;
   }
 
-  /** live ↓/↑ at the right end of the header, like the ONU card's PON mode */
+  /** live ↓/↑ at the right end of the header, like the ONU card's PON mode;
+   *  one value per line so a phone-width card keeps room for the IP */
   private renderTrafficTrail(
     link: WanLink,
     layout: string,
@@ -300,12 +301,9 @@ export class IspCard
       >
         <span class="trail-main">
           <ha-icon icon="mdi:swap-vertical"></ha-icon>
-          <span>${customLocalize("card.isp.traffic")}</span>
+          <span>↓ ${formatBitRate(link.rxRate)}</span>
         </span>
-        <span class="trail-sub"
-          >↓ ${formatBitRate(link.rxRate)}&nbsp;&nbsp;↑
-          ${formatBitRate(link.txRate)}</span
-        >
+        <span class="trail-sub">↑ ${formatBitRate(link.txRate)}</span>
       </div>
     `;
   }
