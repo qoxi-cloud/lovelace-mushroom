@@ -1,7 +1,9 @@
 // qoxi: Apple-Home-style camera tile. Live stream (HA's own picture-entity in
 // `live` mode: WebRTC/HLS, no play button) with the name on a soft bottom band
-// and, like Apple Home, a counter of seconds since playback started. Falls
-// back to a self-refreshing snapshot when the camera has no stream.
+// and a status dot: green while the picture is playing, red while it is not.
+// Falls back to a self-refreshing snapshot when the camera has no stream.
+// Kept deliberately light: no per-second re-renders, the video element is
+// located once and then watched through its own events.
 import { css, CSSResultGroup, html, nothing } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
@@ -33,7 +35,7 @@ const STREAM = 2; // CameraEntityFeature.STREAM
 function deepVideos(
   root: Element | ShadowRoot | null,
   out: HTMLVideoElement[] = []
-) {
+): HTMLVideoElement[] {
   if (!root) return out;
   root.querySelectorAll("video").forEach((v) => out.push(v));
   for (const el of root.querySelectorAll("*")) {
@@ -42,17 +44,10 @@ function deepVideos(
   return out;
 }
 
-function deepVideo(root: Element | ShadowRoot | null): HTMLVideoElement | null {
-  // prefer the element that actually carries the stream
-  const all = deepVideos(root);
-  return all.find((v) => v.srcObject || v.src) ?? all[0] ?? null;
-}
-
 registerCustomCard({
   type: CAMERA_CARD_NAME,
   name: "Mushroom Camera Card (qoxi)",
-  description:
-    "Self-refreshing camera snapshot with a name band, no play button",
+  description: "Live camera tile with a name band and a status dot",
 });
 
 @customElement(CAMERA_CARD_NAME)
@@ -68,12 +63,12 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
 
   @state() private _config?: CameraCardConfig;
   @state() private _tick = 0;
-  @state() private _loadedAt = 0;
-  @state() private _now = Date.now();
-  @state() private _playStart = 0;
+  @state() private _snapshotOk = false;
+  @state() private _playing = false;
   @state() private _player?: LovelaceCard;
-  private _timer?: number;
-  private _clock?: number;
+  private _snapshotTimer?: number;
+  private _findTimer?: number;
+  private _video?: HTMLVideoElement;
   private _liveWanted = false;
 
   getCardSize(): number {
@@ -88,36 +83,46 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
       double_tap_action: { action: "none" },
       ...config,
     };
-    this._restart();
+    this._restartSnapshots();
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this._restart();
-    this._clock = window.setInterval(() => {
-      this._now = Date.now();
-      this._watchPlayback();
-    }, 1000);
+    this._restartSnapshots();
   }
 
-  /** audio of the live stream; browsers only allow this from a user gesture */
-  public setMuted(muted: boolean) {
-    const videos = deepVideos(this._player?.shadowRoot ?? this._player ?? null);
-    for (const video of videos) {
-      video.muted = muted;
-      if (!muted) video.volume = 1;
-    }
-    return videos.length > 0;
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._stopSnapshots();
+    this._stopFinding();
+    this._unwatch();
   }
 
-  /** seconds since the live picture started playing (Apple Home style) */
-  private _watchPlayback() {
-    if (!this._player) return;
-    const video = deepVideo(this._player.shadowRoot ?? this._player);
-    const playing = !!video && !video.paused && video.readyState >= 2;
-    if (playing && !this._playStart) this._playStart = Date.now();
-    if (!playing && this._playStart) this._playStart = 0;
+  // --- snapshot (poster / fallback) -------------------------------------
+
+  private _restartSnapshots() {
+    this._stopSnapshots();
+    const period = Math.max(2, this._config?.refresh ?? 10) * 1000;
+    this._snapshotTimer = window.setInterval(() => {
+      // once the live picture plays there is no point refreshing the poster
+      if (!this._playing) this._tick++;
+    }, period);
   }
+
+  private _stopSnapshots() {
+    if (this._snapshotTimer) window.clearInterval(this._snapshotTimer);
+    this._snapshotTimer = undefined;
+  }
+
+  private _src(): string | undefined {
+    const stateObj = this.hass?.states[this._config?.entity ?? ""];
+    const picture = stateObj?.attributes.entity_picture as string | undefined;
+    if (!picture) return undefined;
+    const sep = picture.includes("?") ? "&" : "?";
+    return `${this.hass.hassUrl(picture)}${sep}t=${this._tick}`;
+  }
+
+  // --- live player ------------------------------------------------------
 
   private _isLive(): boolean {
     if (this._config?.live === false) return false;
@@ -145,9 +150,74 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
       });
       el.hass = this.hass;
       this._player = el;
+      this._startFinding();
     } catch (e) {
       this._liveWanted = false;
     }
+  }
+
+  /** locate the <video> once (it appears asynchronously), then watch its events */
+  private _startFinding() {
+    this._stopFinding();
+    let attempts = 0;
+    this._findTimer = window.setInterval(() => {
+      attempts++;
+      const video = deepVideos(
+        this._player?.shadowRoot ?? this._player ?? null
+      ).find((v) => v.srcObject || v.src);
+      if (video) {
+        this._stopFinding();
+        this._watch(video);
+      } else if (attempts > 60) {
+        this._stopFinding();
+      }
+    }, 500);
+  }
+
+  private _stopFinding() {
+    if (this._findTimer) window.clearInterval(this._findTimer);
+    this._findTimer = undefined;
+  }
+
+  private _onPlaying = () => {
+    this._playing = true;
+  };
+  private _onStalled = () => {
+    this._playing = false;
+    // the player may replace its <video> on reconnect
+    this._startFinding();
+  };
+
+  private _watch(video: HTMLVideoElement) {
+    this._unwatch();
+    this._video = video;
+    video.addEventListener("playing", this._onPlaying);
+    video.addEventListener("pause", this._onStalled);
+    video.addEventListener("ended", this._onStalled);
+    video.addEventListener("error", this._onStalled);
+    video.addEventListener("emptied", this._onStalled);
+    this._playing = !video.paused && video.readyState >= 2;
+  }
+
+  private _unwatch() {
+    const v = this._video;
+    if (!v) return;
+    v.removeEventListener("playing", this._onPlaying);
+    v.removeEventListener("pause", this._onStalled);
+    v.removeEventListener("ended", this._onStalled);
+    v.removeEventListener("error", this._onStalled);
+    v.removeEventListener("emptied", this._onStalled);
+    this._video = undefined;
+  }
+
+  /** audio of the live stream; browsers only allow this from a user gesture */
+  public setMuted(muted: boolean) {
+    const videos = deepVideos(this._player?.shadowRoot ?? this._player ?? null);
+    for (const video of videos) {
+      video.muted = muted;
+      if (!muted) video.volume = 1;
+    }
+    return videos.length > 0;
   }
 
   protected updated(changed: Map<PropertyKey, unknown>) {
@@ -156,31 +226,8 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
     if (this._player && changed.has("hass")) this._player.hass = this.hass;
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this._timer) window.clearInterval(this._timer);
-    if (this._clock) window.clearInterval(this._clock);
-    this._timer = undefined;
-    this._clock = undefined;
-  }
-
-  private _restart() {
-    if (this._timer) window.clearInterval(this._timer);
-    const period = Math.max(2, this._config?.refresh ?? 10) * 1000;
-    this._timer = window.setInterval(() => this._tick++, period);
-  }
-
   private _handleAction(ev: ActionHandlerEvent) {
     handleAction(this, this.hass!, this._config!, ev.detail.action!);
-  }
-
-  private _src(): string | undefined {
-    const stateObj = this.hass?.states[this._config?.entity ?? ""];
-    const picture = stateObj?.attributes.entity_picture as string | undefined;
-    if (!picture) return undefined;
-    // the access token in entity_picture is rotated by HA; `t` only busts the cache
-    const sep = picture.includes("?") ? "&" : "?";
-    return `${this.hass.hassUrl(picture)}${sep}t=${this._tick}`;
   }
 
   protected render() {
@@ -192,11 +239,7 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
       this._config.entity;
     const live = this._isLive() && !!this._player;
     const src = this._src();
-    const since = live ? this._playStart : this._loadedAt;
-    const age =
-      since && this._config.show_age !== false
-        ? `${Math.max(0, Math.round((this._now - since) / 1000))}s`
-        : "";
+    const ok = live ? this._playing : this._snapshotOk;
     return html`
       <ha-card
         style=${styleMap({
@@ -212,25 +255,26 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
           ? html`<img
               src=${src}
               alt=${name}
-              @load=${() => (this._loadedAt = Date.now())}
+              @load=${() => (this._snapshotOk = true)}
+              @error=${() => (this._snapshotOk = false)}
             />`
           : html`<div class="empty">
               <ha-icon icon="mdi:cctv-off"></ha-icon>
             </div>`}
         ${live
-          ? html`<div
-              class=${classMap({ player: true, ready: !!this._playStart })}
-            >
+          ? html`<div class=${classMap({ player: true, ready: this._playing })}>
               ${this._player}
             </div>`
           : nothing}
-        ${live && !this._playStart
+        ${live && !this._playing
           ? html`<div class="loading"><span class="spinner"></span></div>`
           : nothing}
         ${this._config.show_band !== false
           ? html`<div class="band">
               <span class="name">${name}</span>
-              ${age ? html`<span class="age">${age}</span>` : nothing}
+              ${this._config.show_age !== false
+                ? html`<span class=${classMap({ dot: true, ok })}></span>`
+                : nothing}
             </div>`
           : nothing}
       </ha-card>
@@ -248,6 +292,9 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
           background: rgba(var(--rgb-primary-text-color), 0.08);
           cursor: pointer;
           padding: 0;
+          /* video under a blurred surface is expensive on phones */
+          --ha-card-backdrop-filter: none;
+          backdrop-filter: none;
         }
         img {
           display: block;
@@ -259,10 +306,25 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
           position: absolute;
           inset: 0;
           opacity: 0;
-          transition: opacity 300ms ease;
+          --ha-card-border-radius: 0;
+          --ha-card-border-width: 0;
+          --ha-card-background: transparent;
+          --ha-card-backdrop-filter: none;
         }
         .player.ready {
           opacity: 1;
+        }
+        .player > * {
+          width: 100%;
+          height: 100%;
+        }
+        .empty {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          color: var(--secondary-text-color);
+          --mdc-icon-size: 32px;
         }
         .loading {
           position: absolute;
@@ -285,22 +347,6 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
             transform: rotate(360deg);
           }
         }
-          --ha-card-border-radius: 0;
-          --ha-card-border-width: 0;
-          --ha-card-background: transparent;
-        }
-        .player > * {
-          width: 100%;
-          height: 100%;
-        }
-        .empty {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          color: var(--secondary-text-color);
-          --mdc-icon-size: 32px;
-        }
         .band {
           position: absolute;
           left: 0;
@@ -319,11 +365,17 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
           font-weight: 600;
           letter-spacing: -0.01em;
         }
-        .age {
-          font-size: 12px;
-          font-weight: 600;
-          opacity: 0.85;
-          font-variant-numeric: tabular-nums;
+        .dot {
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          margin-bottom: 4px;
+          background: rgb(var(--rgb-danger, 244, 67, 54));
+          box-shadow: 0 0 6px rgba(var(--rgb-danger, 244, 67, 54), 0.8);
+        }
+        .dot.ok {
+          background: rgb(var(--rgb-success, 76, 175, 80));
+          box-shadow: 0 0 6px rgba(var(--rgb-success, 76, 175, 80), 0.8);
         }
       `,
     ];
