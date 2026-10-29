@@ -97,6 +97,15 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
     }, 1000);
   }
 
+  /** audio of the live stream; browsers only allow this from a user gesture */
+  public setMuted(muted: boolean) {
+    const video = deepVideo(this._player?.shadowRoot ?? this._player ?? null);
+    if (!video) return false;
+    video.muted = muted;
+    if (!muted) video.volume = 1;
+    return true;
+  }
+
   /** seconds since the live picture started playing (Apple Home style) */
   private _watchPlayback() {
     if (!this._player) return;

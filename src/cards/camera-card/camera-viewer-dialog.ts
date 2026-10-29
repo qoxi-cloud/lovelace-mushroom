@@ -24,11 +24,36 @@ export function showCameraViewer(el: HTMLElement, params: CameraViewerParams) {
 export class CameraViewerDialog extends QoxiSheet<CameraViewerParams> {
   @state() private _current = "";
   @state() private _grid = false;
+  @state() private _muted = true;
   private _cards = new Map<string, HTMLElement>();
+  private _audioTimer?: number;
+
+  connectedCallback() {
+    super.connectedCallback();
+    // re-apply the audio choice when a player (re)appears after switching cameras
+    this._audioTimer = window.setInterval(() => this._applyAudio(), 1000);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    if (this._audioTimer) window.clearInterval(this._audioTimer);
+  }
+
+  private _applyAudio() {
+    if (!this._params || this._grid) return;
+    const card = this._cards.get(this._current) as any;
+    card?.setMuted?.(this._muted);
+  }
+
+  private _toggleAudio() {
+    this._muted = !this._muted;
+    this._applyAudio();
+  }
 
   public showDialog(params: CameraViewerParams): void {
     this._current = params.entity;
     this._grid = false;
+    this._muted = true;
     super.showDialog(params);
   }
 
@@ -97,6 +122,17 @@ export class CameraViewerDialog extends QoxiSheet<CameraViewerParams> {
               ${this._grid ? `${cams.length} cameras` : `${name} • Live`}
             </div>
           </div>
+          ${!this._grid
+            ? html`<button
+                class=${classMap({ round: true, active: !this._muted })}
+                @click=${this._toggleAudio}
+                aria-label="Sound"
+              >
+                <ha-icon
+                  icon=${this._muted ? "mdi:volume-off" : "mdi:volume-high"}
+                ></ha-icon>
+              </button>`
+            : nothing}
           <button
             class=${classMap({ round: true, active: this._grid })}
             @click=${() => (this._grid = !this._grid)}
@@ -226,6 +262,10 @@ export class CameraViewerDialog extends QoxiSheet<CameraViewerParams> {
           width: 100%;
           max-height: 100%;
           --camera-ratio: 16 / 9;
+          --ha-card-border-radius: 0;
+        }
+        .main {
+          margin: 0 -16px;
         }
         .strip {
           display: flex;
