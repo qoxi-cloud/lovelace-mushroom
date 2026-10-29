@@ -144,6 +144,12 @@
           ],
           "suffix": "On"
          }
+        },
+        {
+         "label": "Overview",
+         "icon": "mdi:view-dashboard-outline",
+         "color": "indigo",
+         "path": "/home"
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -1098,6 +1104,12 @@
           ],
           "suffix": "On"
          }
+        },
+        {
+         "label": "Overview",
+         "icon": "mdi:view-dashboard-outline",
+         "color": "indigo",
+         "path": "/home"
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -1849,6 +1861,12 @@
           ],
           "suffix": "On"
          }
+        },
+        {
+         "label": "Overview",
+         "icon": "mdi:view-dashboard-outline",
+         "color": "indigo",
+         "path": "/home"
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -2323,6 +2341,12 @@
           ],
           "suffix": "On"
          }
+        },
+        {
+         "label": "Overview",
+         "icon": "mdi:view-dashboard-outline",
+         "color": "indigo",
+         "path": "/home"
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -2783,6 +2807,12 @@
           ],
           "suffix": "On"
          }
+        },
+        {
+         "label": "Overview",
+         "icon": "mdi:view-dashboard-outline",
+         "color": "indigo",
+         "path": "/home"
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -3044,6 +3074,12 @@
           ],
           "suffix": "On"
          }
+        },
+        {
+         "label": "Overview",
+         "icon": "mdi:view-dashboard-outline",
+         "color": "indigo",
+         "path": "/home"
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -3225,6 +3261,12 @@
           ],
           "suffix": "On"
          }
+        },
+        {
+         "label": "Overview",
+         "icon": "mdi:view-dashboard-outline",
+         "color": "indigo",
+         "path": "/home"
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -3532,6 +3574,12 @@
           ],
           "suffix": "On"
          }
+        },
+        {
+         "label": "Overview",
+         "icon": "mdi:view-dashboard-outline",
+         "color": "indigo",
+         "path": "/home"
         }
        ],
        "home_path": "/dashboard-home-ios/home",
