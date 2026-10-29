@@ -791,6 +791,21 @@
       },
       {
        "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bathroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
        "entity": "light.wiser_dimmablelight_bathroom_led_light",
        "name": "Led",
        "layout": "horizontal",
@@ -804,21 +819,6 @@
         "columns": 6
        },
        "show_brightness_control": true
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_bathroom_light_light",
-       "name": "Light",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
       },
       {
        "type": "custom:mushroom-light-card",
@@ -877,6 +877,21 @@
       },
       {
        "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_showerroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
        "entity": "light.wiser_dimmablelight_showerroom_led_light",
        "name": "Led",
        "layout": "horizontal",
@@ -890,21 +905,6 @@
         "columns": 6
        },
        "show_brightness_control": true
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_showerroom_light_light",
-       "name": "Light",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
       },
       {
        "type": "custom:mushroom-light-card",
@@ -1599,6 +1599,21 @@
       },
       {
        "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bathroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
        "entity": "light.wiser_dimmablelight_bathroom_led_light",
        "name": "Led",
        "layout": "horizontal",
@@ -1612,21 +1627,6 @@
         "columns": 6
        },
        "show_brightness_control": true
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_bathroom_light_light",
-       "name": "Light",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
       },
       {
        "type": "custom:mushroom-light-card",
@@ -1657,6 +1657,21 @@
       },
       {
        "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_showerroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
        "entity": "light.wiser_dimmablelight_showerroom_led_light",
        "name": "Led",
        "layout": "horizontal",
@@ -1670,21 +1685,6 @@
         "columns": 6
        },
        "show_brightness_control": true
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_showerroom_light_light",
-       "name": "Light",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
       },
       {
        "type": "custom:mushroom-light-card",
