@@ -34,6 +34,7 @@ import { cardStyle } from "../../utils/card-styles";
 import { computeRgbColor } from "../../utils/colors";
 import { computeEntityName } from "../../utils/compute-entity-name";
 import { registerCustomCard } from "../../utils/custom-cards";
+import { qoxiActiveSurface } from "../../utils/qoxi-surface";
 import { computeEntityPicture } from "../../utils/info";
 import {
   LIGHT_CARD_EDITOR_NAME,
@@ -213,7 +214,7 @@ export class LightCard
       <ha-card
         class=${classMap({
           "fill-container": appearance.fill_container,
-          "qoxi-active": isActive(stateObj),
+          "qoxi-active": qoxiActiveSurface(this, isActive(stateObj)),
         })}
       >
         <mushroom-card .appearance=${appearance} ?rtl=${rtl}>

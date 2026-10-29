@@ -26,6 +26,7 @@ import { cardStyle } from "../../utils/card-styles";
 import { computeRgbColor } from "../../utils/colors";
 import { computeEntityName } from "../../utils/compute-entity-name";
 import { registerCustomCard } from "../../utils/custom-cards";
+import { qoxiActiveSurface } from "../../utils/qoxi-surface";
 import { computeEntityPicture } from "../../utils/info";
 import { ENTITY_CARD_EDITOR_NAME, ENTITY_CARD_NAME } from "./const";
 import { EntityCardConfig } from "./entity-card-config";
@@ -85,7 +86,7 @@ export class EntityCard
       <ha-card
         class=${classMap({
           "fill-container": appearance.fill_container,
-          "qoxi-active": isActive(stateObj),
+          "qoxi-active": qoxiActiveSurface(this, isActive(stateObj)),
         })}
       >
         <mushroom-card .appearance=${appearance} ?rtl=${rtl}>

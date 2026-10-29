@@ -45,15 +45,12 @@ export const cardStyle = css`
   }
 
   ha-card.qoxi-active {
-    background: var(--qoxi-active-card-background, var(--ha-card-background));
-    --primary-text-color: var(
-      --qoxi-active-text-color,
-      var(--primary-text-color)
-    );
+    background: var(--qoxi-active-card-background, #ffffff);
+    --primary-text-color: var(--qoxi-active-text-color, #1c1c1e);
     --secondary-text-color: var(
       --qoxi-active-secondary-text-color,
-      var(--secondary-text-color)
+      rgba(60, 60, 67, 0.6)
     );
-    --qoxi-shape-color: var(--qoxi-active-shape-color, var(--qoxi-shape-color));
+    --qoxi-shape-color: var(--qoxi-active-shape-color, rgba(0, 0, 0, 0.06));
   }
 `;
