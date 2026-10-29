@@ -52,5 +52,11 @@ export const cardStyle = css`
       rgba(60, 60, 67, 0.6)
     );
     --qoxi-shape-color: var(--qoxi-active-shape-color, rgba(0, 0, 0, 0.06));
+    /* Mushroom resolves these on the card host, so override them here too */
+    --card-primary-color: var(--qoxi-active-text-color, #1c1c1e);
+    --card-secondary-color: var(
+      --qoxi-active-secondary-text-color,
+      rgba(60, 60, 67, 0.6)
+    );
   }
 `;
