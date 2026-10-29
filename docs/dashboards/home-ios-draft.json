@@ -15,12 +15,6 @@
        "title": "Home",
        "items": [
         {
-         "label": "Home",
-         "icon": "mdi:home",
-         "color": "amber",
-         "path": "/dashboard-home-ios/home"
-        },
-        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -1073,12 +1067,6 @@
        "title": "Lights",
        "items": [
         {
-         "label": "Home",
-         "icon": "mdi:home",
-         "color": "amber",
-         "path": "/dashboard-home-ios/home"
-        },
-        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -1820,12 +1808,6 @@
        "title": "Heating",
        "items": [
         {
-         "label": "Home",
-         "icon": "mdi:home",
-         "color": "amber",
-         "path": "/dashboard-home-ios/home"
-        },
-        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -2242,12 +2224,6 @@
        "title": "Cooling",
        "items": [
         {
-         "label": "Home",
-         "icon": "mdi:home",
-         "color": "amber",
-         "path": "/dashboard-home-ios/home"
-        },
-        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -2616,12 +2592,6 @@
        "type": "custom:mushroom-category-bar-card",
        "title": "Cameras",
        "items": [
-        {
-         "label": "Home",
-         "icon": "mdi:home",
-         "color": "amber",
-         "path": "/dashboard-home-ios/home"
-        },
         {
          "label": "Lights",
          "icon": "mdi:lightbulb",

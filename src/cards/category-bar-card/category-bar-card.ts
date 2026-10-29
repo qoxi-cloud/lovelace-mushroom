@@ -149,6 +149,14 @@ export class CategoryBarCard
     return this._path === item.path;
   }
 
+  /** pills behave like filters: tapping the active one clears the filter
+   *  (back to home_path), tapping another one switches */
+  private _toggle(item: CategoryItem) {
+    const home = this._config?.home_path;
+    if (this._active(item) && home) navigate(home);
+    else navigate(item.path);
+  }
+
   private _renderPill(item: CategoryItem): TemplateResult {
     const active = this._active(item);
     const rgb = computeRgbColor(item.color ?? "blue");
@@ -156,7 +164,7 @@ export class CategoryBarCard
       <button
         class=${classMap({ pill: true, active })}
         style=${styleMap({ "--pill-icon-color": `rgb(${rgb})` })}
-        @click=${() => navigate(item.path)}
+        @click=${() => this._toggle(item)}
       >
         <ha-icon .icon=${item.icon}></ha-icon>
         <span class="text">
