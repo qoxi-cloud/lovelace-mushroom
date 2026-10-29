@@ -65,7 +65,7 @@
          "label": "Security",
          "icon": "mdi:lock",
          "color": "teal",
-         "path": "/dashboard-home-ios/home",
+         "path": "/dashboard-home-ios/security",
          "status": {
           "kind": "state",
           "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
@@ -987,23 +987,9 @@
      "cards": [
       {
        "type": "heading",
-       "heading": "Security & systems",
+       "heading": "Systems",
        "heading_style": "title",
-       "icon": "mdi:shield-home"
-      },
-      {
-       "type": "custom:mushroom-alarm-control-panel-card",
-       "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
-       "name": "Ajax",
-       "states": [
-        "armed_home",
-        "armed_away"
-       ],
-       "layout": "horizontal",
-       "fill_container": true,
-       "grid_options": {
-        "columns": "full"
-       }
+       "icon": "mdi:cog-outline"
       },
       {
        "type": "custom:mushroom-entity-card",
@@ -1021,16 +1007,6 @@
        "entity": "sensor.bwt_perla_silk_days_until_regeneration",
        "name": "Regeneration in",
        "icon": "mdi:water-sync",
-       "layout": "horizontal",
-       "fill_container": true,
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "sensor.server_hub_2_plus_jeweller_battery",
-       "name": "Ajax hub battery",
        "layout": "horizontal",
        "fill_container": true,
        "grid_options": {
@@ -1117,7 +1093,7 @@
          "label": "Security",
          "icon": "mdi:lock",
          "color": "teal",
-         "path": "/dashboard-home-ios/home",
+         "path": "/dashboard-home-ios/security",
          "status": {
           "kind": "state",
           "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
@@ -1858,7 +1834,7 @@
          "label": "Security",
          "icon": "mdi:lock",
          "color": "teal",
-         "path": "/dashboard-home-ios/home",
+         "path": "/dashboard-home-ios/security",
          "status": {
           "kind": "state",
           "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
@@ -2274,7 +2250,7 @@
          "label": "Security",
          "icon": "mdi:lock",
          "color": "teal",
-         "path": "/dashboard-home-ios/home",
+         "path": "/dashboard-home-ios/security",
          "status": {
           "kind": "state",
           "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
@@ -2579,6 +2555,209 @@
    ]
   },
   {
+   "title": "Security",
+   "path": "security",
+   "icon": "mdi:lock",
+   "type": "sections",
+   "max_columns": 2,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Security",
+       "items": [
+        {
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "domain": "light",
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/security",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
+         }
+        }
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       },
+       "show_home_button": false
+      },
+      {
+       "type": "custom:mushroom-alarm-control-panel-card",
+       "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+       "name": "Ajax",
+       "states": [
+        "armed_home",
+        "armed_away"
+       ],
+       "layout": "vertical",
+       "fill_container": true,
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Hub 2 Plus",
+       "heading_style": "title",
+       "icon": "mdi:shield-home"
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.server_hub_2_plus_jeweller_battery",
+       "name": "Battery",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.server_hub_2_plus_jeweller_connection_type",
+       "name": "Connection",
+       "icon": "mdi:ethernet",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "binary_sensor.server_hub_2_plus_jeweller_cellular_connected",
+       "name": "Cellular",
+       "icon": "mdi:signal",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "binary_sensor.server_hub_2_plus_jeweller_lid_opened",
+       "name": "Tamper",
+       "icon": "mdi:shield-alert-outline",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Restore after alarm",
+       "icon": "mdi:restore-alert",
+       "icon_color": "red",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "perform-action",
+        "perform_action": "button.press",
+        "target": {
+         "entity_id": "button.server_hub_2_plus_jeweller_restore_after_alarm"
+        }
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Refresh hub",
+       "icon": "mdi:refresh",
+       "icon_color": "grey",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "perform-action",
+        "perform_action": "button.press",
+        "target": {
+         "entity_id": "button.server_hub_2_plus_jeweller_refresh_hub"
+        }
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
    "title": "Cameras",
    "path": "cameras",
    "icon": "mdi:cctv",
@@ -2643,7 +2822,7 @@
          "label": "Security",
          "icon": "mdi:lock",
          "color": "teal",
-         "path": "/dashboard-home-ios/home",
+         "path": "/dashboard-home-ios/security",
          "status": {
           "kind": "state",
           "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
