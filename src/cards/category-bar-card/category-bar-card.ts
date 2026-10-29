@@ -261,12 +261,13 @@ export class CategoryBarCard
           color: var(--secondary-text-color);
         }
         .pill.active {
-          background: var(--primary-text-color);
-          color: var(--card-background-color, #1c2030);
+          background: #ffffff;
+          color: #1c1c1e;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
         }
         .pill.active .status {
-          color: var(--card-background-color, #1c2030);
-          opacity: 0.7;
+          color: #1c1c1e;
+          opacity: 0.6;
         }
         .home {
           position: fixed;
