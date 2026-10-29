@@ -98,6 +98,21 @@
           "domain": "device_tracker",
           "suffix": "online"
          }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch"
+          ],
+          "suffix": "On"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -382,20 +397,6 @@
        }
       },
       {
-       "type": "custom:mushroom-entity-card",
-       "entity": "switch.wiser_bedroom_garland_switch",
-       "name": "Garland",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon": "mdi:string-lights",
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
        "type": "custom:mushroom-climate-card",
        "entity": "climate.gree_ac_2",
        "name": "AC",
@@ -562,20 +563,6 @@
        }
       },
       {
-       "type": "custom:mushroom-entity-card",
-       "entity": "switch.wiser_childrens_garland_switch",
-       "name": "Garland",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon": "mdi:string-lights",
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
        "type": "custom:mushroom-climate-card",
        "entity": "climate.gree_ac_1",
        "name": "AC",
@@ -642,20 +629,6 @@
        "fill_container": true,
        "collapsible_controls": true,
        "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "switch.wiser_cabinet_garland_switch",
-       "name": "Garland",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon": "mdi:string-lights",
        "tap_action": {
         "action": "toggle"
        },
@@ -961,50 +934,6 @@
        "temperature_icon": true
       }
      ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "Systems",
-       "heading_style": "title",
-       "icon": "mdi:cog-outline"
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "sensor.bwt_perla_silk_salt_level",
-       "name": "Water softener salt",
-       "icon": "mdi:shaker-outline",
-       "layout": "horizontal",
-       "fill_container": true,
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "sensor.bwt_perla_silk_days_until_regeneration",
-       "name": "Regeneration in",
-       "icon": "mdi:water-sync",
-       "layout": "horizontal",
-       "fill_container": true,
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "sensor.wiser_heathub_wiserheat06724f_wiser_cloud",
-       "name": "Wiser cloud",
-       "icon": "mdi:cloud-check-outline",
-       "layout": "horizontal",
-       "fill_container": true,
-       "grid_options": {
-        "columns": 6
-       }
-      }
-     ]
     }
    ]
   },
@@ -1105,6 +1034,21 @@
           "kind": "count_on",
           "domain": "device_tracker",
           "suffix": "online"
+         }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch"
+          ],
+          "suffix": "On"
          }
         }
        ],
@@ -1340,20 +1284,6 @@
        "grid_options": {
         "columns": 6
        }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "switch.wiser_bedroom_garland_switch",
-       "name": "Garland",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon": "mdi:string-lights",
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
       }
      ]
     },
@@ -1473,20 +1403,6 @@
        "grid_options": {
         "columns": 6
        }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "switch.wiser_childrens_garland_switch",
-       "name": "Garland",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon": "mdi:string-lights",
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
       }
      ]
     },
@@ -1508,20 +1424,6 @@
        "fill_container": true,
        "collapsible_controls": true,
        "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "switch.wiser_cabinet_garland_switch",
-       "name": "Garland",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon": "mdi:string-lights",
        "tap_action": {
         "action": "toggle"
        },
@@ -1676,17 +1578,6 @@
        "grid_options": {
         "columns": 6
        }
-      },
-      {
-       "type": "custom:mushroom-fan-card",
-       "entity": "fan.wiser_onofflight_bathroom_hood_fan",
-       "name": "Hood",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon_animation": true,
-       "grid_options": {
-        "columns": 6
-       }
       }
      ]
     },
@@ -1742,17 +1633,6 @@
        "tap_action": {
         "action": "toggle"
        },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-fan-card",
-       "entity": "fan.wiser_onofflight_showerroom_hood_fan",
-       "name": "Hood",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon_animation": true,
        "grid_options": {
         "columns": 6
        }
@@ -1858,6 +1738,21 @@
           "kind": "count_on",
           "domain": "device_tracker",
           "suffix": "online"
+         }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch"
+          ],
+          "suffix": "On"
          }
         }
        ],
@@ -2287,6 +2182,21 @@
           "domain": "device_tracker",
           "suffix": "online"
          }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch"
+          ],
+          "suffix": "On"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -2567,6 +2477,50 @@
        }
       }
      ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "BathRoom",
+       "heading_style": "title",
+       "icon": "mdi:bathtub"
+      },
+      {
+       "type": "custom:mushroom-fan-card",
+       "entity": "fan.wiser_onofflight_bathroom_hood_fan",
+       "name": "Hood",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon_animation": true,
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "ShowerRoom",
+       "heading_style": "title",
+       "icon": "mdi:shower"
+      },
+      {
+       "type": "custom:mushroom-fan-card",
+       "entity": "fan.wiser_onofflight_showerroom_hood_fan",
+       "name": "Hood",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon_animation": true,
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
     }
    ]
   },
@@ -2667,6 +2621,21 @@
           "kind": "count_on",
           "domain": "device_tracker",
           "suffix": "online"
+         }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch"
+          ],
+          "suffix": "On"
          }
         }
        ],
@@ -2883,6 +2852,21 @@
           "domain": "device_tracker",
           "suffix": "online"
          }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch"
+          ],
+          "suffix": "On"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -3017,6 +3001,21 @@
           "kind": "count_on",
           "domain": "device_tracker",
           "suffix": "online"
+         }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch"
+          ],
+          "suffix": "On"
          }
         }
        ],
@@ -3175,6 +3174,207 @@
        "filter": "wireless",
        "show_filters": false,
        "limit": 10
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Service",
+   "path": "service",
+   "icon": "mdi:wrench-outline",
+   "type": "sections",
+   "max_columns": 2,
+   "sections": [
+    {
+     "type": "grid",
+     "column_span": 2,
+     "cards": [
+      {
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Service",
+       "items": [
+        {
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "domain": "light",
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/security",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
+         }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch"
+          ],
+          "suffix": "On"
+         }
+        }
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       },
+       "show_home_button": false
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "BedRoom",
+       "heading_style": "title",
+       "icon": "mdi:bed"
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "switch.wiser_bedroom_garland_switch",
+       "name": "Garland",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon": "mdi:string-lights",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Children's",
+       "heading_style": "title",
+       "icon": "mdi:teddy-bear"
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "switch.wiser_childrens_garland_switch",
+       "name": "Garland",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon": "mdi:string-lights",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Cabinet",
+       "heading_style": "title",
+       "icon": "mdi:desk"
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "switch.wiser_cabinet_garland_switch",
+       "name": "Garland",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon": "mdi:string-lights",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
       }
      ]
     }
