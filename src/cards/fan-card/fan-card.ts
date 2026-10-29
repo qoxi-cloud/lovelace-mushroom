@@ -169,7 +169,10 @@ export class FanCard
 
     return html`
       <ha-card
-        class=${classMap({ "fill-container": appearance.fill_container })}
+        class=${classMap({
+          "fill-container": appearance.fill_container,
+          "qoxi-active": isActive(stateObj),
+        })}
       >
         <mushroom-card .appearance=${appearance} ?rtl=${rtl}>
           <mushroom-state-item

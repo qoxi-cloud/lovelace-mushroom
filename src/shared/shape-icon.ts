@@ -43,7 +43,7 @@ export class ShapeIcon extends LitElement {
           display: flex;
           align-items: center;
           justify-content: center;
-          background-color: var(--shape-color);
+          background-color: var(--qoxi-shape-color, var(--shape-color));
           transition-property: background-color, box-shadow;
           transition-duration: 280ms;
           transition-timing-function: ease-out;
@@ -63,7 +63,10 @@ export class ShapeIcon extends LitElement {
           --mdc-icon-size: var(--icon-symbol-size);
         }
         .shape.disabled {
-          background-color: var(--shape-color-disabled);
+          background-color: var(
+            --qoxi-shape-color,
+            var(--shape-color-disabled)
+          );
         }
         .shape.disabled ::slotted(*) {
           color: var(--icon-color-disabled);

@@ -43,4 +43,17 @@ export const cardStyle = css`
   mushroom-state-item[disabled] {
     cursor: initial;
   }
+
+  ha-card.qoxi-active {
+    background: var(--qoxi-active-card-background, var(--ha-card-background));
+    --primary-text-color: var(
+      --qoxi-active-text-color,
+      var(--primary-text-color)
+    );
+    --secondary-text-color: var(
+      --qoxi-active-secondary-text-color,
+      var(--secondary-text-color)
+    );
+    --qoxi-shape-color: var(--qoxi-active-shape-color, var(--qoxi-shape-color));
+  }
 `;
