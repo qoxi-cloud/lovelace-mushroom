@@ -244,17 +244,17 @@ qoxi iOS:
       rgb-secondary-text-color: 110, 110, 115
       rgb-card-background-color: 255, 255, 255
       lovelace-background: "radial-gradient(at 18% 8%, rgba(120, 160, 255, 0.55) 0px, transparent 55%), radial-gradient(at 88% 0%, rgba(190, 150, 255, 0.5) 0px, transparent 50%), radial-gradient(at 28% 100%, rgba(120, 220, 230, 0.5) 0px, transparent 55%), radial-gradient(at 90% 90%, rgba(255, 170, 200, 0.45) 0px, transparent 50%), #eef0f6"
-      card-background-color: "rgba(225, 228, 240, 0.62)"
-      ha-card-background: "rgba(225, 228, 240, 0.62)"
+      card-background-color: "rgba(118, 120, 134, 0.42)"
+      ha-card-background: "rgba(118, 120, 134, 0.42)"
       app-header-background-color: "#e9ecf5"
       sidebar-background-color: "#eceef5"
-      qoxi-pill-background: "rgba(205, 210, 228, 0.6)"
+      qoxi-pill-background: "rgba(118, 120, 134, 0.42)"
       ha-card-backdrop-filter: "blur(20px)"
     dark:
       primary-background-color: "#0b0b0f"
       secondary-background-color: "#1c2030"
-      card-background-color: "rgba(34, 38, 56, 0.6)"
-      ha-card-background: "rgba(34, 38, 56, 0.6)"
+      card-background-color: "rgba(24, 27, 40, 0.6)"
+      ha-card-background: "rgba(24, 27, 40, 0.6)"
       app-header-text-color: "#ffffff"
       sidebar-text-color: "#ffffff"
       sidebar-icon-color: "#98989d"
@@ -270,14 +270,14 @@ qoxi iOS:
       mdc-dialog-background-color: "#1c2030"
       rgb-primary-text-color: 255, 255, 255
       rgb-secondary-text-color: 152, 152, 157
-      rgb-card-background-color: 34, 38, 56
+      rgb-card-background-color: 24, 27, 40
       mdc-theme-surface: "#1c2030"
       lovelace-background: "radial-gradient(at 18% 8%, rgba(46, 86, 170, 0.75) 0px, transparent 55%), radial-gradient(at 88% 0%, rgba(96, 56, 150, 0.7) 0px, transparent 50%), radial-gradient(at 28% 100%, rgba(28, 104, 114, 0.7) 0px, transparent 55%), radial-gradient(at 90% 90%, rgba(128, 56, 92, 0.6) 0px, transparent 50%), #0a0a0e"
       app-header-background-color: "#0e1222"
       sidebar-background-color: "#0c0e18"
 
       code-editor-background-color: "#1c2030"
-      qoxi-pill-background: "rgba(34, 38, 56, 0.6)"
+      qoxi-pill-background: "rgba(24, 27, 40, 0.6)"
       ha-card-backdrop-filter: "blur(20px)"
 # qoxi iOS — Apple Home–like theme for Home Assistant + the qoxi Mushroom fork.
 # Install: copy to <config>/themes/ (configuration.yaml: frontend: themes: !include_dir_merge_named themes),
