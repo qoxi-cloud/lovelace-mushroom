@@ -256,7 +256,12 @@ export class CategoryBarCard
           padding: 8px 18px 8px 12px;
           border: none;
           border-radius: 999px;
-          background: rgba(var(--rgb-primary-text-color), 0.1);
+          background: var(
+            --qoxi-pill-background,
+            rgba(var(--rgb-primary-text-color), 0.1)
+          );
+          -webkit-backdrop-filter: blur(20px);
+          backdrop-filter: blur(20px);
           color: var(--primary-text-color);
           font: inherit;
           cursor: pointer;
