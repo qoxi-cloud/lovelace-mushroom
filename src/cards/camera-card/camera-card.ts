@@ -1,6 +1,7 @@
-// qoxi: Apple-Home-style camera tile — snapshot that refreshes itself, the
-// name on a soft bottom band, the age of the frame in the corner, no play
-// button. Tap opens more-info (the live view) unless configured otherwise.
+// qoxi: Apple-Home-style camera tile. Live stream (HA's own picture-entity in
+// `live` mode: WebRTC/HLS, no play button) with the name on a soft bottom band
+// and, like Apple Home, a counter of seconds since playback started. Falls
+// back to a self-refreshing snapshot when the camera has no stream.
 import { css, CSSResultGroup, html, nothing } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
@@ -17,6 +18,29 @@ import { MushroomBaseElement } from "../../utils/base-element";
 import { registerCustomCard } from "../../utils/custom-cards";
 import { CAMERA_CARD_NAME } from "./const";
 import { CameraCardConfig, cameraCardConfigStruct } from "./camera-card-config";
+
+declare global {
+  interface Window {
+    loadCardHelpers?: () => Promise<{
+      createCardElement: (config: Record<string, unknown>) => LovelaceCard;
+    }>;
+  }
+}
+
+const STREAM = 2; // CameraEntityFeature.STREAM
+
+function deepVideo(root: Element | ShadowRoot | null): HTMLVideoElement | null {
+  if (!root) return null;
+  const direct = root.querySelector("video");
+  if (direct) return direct;
+  for (const el of root.querySelectorAll("*")) {
+    if (el.shadowRoot) {
+      const v = deepVideo(el.shadowRoot);
+      if (v) return v;
+    }
+  }
+  return null;
+}
 
 registerCustomCard({
   type: CAMERA_CARD_NAME,
@@ -40,8 +64,11 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
   @state() private _tick = 0;
   @state() private _loadedAt = 0;
   @state() private _now = Date.now();
+  @state() private _playStart = 0;
+  @state() private _player?: LovelaceCard;
   private _timer?: number;
   private _clock?: number;
+  private _liveWanted = false;
 
   getCardSize(): number {
     return 4;
@@ -61,7 +88,56 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
   connectedCallback() {
     super.connectedCallback();
     this._restart();
-    this._clock = window.setInterval(() => (this._now = Date.now()), 1000);
+    this._clock = window.setInterval(() => {
+      this._now = Date.now();
+      this._watchPlayback();
+    }, 1000);
+  }
+
+  /** seconds since the live picture started playing (Apple Home style) */
+  private _watchPlayback() {
+    if (!this._player) return;
+    const video = deepVideo(this._player.shadowRoot ?? this._player);
+    const playing = !!video && !video.paused && video.readyState >= 2;
+    if (playing && !this._playStart) this._playStart = Date.now();
+    if (!playing && this._playStart) this._playStart = 0;
+  }
+
+  private _isLive(): boolean {
+    if (this._config?.live === false) return false;
+    const stateObj = this.hass?.states[this._config?.entity ?? ""];
+    return (
+      !!stateObj &&
+      (Number(stateObj.attributes.supported_features) & STREAM) !== 0
+    );
+  }
+
+  private async _ensurePlayer() {
+    if (!this._config || !this.hass || this._player || this._liveWanted) return;
+    this._liveWanted = true;
+    try {
+      const helpers = await window.loadCardHelpers?.();
+      if (!helpers) return;
+      const el = helpers.createCardElement({
+        type: "picture-entity",
+        entity: this._config.entity,
+        camera_view: "live",
+        show_name: false,
+        show_state: false,
+        tap_action: { action: "none" },
+        hold_action: { action: "none" },
+      });
+      el.hass = this.hass;
+      this._player = el;
+    } catch (e) {
+      this._liveWanted = false;
+    }
+  }
+
+  protected updated(changed: Map<PropertyKey, unknown>) {
+    super.updated(changed);
+    if (this._isLive()) this._ensurePlayer();
+    if (this._player && changed.has("hass")) this._player.hass = this.hass;
   }
 
   disconnectedCallback() {
@@ -98,10 +174,12 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
       this._config.name ??
       (stateObj?.attributes.friendly_name as string | undefined) ??
       this._config.entity;
+    const live = this._isLive() && !!this._player;
     const src = this._src();
+    const since = live ? this._playStart : this._loadedAt;
     const age =
-      this._loadedAt && this._config.show_age !== false
-        ? `${Math.max(0, Math.round((this._now - this._loadedAt) / 1000))}s`
+      since && this._config.show_age !== false
+        ? `${Math.max(0, Math.round((this._now - since) / 1000))}s`
         : "";
     return html`
       <ha-card
@@ -114,15 +192,17 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
           hasDoubleClick: hasAction(this._config.double_tap_action),
         })}
       >
-        ${src
-          ? html`<img
-              src=${src}
-              alt=${name}
-              @load=${() => (this._loadedAt = Date.now())}
-            />`
-          : html`<div class="empty">
-              <ha-icon icon="mdi:cctv-off"></ha-icon>
-            </div>`}
+        ${live
+          ? html`<div class="player">${this._player}</div>`
+          : src
+            ? html`<img
+                src=${src}
+                alt=${name}
+                @load=${() => (this._loadedAt = Date.now())}
+              />`
+            : html`<div class="empty">
+                <ha-icon icon="mdi:cctv-off"></ha-icon>
+              </div>`}
         <div class="band">
           <span class="name">${name}</span>
           ${age ? html`<span class="age">${age}</span>` : nothing}
@@ -148,6 +228,17 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
           width: 100%;
           height: 100%;
           object-fit: cover;
+        }
+        .player {
+          position: absolute;
+          inset: 0;
+          --ha-card-border-radius: 0;
+          --ha-card-border-width: 0;
+          --ha-card-background: transparent;
+        }
+        .player > * {
+          width: 100%;
+          height: 100%;
         }
         .empty {
           display: flex;

@@ -15,6 +15,8 @@ export type CameraCardConfig = LovelaceCardConfig &
     /** CSS aspect ratio, default "16 / 9" */
     aspect_ratio?: string;
     show_age?: boolean;
+    /** play the live stream (HLS/WebRTC through HA) instead of snapshots; default true when the camera supports it */
+    live?: boolean;
   };
 
 export const cameraCardConfigStruct = assign(
@@ -26,5 +28,6 @@ export const cameraCardConfigStruct = assign(
     refresh: optional(number()),
     aspect_ratio: optional(string()),
     show_age: optional(boolean()),
+    live: optional(boolean()),
   })
 );
