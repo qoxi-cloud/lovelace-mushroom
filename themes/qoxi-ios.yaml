@@ -250,6 +250,7 @@ qoxi iOS:
       sidebar-background-color: "#eceef5"
       qoxi-pill-background: "rgba(232, 235, 246, 0.72)"
       ha-card-backdrop-filter: "blur(20px)"
+      qoxi-camera-dialog-background: "#000000"
     dark:
       primary-background-color: "#0b0b0f"
       secondary-background-color: "#1c2030"
@@ -279,6 +280,7 @@ qoxi iOS:
       code-editor-background-color: "#1c2030"
       qoxi-pill-background: "rgba(24, 27, 40, 0.6)"
       ha-card-backdrop-filter: "blur(20px)"
+      qoxi-camera-dialog-background: "#000000"
 # qoxi iOS — Apple Home–like theme for Home Assistant + the qoxi Mushroom fork.
 # Install: copy to <config>/themes/ (configuration.yaml: frontend: themes: !include_dir_merge_named themes),
 # then Settings → Profile → Theme, or `frontend.set_theme`.
