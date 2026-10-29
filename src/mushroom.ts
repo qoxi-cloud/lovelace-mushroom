@@ -22,6 +22,7 @@ import "./cards/person-card/person-card";
 import "./cards/select-card/select-card";
 import "./cards/template-card/template-card";
 import "./cards/title-card/title-card";
+import "./cards/category-bar-card/category-bar-card";
 import "./cards/update-card/update-card";
 import "./cards/vacuum-card/vacuum-card";
 

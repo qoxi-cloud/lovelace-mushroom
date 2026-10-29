@@ -228,6 +228,19 @@ export class ClimateCard
     iconStyle["--icon-color"] = `rgb(${color})`;
     iconStyle["--shape-color"] = `rgba(${color}, 0.2)`;
 
+    const temp = Number(stateObj.attributes.current_temperature);
+    if (this._config?.temperature_icon && Number.isFinite(temp)) {
+      // qoxi: Apple Home shows the room temperature where the icon would be
+      return html`
+        <mushroom-shape-icon
+          slot="icon"
+          .disabled=${!available}
+          style=${styleMap(iconStyle)}
+        >
+          <span class="temp-icon">${temp.toFixed(temp % 1 ? 1 : 0)}°</span>
+        </mushroom-shape-icon>
+      `;
+    }
     return html`
       <mushroom-shape-icon
         slot="icon"
@@ -320,6 +333,13 @@ export class ClimateCard
       super.styles,
       cardStyle,
       css`
+        .temp-icon {
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          color: var(--icon-color);
+          font-variant-numeric: tabular-nums;
+        }
         mushroom-state-item {
           cursor: pointer;
         }
