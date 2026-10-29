@@ -16,7 +16,8 @@ repo="$(git remote get-url origin | sed -E 's#.*github.com[:/]##; s#\.git$##')"
 gh release create "v$v" dist/mushroom.js -R "$repo" --title "$v" --notes "qoxi fork release $v (asset: mushroom.js)"
 if [ -n "${HA_MCP_URL:-}" ]; then
   python3 scripts/hamcp.py ha_call_write_tool '{"name":"ha_manage_hacs","arguments":{"action":"update_information","repository_id":"1437330511"}}' >/dev/null
-  python3 scripts/hamcp.py ha_call_write_tool '{"name":"ha_manage_hacs","arguments":{"action":"download","repository_id":"1437330511"}}'
+  # HACS caches GitHub release info for a while: ask for this exact version
+  python3 scripts/hamcp.py ha_call_write_tool "{\"name\":\"ha_manage_hacs\",\"arguments\":{\"action\":\"download\",\"repository_id\":\"1437330511\",\"version\":\"v$v\"}}"
   echo "HACS updated; hard-refresh the dashboard."
 else
   echo "Now: HACS → Mushroom (qoxi) → Update."
