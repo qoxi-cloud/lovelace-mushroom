@@ -15,6 +15,12 @@
        "title": "Home",
        "items": [
         {
+         "label": "Home",
+         "icon": "mdi:home",
+         "color": "amber",
+         "path": "/dashboard-home-ios/home"
+        },
+        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -92,7 +98,8 @@
        "home_path": "/dashboard-home-ios/home",
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "show_home_button": false
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -1066,6 +1073,12 @@
        "title": "Lights",
        "items": [
         {
+         "label": "Home",
+         "icon": "mdi:home",
+         "color": "amber",
+         "path": "/dashboard-home-ios/home"
+        },
+        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -1143,7 +1156,8 @@
        "home_path": "/dashboard-home-ios/home",
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "show_home_button": false
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -1806,6 +1820,12 @@
        "title": "Heating",
        "items": [
         {
+         "label": "Home",
+         "icon": "mdi:home",
+         "color": "amber",
+         "path": "/dashboard-home-ios/home"
+        },
+        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -1883,7 +1903,8 @@
        "home_path": "/dashboard-home-ios/home",
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "show_home_button": false
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -2221,6 +2242,12 @@
        "title": "Cooling",
        "items": [
         {
+         "label": "Home",
+         "icon": "mdi:home",
+         "color": "amber",
+         "path": "/dashboard-home-ios/home"
+        },
+        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -2298,7 +2325,8 @@
        "home_path": "/dashboard-home-ios/home",
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "show_home_button": false
       }
      ]
     },
@@ -2589,6 +2617,12 @@
        "title": "Cameras",
        "items": [
         {
+         "label": "Home",
+         "icon": "mdi:home",
+         "color": "amber",
+         "path": "/dashboard-home-ios/home"
+        },
+        {
          "label": "Lights",
          "icon": "mdi:lightbulb",
          "color": "amber",
@@ -2666,7 +2700,8 @@
        "home_path": "/dashboard-home-ios/home",
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "show_home_button": false
       },
       {
        "type": "picture-entity",
