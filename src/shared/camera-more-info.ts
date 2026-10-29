@@ -4,7 +4,7 @@
 // is defined; nothing else changes, HA's dialog keeps all its behaviour.
 const STYLE_ID = "qoxi-camera-more-info";
 
-const CSS = `
+const DIALOG_CSS = `
   :host([qoxi-camera]) {
     --ha-color-surface-default: var(--qoxi-camera-dialog-background);
     --card-background-color: var(--qoxi-camera-dialog-background);
@@ -50,7 +50,7 @@ function tick() {
   if (on && dlg.shadowRoot && !dlg.shadowRoot.getElementById(STYLE_ID)) {
     const style = document.createElement("style");
     style.id = STYLE_ID;
-    style.textContent = CSS;
+    style.textContent = DIALOG_CSS;
     dlg.shadowRoot.appendChild(style);
   }
 }
