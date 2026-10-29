@@ -3,9 +3,9 @@
   {
    "title": "Home",
    "path": "home",
+   "icon": "mdi:home-variant",
    "type": "sections",
    "max_columns": 3,
-   "icon": "mdi:home-variant",
    "sections": [
     {
      "type": "grid",
@@ -45,83 +45,127 @@
          "tap_action": {
           "action": "more-info"
          }
-        },
-        {
-         "type": "template",
-         "icon": "mdi:lightbulb-group",
-         "icon_color": "{{ 'amber' if states.light | selectattr('state','eq','on') | list | count > 0 else 'disabled' }}",
-         "content": "{{ states.light | selectattr('state','eq','on') | list | count }} on",
-         "tap_action": {
-          "action": "call-service",
-          "perform_action": "light.turn_off",
-          "target": {
-           "entity_id": "all"
-          }
-         }
-        },
-        {
-         "type": "template",
-         "icon": "mdi:radiator",
-         "icon_color": "{{ 'orange' if is_state('sensor.wiser_heathub_wiserheat06724f_wiser_heating','on') else 'disabled' }}",
-         "content": "Heating",
-         "entity": "sensor.wiser_heathub_wiserheat06724f_wiser_heating",
-         "tap_action": {
-          "action": "more-info"
-         }
-        },
-        {
-         "type": "template",
-         "icon": "mdi:snowflake",
-         "icon_color": "{{ 'light-blue' if states.climate | selectattr('entity_id','search','gree') | rejectattr('state','eq','off') | list | count > 0 else 'disabled' }}",
-         "content": "AC {{ states.climate | selectattr('entity_id','search','gree') | rejectattr('state','eq','off') | list | count }}"
         }
        ]
       },
       {
-       "type": "grid",
-       "columns": 3,
-       "square": false,
-       "cards": [
-        {
-         "type": "custom:mushroom-template-card",
-         "primary": "Good night",
-         "secondary": "",
-         "icon": "mdi:weather-night",
-         "icon_color": "indigo",
-         "layout": "vertical",
-         "fill_container": true,
-         "tap_action": {
-          "action": "perform-action",
-          "perform_action": "script.good_night"
-         }
-        },
-        {
-         "type": "custom:mushroom-template-card",
-         "primary": "Leaving",
-         "secondary": "",
-         "icon": "mdi:home-export-outline",
-         "icon_color": "teal",
-         "layout": "vertical",
-         "fill_container": true,
-         "tap_action": {
-          "action": "perform-action",
-          "perform_action": "script.leaving_home"
-         }
-        },
-        {
-         "type": "custom:mushroom-template-card",
-         "primary": "All off",
-         "secondary": "",
-         "icon": "mdi:power",
-         "icon_color": "red",
-         "layout": "vertical",
-         "fill_container": true,
-         "tap_action": {
-          "action": "perform-action",
-          "perform_action": "script.all_off"
-         }
-        }
-       ]
+       "type": "heading",
+       "heading": "Categories",
+       "heading_style": "subtitle"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Lights",
+       "secondary": "{{ states.light | selectattr('state','eq','on') | list | count }} on",
+       "icon": "mdi:lightbulb-group",
+       "icon_color": "{{ 'amber' if {{ states.light | selectattr('state','eq','on') | list | count }}|int>0 else 'disabled' }}",
+       "layout": "vertical",
+       "fill_container": true,
+       "tap_action": {
+        "action": "navigate",
+        "navigation_path": "/dashboard-home-ios/lights"
+       },
+       "grid_options": {
+        "columns": 3
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Heating",
+       "secondary": "{{ states.climate | selectattr('entity_id','search','wiser') | selectattr('attributes.hvac_action','eq','heating') | list | count }} heating",
+       "icon": "mdi:radiator",
+       "icon_color": "{{ 'orange' if {{ states.climate | selectattr('entity_id','search','wiser') | selectattr('attributes.hvac_action','eq','heating') | list | count }}|int>0 else 'disabled' }}",
+       "layout": "vertical",
+       "fill_container": true,
+       "tap_action": {
+        "action": "navigate",
+        "navigation_path": "/dashboard-home-ios/heating"
+       },
+       "grid_options": {
+        "columns": 3
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Cooling",
+       "secondary": "{{ states.climate | selectattr('entity_id','search','gree') | rejectattr('state','eq','off') | list | count }} on",
+       "icon": "mdi:snowflake",
+       "icon_color": "{{ 'light-blue' if {{ states.climate | selectattr('entity_id','search','gree') | rejectattr('state','eq','off') | list | count }}|int>0 else 'disabled' }}",
+       "layout": "vertical",
+       "fill_container": true,
+       "tap_action": {
+        "action": "navigate",
+        "navigation_path": "/dashboard-home-ios/cooling"
+       },
+       "grid_options": {
+        "columns": 3
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Cameras",
+       "secondary": "3",
+       "icon": "mdi:cctv",
+       "icon_color": "blue-grey",
+       "layout": "vertical",
+       "fill_container": true,
+       "tap_action": {
+        "action": "navigate",
+        "navigation_path": "/dashboard-home-ios/cameras"
+       },
+       "grid_options": {
+        "columns": 3
+       }
+      },
+      {
+       "type": "heading",
+       "heading": "Scenes",
+       "heading_style": "subtitle"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Good night",
+       "icon": "mdi:weather-night",
+       "icon_color": "indigo",
+       "layout": "vertical",
+       "fill_container": true,
+       "tap_action": {
+        "action": "perform-action",
+        "perform_action": "script.good_night"
+       },
+       "grid_options": {
+        "columns": 4
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Leaving",
+       "icon": "mdi:home-export-outline",
+       "icon_color": "teal",
+       "layout": "vertical",
+       "fill_container": true,
+       "tap_action": {
+        "action": "perform-action",
+        "perform_action": "script.leaving_home"
+       },
+       "grid_options": {
+        "columns": 4
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "All off",
+       "icon": "mdi:power",
+       "icon_color": "red",
+       "layout": "vertical",
+       "fill_container": true,
+       "tap_action": {
+        "action": "perform-action",
+        "perform_action": "script.all_off"
+       },
+       "grid_options": {
+        "columns": 4
+       }
       }
      ]
     },
@@ -231,6 +275,7 @@
        "collapsible_controls": true,
        "show_temperature_control": true,
        "hvac_modes": [
+        "auto",
         "heat",
         "off"
        ],
@@ -247,8 +292,7 @@
        "type": "heading",
        "heading": "Hall",
        "heading_style": "title",
-       "icon": "mdi:sofa",
-       "badges": []
+       "icon": "mdi:sofa"
       },
       {
        "type": "custom:mushroom-light-card",
@@ -289,6 +333,7 @@
        "collapsible_controls": true,
        "show_temperature_control": true,
        "hvac_modes": [
+        "auto",
         "heat",
         "off"
        ],
@@ -328,10 +373,10 @@
        "tap_action": {
         "action": "toggle"
        },
-       "show_brightness_control": true,
        "grid_options": {
         "columns": 6
-       }
+       },
+       "show_brightness_control": true
       },
       {
        "type": "custom:mushroom-light-card",
@@ -435,6 +480,7 @@
        "collapsible_controls": true,
        "show_temperature_control": true,
        "hvac_modes": [
+        "auto",
         "heat",
         "off"
        ],
@@ -474,10 +520,10 @@
        "tap_action": {
         "action": "toggle"
        },
-       "show_brightness_control": true,
        "grid_options": {
         "columns": 6
-       }
+       },
+       "show_brightness_control": true
       },
       {
        "type": "custom:mushroom-light-card",
@@ -490,10 +536,10 @@
        "tap_action": {
         "action": "toggle"
        },
-       "show_brightness_control": true,
        "grid_options": {
         "columns": 6
-       }
+       },
+       "show_brightness_control": true
       },
       {
        "type": "custom:mushroom-light-card",
@@ -612,6 +658,7 @@
        "collapsible_controls": true,
        "show_temperature_control": true,
        "hvac_modes": [
+        "auto",
         "heat",
         "off"
        ],
@@ -688,6 +735,7 @@
        "collapsible_controls": true,
        "show_temperature_control": true,
        "hvac_modes": [
+        "auto",
         "heat",
         "off"
        ],
@@ -704,8 +752,7 @@
        "type": "heading",
        "heading": "Hallway",
        "heading_style": "title",
-       "icon": "mdi:door",
-       "badges": []
+       "icon": "mdi:door"
       },
       {
        "type": "custom:mushroom-light-card",
@@ -718,10 +765,10 @@
        "tap_action": {
         "action": "toggle"
        },
-       "show_brightness_control": true,
        "grid_options": {
         "columns": 6
-       }
+       },
+       "show_brightness_control": true
       },
       {
        "type": "custom:mushroom-light-card",
@@ -734,10 +781,10 @@
        "tap_action": {
         "action": "toggle"
        },
-       "show_brightness_control": true,
        "grid_options": {
         "columns": 6
-       }
+       },
+       "show_brightness_control": true
       },
       {
        "type": "custom:mushroom-light-card",
@@ -750,10 +797,10 @@
        "tap_action": {
         "action": "toggle"
        },
-       "show_brightness_control": true,
        "grid_options": {
         "columns": 6
-       }
+       },
+       "show_brightness_control": true
       },
       {
        "type": "custom:mushroom-light-card",
@@ -794,6 +841,7 @@
        "collapsible_controls": true,
        "show_temperature_control": true,
        "hvac_modes": [
+        "auto",
         "heat",
         "off"
        ],
@@ -830,8 +878,7 @@
        "type": "heading",
        "heading": "BathRoom",
        "heading_style": "title",
-       "icon": "mdi:bathtub",
-       "badges": []
+       "icon": "mdi:bathtub"
       },
       {
        "type": "custom:mushroom-light-card",
@@ -844,10 +891,10 @@
        "tap_action": {
         "action": "toggle"
        },
-       "show_brightness_control": true,
        "grid_options": {
         "columns": 6
-       }
+       },
+       "show_brightness_control": true
       },
       {
        "type": "custom:mushroom-light-card",
@@ -899,6 +946,7 @@
        "collapsible_controls": true,
        "show_temperature_control": true,
        "hvac_modes": [
+        "auto",
         "heat",
         "off"
        ],
@@ -915,8 +963,7 @@
        "type": "heading",
        "heading": "ShowerRoom",
        "heading_style": "title",
-       "icon": "mdi:shower",
-       "badges": []
+       "icon": "mdi:shower"
       },
       {
        "type": "custom:mushroom-light-card",
@@ -929,10 +976,10 @@
        "tap_action": {
         "action": "toggle"
        },
-       "show_brightness_control": true,
        "grid_options": {
         "columns": 6
-       }
+       },
+       "show_brightness_control": true
       },
       {
        "type": "custom:mushroom-light-card",
@@ -984,6 +1031,7 @@
        "collapsible_controls": true,
        "show_temperature_control": true,
        "hvac_modes": [
+        "auto",
         "heat",
         "off"
        ],
@@ -1058,39 +1106,665 @@
        "grid_options": {
         "columns": 6
        }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Lights",
+   "path": "lights",
+   "icon": "mdi:lightbulb-group",
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Lights",
+       "heading_style": "title",
+       "icon": "mdi:lightbulb-group"
       },
       {
-       "type": "custom:mushroom-template-card",
-       "primary": "Boost all heating",
-       "icon": "mdi:fire",
-       "icon_color": "orange",
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "template",
+         "icon": "mdi:lightbulb-on",
+         "icon_color": "amber",
+         "content": "{{ states.light | selectattr('state','eq','on') | list | count }} on"
+        },
+        {
+         "type": "template",
+         "icon": "mdi:lightbulb-group-off",
+         "icon_color": "disabled",
+         "content": "All off",
+         "tap_action": {
+          "action": "perform-action",
+          "perform_action": "light.turn_off",
+          "target": {
+           "entity_id": "all"
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Kitchen",
+       "heading_style": "title",
+       "icon": "mdi:silverware-fork-knife",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_kitchen_light_light",
+       "name": "Light",
        "layout": "horizontal",
        "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
        "tap_action": {
-        "action": "perform-action",
-        "perform_action": "button.press",
-        "target": {
-         "entity_id": "button.wiser_heathub_wiserheat06724f_wiser_boost_all_heating"
-        }
+        "action": "toggle"
        },
        "grid_options": {
         "columns": 6
        }
       },
       {
-       "type": "custom:mushroom-template-card",
-       "primary": "Cancel overrides",
-       "icon": "mdi:fire-off",
-       "icon_color": "grey",
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_kitchen_light_square_light",
+       "name": "Light-Square",
        "layout": "horizontal",
        "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
        "tap_action": {
-        "action": "perform-action",
-        "perform_action": "button.press",
-        "target": {
-         "entity_id": "button.wiser_heathub_wiserheat06724f_wiser_cancel_all_heating_overrides"
-        }
+        "action": "toggle"
        },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_kitchen_light_table_light",
+       "name": "Light-Table",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "switch.wiser_onofflight_kitchen_chopper_switch",
+       "name": "Chopper",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon": "mdi:string-lights",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Hall",
+       "heading_style": "title",
+       "icon": "mdi:sofa",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hall_lighr_square_light",
+       "name": "Light-Square",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hall_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "BedRoom",
+       "heading_style": "title",
+       "icon": "mdi:bed",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_dimmablelight_bedroom_led_light",
+       "name": "Led",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "show_brightness_control": true
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bedroom_light_bed_l_light",
+       "name": "Bed-L",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bedroom_light_bed_r_light",
+       "name": "Bed-R",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bedroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bedroom_ligth_table_light",
+       "name": "Table",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "switch.wiser_bedroom_garland_switch",
+       "name": "Garland",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon": "mdi:string-lights",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Children's",
+       "heading_style": "title",
+       "icon": "mdi:teddy-bear",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_led_bed_a_light",
+       "name": "Led-Bed-A",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "show_brightness_control": true
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_led_bed_s_light",
+       "name": "Led-Bed-S",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "show_brightness_control": true
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_light_bed_a_light",
+       "name": "Bed-A",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_light_bed_s_light",
+       "name": "Bed-S",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_light_sconce_a_light",
+       "name": "Sconce-A",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_light_sconce_s_light",
+       "name": "Sconce-S",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "switch.wiser_childrens_garland_switch",
+       "name": "Garland",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon": "mdi:string-lights",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Cabinet",
+       "heading_style": "title",
+       "icon": "mdi:desk",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_cabinet_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "switch.wiser_cabinet_garland_switch",
+       "name": "Garland",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon": "mdi:string-lights",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Hallway",
+       "heading_style": "title",
+       "icon": "mdi:door",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_dimmablelight_hallway_led_1_light",
+       "name": "Led-1",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "show_brightness_control": true
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_dimmablelight_hallway_led_2_light",
+       "name": "Led-2",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "show_brightness_control": true
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hallway_led_wall_light",
+       "name": "Led-Wall",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "show_brightness_control": true
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hallway_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hallway_track_light",
+       "name": "Track",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "BathRoom",
+       "heading_style": "title",
+       "icon": "mdi:bathtub",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_dimmablelight_bathroom_led_light",
+       "name": "Led",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "show_brightness_control": true
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bathroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bathroom_light_table_light",
+       "name": "Table",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-fan-card",
+       "entity": "fan.wiser_onofflight_bathroom_hood_fan",
+       "name": "Hood",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon_animation": true,
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "ShowerRoom",
+       "heading_style": "title",
+       "icon": "mdi:shower",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_dimmablelight_showerroom_led_light",
+       "name": "Led",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "show_brightness_control": true
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_showerroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_showerroom_light_table_light",
+       "name": "Table",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-fan-card",
+       "entity": "fan.wiser_onofflight_showerroom_hood_fan",
+       "name": "Hood",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon_animation": true,
        "grid_options": {
         "columns": 6
        }
@@ -1098,9 +1772,675 @@
      ]
     }
    ]
+  },
+  {
+   "title": "Heating",
+   "path": "heating",
+   "icon": "mdi:radiator",
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Heating",
+       "heading_style": "title",
+       "icon": "mdi:radiator"
+      },
+      {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "template",
+         "entity": "sensor.wiser_heathub_wiserheat06724f_wiser_heating",
+         "icon": "mdi:fire",
+         "icon_color": "{{ 'orange' if is_state(entity,'on') else 'disabled' }}",
+         "content": "{{ 'Heating' if is_state(entity,'on') else 'Idle' }}"
+        },
+        {
+         "type": "template",
+         "icon": "mdi:fire",
+         "icon_color": "orange",
+         "content": "Boost all",
+         "tap_action": {
+          "action": "perform-action",
+          "perform_action": "button.press",
+          "target": {
+           "entity_id": "button.wiser_heathub_wiserheat06724f_wiser_boost_all_heating"
+          }
+         }
+        },
+        {
+         "type": "template",
+         "icon": "mdi:fire-off",
+         "icon_color": "disabled",
+         "content": "Cancel overrides",
+         "tap_action": {
+          "action": "perform-action",
+          "perform_action": "button.press",
+          "target": {
+           "entity_id": "button.wiser_heathub_wiserheat06724f_wiser_cancel_all_heating_overrides"
+          }
+         }
+        },
+        {
+         "type": "entity",
+         "entity": "switch.wiser_heathub_wiserheat06724f_wiser_away_mode",
+         "icon": "mdi:home-export-outline",
+         "content_info": "name"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Kitchen",
+       "heading_style": "title",
+       "icon": "mdi:silverware-fork-knife",
+       "badges": [
+        {
+         "type": "entity",
+         "entity": "climate.wiser_kitchen",
+         "state_content": "current_temperature",
+         "show_state": true,
+         "show_icon": true,
+         "icon": "mdi:thermometer"
+        }
+       ]
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.wiser_kitchen",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Hall",
+       "heading_style": "title",
+       "icon": "mdi:sofa"
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.hall_wiser_hall_heating",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "BedRoom",
+       "heading_style": "title",
+       "icon": "mdi:bed",
+       "badges": [
+        {
+         "type": "entity",
+         "entity": "climate.wiser_bedroom",
+         "state_content": "current_temperature",
+         "show_state": true,
+         "show_icon": true,
+         "icon": "mdi:thermometer"
+        }
+       ]
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.wiser_bedroom",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Children's",
+       "heading_style": "title",
+       "icon": "mdi:teddy-bear",
+       "badges": [
+        {
+         "type": "entity",
+         "entity": "climate.wiser_children_s",
+         "state_content": "current_temperature",
+         "show_state": true,
+         "show_icon": true,
+         "icon": "mdi:thermometer"
+        }
+       ]
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.wiser_children_s",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Cabinet",
+       "heading_style": "title",
+       "icon": "mdi:desk",
+       "badges": [
+        {
+         "type": "entity",
+         "entity": "climate.wiser_cabinet",
+         "state_content": "current_temperature",
+         "show_state": true,
+         "show_icon": true,
+         "icon": "mdi:thermometer"
+        }
+       ]
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.wiser_cabinet",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Hallway",
+       "heading_style": "title",
+       "icon": "mdi:door"
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.hallway_wiser_hallway_heating",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "BathRoom",
+       "heading_style": "title",
+       "icon": "mdi:bathtub"
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.bathroom_wiser_bathroom_heating",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "ShowerRoom",
+       "heading_style": "title",
+       "icon": "mdi:shower"
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.showerroom_wiser_showerroom_heating",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Cooling",
+   "path": "cooling",
+   "icon": "mdi:snowflake",
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Cooling",
+       "heading_style": "title",
+       "icon": "mdi:snowflake"
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Kitchen",
+       "heading_style": "title",
+       "icon": "mdi:silverware-fork-knife"
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.gree_ac_3",
+       "name": "AC",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "cool",
+        "heat",
+        "fan_only",
+        "dry",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_3_sleep",
+         "icon": "mdi:power-sleep",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Sleep"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_3_health",
+         "icon": "mdi:leaf",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Health"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_3_power_save",
+         "icon": "mdi:battery-heart",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Power save"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_3_x_fan",
+         "icon": "mdi:fan-auto",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "X-Fan"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_3_lights",
+         "icon": "mdi:led-outline",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Panel light"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "BedRoom",
+       "heading_style": "title",
+       "icon": "mdi:bed"
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.gree_ac_2",
+       "name": "AC",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "cool",
+        "heat",
+        "fan_only",
+        "dry",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_2_sleep",
+         "icon": "mdi:power-sleep",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Sleep"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_2_health",
+         "icon": "mdi:leaf",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Health"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_2_power_save",
+         "icon": "mdi:battery-heart",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Power save"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_2_x_fan",
+         "icon": "mdi:fan-auto",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "X-Fan"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_2_lights",
+         "icon": "mdi:led-outline",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Panel light"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Children's",
+       "heading_style": "title",
+       "icon": "mdi:teddy-bear"
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.gree_ac_1",
+       "name": "AC",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "cool",
+        "heat",
+        "fan_only",
+        "dry",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_1_sleep",
+         "icon": "mdi:power-sleep",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Sleep"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_1_health",
+         "icon": "mdi:leaf",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Health"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_1_power_save",
+         "icon": "mdi:battery-heart",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Power save"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_1_x_fan",
+         "icon": "mdi:fan-auto",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "X-Fan"
+        },
+        {
+         "type": "entity",
+         "entity": "switch.gree_ac_1_lights",
+         "icon": "mdi:led-outline",
+         "content_info": "name",
+         "tap_action": {
+          "action": "toggle"
+         },
+         "name": "Panel light"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Cameras",
+   "path": "cameras",
+   "icon": "mdi:cctv",
+   "type": "sections",
+   "max_columns": 2,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Cameras",
+       "heading_style": "title",
+       "icon": "mdi:cctv"
+      },
+      {
+       "type": "picture-entity",
+       "entity": "camera.hallway",
+       "camera_view": "auto",
+       "show_name": true,
+       "show_state": false,
+       "grid_options": {
+        "columns": 6
+       },
+       "name": "Hallway"
+      },
+      {
+       "type": "picture-entity",
+       "entity": "camera.basip_av_06m",
+       "camera_view": "auto",
+       "show_name": true,
+       "show_state": false,
+       "grid_options": {
+        "columns": 6
+       },
+       "name": "Intercom"
+      },
+      {
+       "type": "picture-entity",
+       "entity": "camera.aqara_g100_90da",
+       "camera_view": "auto",
+       "show_name": true,
+       "show_state": false,
+       "grid_options": {
+        "columns": 6
+       },
+       "name": "Children's"
+      }
+     ]
+    }
+   ]
   }
- ],
- "kiosk_mode": {
-  "hide_header": true
- }
+ ]
 }
