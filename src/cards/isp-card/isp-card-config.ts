@@ -20,10 +20,6 @@ export const ISP_STATS = [
   "max_bandwidth",
   "rx_rate",
   "tx_rate",
-  "speedtest_down",
-  "speedtest_up",
-  "speedtest_latency",
-  "speedtest_age",
 ] as const;
 
 export type IspStat = (typeof ISP_STATS)[number];

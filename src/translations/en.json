@@ -79,11 +79,7 @@
         "isp_enabled": "ISP",
         "max_bandwidth": "Max BW",
         "rx_rate": "RX",
-        "tx_rate": "TX",
-        "speedtest_down": "Measured ↓",
-        "speedtest_up": "Measured ↑",
-        "speedtest_latency": "Test ping",
-        "speedtest_age": "Tested"
+        "tx_rate": "TX"
       }
     },
     "net_device": {
