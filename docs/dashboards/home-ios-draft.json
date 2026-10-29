@@ -5,7 +5,7 @@
    "path": "home",
    "icon": "mdi:home-variant",
    "type": "sections",
-   "max_columns": 3,
+   "max_columns": 2,
    "sections": [
     {
      "type": "grid",
@@ -87,6 +87,17 @@
           "kind": "count",
           "domain": "camera"
          }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -94,40 +105,9 @@
         "columns": "full"
        },
        "show_home_button": false
-      },
-      {
-       "type": "custom:mushroom-chips-card",
-       "alignment": "start",
-       "chips": [
-        {
-         "type": "weather",
-         "entity": "weather.forecast_home",
-         "show_conditions": true,
-         "show_temperature": true
-        },
-        {
-         "type": "entity",
-         "entity": "person.ihor",
-         "icon_color": "blue"
-        },
-        {
-         "type": "entity",
-         "entity": "person.ipayk24",
-         "icon_color": "blue"
-        },
-        {
-         "type": "template",
-         "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
-         "icon": "mdi:shield-home",
-         "icon_color": "{{ 'red' if not is_state(entity,'disarmed') else 'disabled' }}",
-         "content": "{{ states(entity) | replace('_',' ') | capitalize }}",
-         "tap_action": {
-          "action": "more-info"
-         }
-        }
-       ]
       }
-     ]
+     ],
+     "column_span": 2
     },
     {
      "type": "grid",
@@ -1033,7 +1013,7 @@
    "path": "lights",
    "icon": "mdi:lightbulb-group",
    "type": "sections",
-   "max_columns": 3,
+   "max_columns": 2,
    "sections": [
     {
      "type": "grid",
@@ -1115,6 +1095,17 @@
           "kind": "count",
           "domain": "camera"
          }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -1148,7 +1139,8 @@
         }
        ]
       }
-     ]
+     ],
+     "column_span": 2
     },
     {
      "type": "grid",
@@ -1774,7 +1766,7 @@
    "path": "heating",
    "icon": "mdi:radiator",
    "type": "sections",
-   "max_columns": 3,
+   "max_columns": 2,
    "sections": [
     {
      "type": "grid",
@@ -1856,6 +1848,17 @@
           "kind": "count",
           "domain": "camera"
          }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -1909,7 +1912,8 @@
         }
        ]
       }
-     ]
+     ],
+     "column_span": 2
     },
     {
      "type": "grid",
@@ -2190,7 +2194,7 @@
    "path": "cooling",
    "icon": "mdi:snowflake",
    "type": "sections",
-   "max_columns": 3,
+   "max_columns": 2,
    "sections": [
     {
      "type": "grid",
@@ -2272,6 +2276,17 @@
           "kind": "count",
           "domain": "camera"
          }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -2280,7 +2295,8 @@
        },
        "show_home_button": false
       }
-     ]
+     ],
+     "column_span": 2
     },
     {
      "type": "grid",
@@ -2641,6 +2657,17 @@
           "kind": "count",
           "domain": "camera"
          }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -2663,7 +2690,8 @@
         "columns": "full"
        }
       }
-     ]
+     ],
+     "column_span": 2
     },
     {
      "type": "grid",
@@ -2844,6 +2872,17 @@
           "kind": "count",
           "domain": "camera"
          }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
         }
        ],
        "home_path": "/dashboard-home-ios/home",
@@ -2875,6 +2914,267 @@
        "grid_options": {
         "columns": 6
        }
+      }
+     ],
+     "column_span": 2
+    }
+   ]
+  },
+  {
+   "title": "Network",
+   "path": "network",
+   "type": "sections",
+   "max_columns": 2,
+   "icon": "mdi:lan",
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Network",
+       "items": [
+        {
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "domain": "light",
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/security",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
+         }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
+        }
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       },
+       "show_home_button": false
+      }
+     ],
+     "column_span": 2
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "ONU",
+       "icon": "mdi:lan-connect"
+      },
+      {
+       "type": "custom:mushroom-onu-card",
+       "serial": "sc26220140007",
+       "grid_options": {
+        "columns": 12
+       }
+      },
+      {
+       "type": "custom:mushroom-onu-card",
+       "serial": "sc26220140025",
+       "grid_options": {
+        "columns": 12
+       }
+      },
+      {
+       "type": "custom:mushroom-onu-card",
+       "serial": "sc26340350034",
+       "grid_options": {
+        "columns": 12
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "ISP / WAN",
+       "icon": "mdi:web"
+      },
+      {
+       "type": "custom:mushroom-isp-card",
+       "wan": "linkcom_sfp2",
+       "grid_options": {
+        "columns": 12
+       }
+      },
+      {
+       "type": "custom:mushroom-isp-card",
+       "wan": "kopiyka_sfp3",
+       "grid_options": {
+        "columns": 12
+       }
+      },
+      {
+       "type": "custom:mushroom-isp-card",
+       "wan": "astra_sfp4",
+       "grid_options": {
+        "columns": 12
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Gateway & switches",
+       "icon": "mdi:lan"
+      },
+      {
+       "type": "custom:mushroom-omada-devices-card",
+       "types": [
+        "gateway",
+        "switch"
+       ],
+       "show_header": false,
+       "show_filters": false,
+       "stats": [
+        "cpu",
+        "mem",
+        "clients",
+        "poe"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Access points",
+       "icon": "mdi:access-point"
+      },
+      {
+       "type": "custom:mushroom-omada-devices-card",
+       "types": [
+        "ap"
+       ],
+       "show_header": false,
+       "show_filters": false,
+       "stats": [
+        "cpu",
+        "mem",
+        "clients",
+        "util_5g"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Wired clients",
+       "icon": "mdi:ethernet"
+      },
+      {
+       "type": "custom:mushroom-omada-clients-card",
+       "name": "Wired",
+       "icon": "mdi:ethernet",
+       "icon_color": "indigo",
+       "filter": "wired",
+       "show_filters": false,
+       "limit": 10
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Wireless clients",
+       "icon": "mdi:wifi"
+      },
+      {
+       "type": "custom:mushroom-omada-clients-card",
+       "name": "Wireless",
+       "icon": "mdi:wifi",
+       "icon_color": "teal",
+       "filter": "wireless",
+       "show_filters": false,
+       "limit": 10
       }
      ]
     }
