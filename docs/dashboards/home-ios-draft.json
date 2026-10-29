@@ -116,56 +116,6 @@
        "grid_options": {
         "columns": 3
        }
-      },
-      {
-       "type": "heading",
-       "heading": "Scenes",
-       "heading_style": "subtitle"
-      },
-      {
-       "type": "custom:mushroom-template-card",
-       "primary": "Good night",
-       "icon": "mdi:weather-night",
-       "icon_color": "indigo",
-       "layout": "vertical",
-       "fill_container": true,
-       "tap_action": {
-        "action": "perform-action",
-        "perform_action": "script.good_night"
-       },
-       "grid_options": {
-        "columns": 4
-       }
-      },
-      {
-       "type": "custom:mushroom-template-card",
-       "primary": "Leaving",
-       "icon": "mdi:home-export-outline",
-       "icon_color": "teal",
-       "layout": "vertical",
-       "fill_container": true,
-       "tap_action": {
-        "action": "perform-action",
-        "perform_action": "script.leaving_home"
-       },
-       "grid_options": {
-        "columns": 4
-       }
-      },
-      {
-       "type": "custom:mushroom-template-card",
-       "primary": "All off",
-       "icon": "mdi:power",
-       "icon_color": "red",
-       "layout": "vertical",
-       "fill_container": true,
-       "tap_action": {
-        "action": "perform-action",
-        "perform_action": "script.all_off"
-       },
-       "grid_options": {
-        "columns": 4
-       }
       }
      ]
     },
@@ -1122,6 +1072,22 @@
      "type": "grid",
      "cards": [
       {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "template",
+         "icon": "mdi:chevron-left",
+         "icon_color": "blue",
+         "content": "Home",
+         "tap_action": {
+          "action": "navigate",
+          "navigation_path": "/dashboard-home-ios/home"
+         }
+        }
+       ]
+      },
+      {
        "type": "heading",
        "heading": "Lights",
        "heading_style": "title",
@@ -1784,6 +1750,22 @@
      "type": "grid",
      "cards": [
       {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "template",
+         "icon": "mdi:chevron-left",
+         "icon_color": "blue",
+         "content": "Home",
+         "tap_action": {
+          "action": "navigate",
+          "navigation_path": "/dashboard-home-ios/home"
+         }
+        }
+       ]
+      },
+      {
        "type": "heading",
        "heading": "Heating",
        "heading_style": "title",
@@ -2113,6 +2095,22 @@
      "type": "grid",
      "cards": [
       {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "template",
+         "icon": "mdi:chevron-left",
+         "icon_color": "blue",
+         "content": "Home",
+         "tap_action": {
+          "action": "navigate",
+          "navigation_path": "/dashboard-home-ios/home"
+         }
+        }
+       ]
+      },
+      {
        "type": "heading",
        "heading": "Cooling",
        "heading_style": "title",
@@ -2400,6 +2398,22 @@
      "type": "grid",
      "cards": [
       {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "chips": [
+        {
+         "type": "template",
+         "icon": "mdi:chevron-left",
+         "icon_color": "blue",
+         "content": "Home",
+         "tap_action": {
+          "action": "navigate",
+          "navigation_path": "/dashboard-home-ios/home"
+         }
+        }
+       ]
+      },
+      {
        "type": "heading",
        "heading": "Cameras",
        "heading_style": "title",
@@ -2442,5 +2456,8 @@
     }
    ]
   }
- ]
+ ],
+ "kiosk_mode": {
+  "hide_header": true
+ }
 }
