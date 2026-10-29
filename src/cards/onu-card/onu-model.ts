@@ -305,8 +305,10 @@ export function onuStatEntityId(
 
 export function formatRate(bytesPerSecond: number): string {
   const bits = bytesPerSecond * 8;
-  if (bits >= 1e9) return `${(bits / 1e9).toFixed(2)} Gbit/s`;
-  if (bits >= 1e6) return `${(bits / 1e6).toFixed(1)} Mbit/s`;
+  // same rounding as shared/network/format.ts so "17.5 Mbit/s" does not overflow a phone tile
+  if (bits >= 1e9)
+    return `${(bits / 1e9).toFixed(bits >= 1e10 ? 0 : 1)} Gbit/s`;
+  if (bits >= 1e6) return `${(bits / 1e6).toFixed(bits >= 1e7 ? 0 : 1)} Mbit/s`;
   if (bits >= 1e3) return `${(bits / 1e3).toFixed(0)} kbit/s`;
   return `${bits.toFixed(0)} bit/s`;
 }

@@ -151,8 +151,10 @@ export function findWanLink(
 }
 
 export function formatBitRate(bitsPerSecond: number): string {
-  if (bitsPerSecond >= 1e9) return `${(bitsPerSecond / 1e9).toFixed(2)} Gbit/s`;
-  if (bitsPerSecond >= 1e6) return `${(bitsPerSecond / 1e6).toFixed(1)} Mbit/s`;
+  if (bitsPerSecond >= 1e9)
+    return `${(bitsPerSecond / 1e9).toFixed(bitsPerSecond >= 1e10 ? 0 : 1)} Gbit/s`;
+  if (bitsPerSecond >= 1e6)
+    return `${(bitsPerSecond / 1e6).toFixed(bitsPerSecond >= 1e7 ? 0 : 1)} Mbit/s`;
   if (bitsPerSecond >= 1e3) return `${(bitsPerSecond / 1e3).toFixed(0)} kbit/s`;
   return `${bitsPerSecond.toFixed(0)} bit/s`;
 }
