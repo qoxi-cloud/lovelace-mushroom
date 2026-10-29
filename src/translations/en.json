@@ -78,9 +78,10 @@
         "ip": "IP",
         "isp_enabled": "ISP",
         "max_bandwidth": "Max BW",
-        "rx_rate": "RX",
-        "tx_rate": "TX"
-      }
+        "rx_rate": "Down",
+        "tx_rate": "Up"
+      },
+      "traffic": "Traffic"
     },
     "net_device": {
       "stats": {
@@ -362,7 +363,10 @@
       },
       "isp": {
         "wan": "WAN link",
-        "stats": "Statistics"
+        "stats": "Statistics",
+        "rx_entity": "Download rate sensor",
+        "tx_entity": "Upload rate sensor",
+        "show_traffic": "Traffic in header"
       },
       "net_device": {
         "device": "Omada device",

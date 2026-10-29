@@ -1,4 +1,12 @@
-import { array, assign, enums, object, optional, string } from "superstruct";
+import {
+  array,
+  assign,
+  boolean,
+  enums,
+  object,
+  optional,
+  string,
+} from "superstruct";
 import {
   ActionsSharedConfig,
   actionsSharedConfigStruct,
@@ -31,6 +39,14 @@ export const DEFAULT_ISP_STATS: IspStat[] = [
   "proto",
 ];
 
+/** defaults once a throughput source is configured: history-worthy tiles first */
+export const DEFAULT_ISP_TRAFFIC_STATS: IspStat[] = [
+  "latency",
+  "rx_rate",
+  "tx_rate",
+  "link_speed",
+];
+
 export type IspCardConfig = LovelaceCardConfig &
   AppearanceSharedConfig &
   ActionsSharedConfig & {
@@ -39,6 +55,12 @@ export type IspCardConfig = LovelaceCardConfig &
     icon?: string;
     icon_color?: string;
     stats?: IspStat[];
+    /** throughput sensors (bit/s or B/s) measured elsewhere, e.g. the ISP-facing
+     *  port of an aggregation switch; they replace the gateway's wan_rx/tx_rate */
+    rx_entity?: string;
+    tx_entity?: string;
+    /** live ↓/↑ at the right end of the header (default: on when rates exist) */
+    show_traffic?: boolean;
   };
 
 export const ispCardConfigStruct = assign(
@@ -50,5 +72,8 @@ export const ispCardConfigStruct = assign(
     icon: optional(string()),
     icon_color: optional(string()),
     stats: optional(array(enums(ISP_STATS))),
+    rx_entity: optional(string()),
+    tx_entity: optional(string()),
+    show_traffic: optional(boolean()),
   })
 );

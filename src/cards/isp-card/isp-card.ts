@@ -27,7 +27,13 @@ import { computeRgbColor } from "../../utils/colors";
 import { registerCustomCard } from "../../utils/custom-cards";
 import { computeInfoDisplay } from "../../utils/info";
 import { DEFAULT_ISP_ICON, ISP_CARD_EDITOR_NAME, ISP_CARD_NAME } from "./const";
-import { DEFAULT_ISP_STATS, IspCardConfig, IspStat } from "./isp-card-config";
+import { showMoreInfo } from "../../shared/qoxi-sheet";
+import {
+  DEFAULT_ISP_STATS,
+  DEFAULT_ISP_TRAFFIC_STATS,
+  IspCardConfig,
+  IspStat,
+} from "./isp-card-config";
 import {
   collectWanLinks,
   findWanLink,
@@ -35,9 +41,11 @@ import {
   formatLatency,
   formatMbps,
   isLocalIp,
+  ispStatEntityId,
   latencyTone,
   WanLink,
   wanStateColor,
+  withTrafficEntities,
 } from "./isp-model";
 
 registerCustomCard({
@@ -124,7 +132,18 @@ export class IspCard
 
   private get _link(): WanLink | undefined {
     if (!this.hass || !this._config) return undefined;
-    return findWanLink(this.hass, this._config.wan);
+    const link = findWanLink(this.hass, this._config.wan);
+    if (!link) return undefined;
+    return withTrafficEntities(
+      link,
+      this.hass,
+      this._config.rx_entity,
+      this._config.tx_entity
+    );
+  }
+
+  private get _hasTrafficSource(): boolean {
+    return !!(this._config?.rx_entity || this._config?.tx_entity);
   }
 
   protected get _stateObj(): HassEntity | undefined {
@@ -138,7 +157,10 @@ export class IspCard
   }
 
   private get _stats(): IspStat[] {
-    return this._config?.stats ?? DEFAULT_ISP_STATS;
+    return (
+      this._config?.stats ??
+      (this._hasTrafficSource ? DEFAULT_ISP_TRAFFIC_STATS : DEFAULT_ISP_STATS)
+    );
   }
 
   public getGridOptions(): LovelaceGridOptions {
@@ -222,28 +244,69 @@ export class IspCard
         class=${classMap({ "fill-container": appearance.fill_container })}
       >
         <mushroom-card .appearance=${appearance} ?rtl=${rtl}>
-          <mushroom-state-item
-            ?rtl=${rtl}
-            .appearance=${appearance}
-            @action=${this._handleAction}
-            .actionHandler=${actionHandler({
-              hasHold: hasAction(this._config.hold_action),
-              hasDoubleClick: hasAction(this._config.double_tap_action),
-            })}
-          >
-            ${appearance.icon_type !== "none"
-              ? this.renderLinkIcon(link)
-              : nothing}
-            ${this.renderLinkBadge(link)}
-            <mushroom-state-info
-              slot="info"
-              .primary=${primary}
-              .secondary=${secondary}
-            ></mushroom-state-info>
-          </mushroom-state-item>
+          <div class="head">
+            <mushroom-state-item
+              ?rtl=${rtl}
+              .appearance=${appearance}
+              @action=${this._handleAction}
+              .actionHandler=${actionHandler({
+                hasHold: hasAction(this._config.hold_action),
+                hasDoubleClick: hasAction(this._config.double_tap_action),
+              })}
+            >
+              ${appearance.icon_type !== "none"
+                ? this.renderLinkIcon(link)
+                : nothing}
+              ${this.renderLinkBadge(link)}
+              <mushroom-state-info
+                slot="info"
+                .primary=${primary}
+                .secondary=${secondary}
+              ></mushroom-state-info>
+            </mushroom-state-item>
+            ${this.renderTrafficTrail(link, appearance.layout, customLocalize)}
+          </div>
           ${this.renderStats(link, customLocalize)}
         </mushroom-card>
       </ha-card>
+    `;
+  }
+
+  /** live ↓/↑ at the right end of the header, like the ONU card's PON mode */
+  private renderTrafficTrail(
+    link: WanLink,
+    layout: string,
+    customLocalize: ReturnType<typeof setupCustomlocalize>
+  ) {
+    if (this._config?.show_traffic === false || layout === "vertical")
+      return nothing;
+    const show =
+      this._config?.show_traffic === true ||
+      this._hasTrafficSource ||
+      link.rxRate > 0 ||
+      link.txRate > 0;
+    if (!show) return nothing;
+    const rxId = ispStatEntityId(link, "rx_rate");
+    return html`
+      <div
+        class=${classMap({ trail: true, linked: !!rxId })}
+        title=${customLocalize("card.isp.traffic")}
+        @click=${rxId
+          ? (ev: Event) => {
+              ev.stopPropagation();
+              showMoreInfo(this, rxId);
+            }
+          : undefined}
+      >
+        <span class="trail-main">
+          <ha-icon icon="mdi:swap-vertical"></ha-icon>
+          <span>${customLocalize("card.isp.traffic")}</span>
+        </span>
+        <span class="trail-sub"
+          >↓ ${formatBitRate(link.rxRate)}&nbsp;&nbsp;↑
+          ${formatBitRate(link.txRate)}</span
+        >
+      </div>
     `;
   }
 
@@ -303,8 +366,25 @@ export class IspCard
           const stat = computeStat(link, key, (k) =>
             customLocalize(`card.isp.${k}`)
           );
+          // rx/tx open their own sensor (throughput history); the rest keep the card tap
+          const entityId =
+            key === "rx_rate" || key === "tx_rate"
+              ? ispStatEntityId(link, key)
+              : undefined;
           return html`
-            <div class=${classMap({ stat: true, [stat.tone]: true })}>
+            <div
+              class=${classMap({
+                stat: true,
+                linked: !!entityId,
+                [stat.tone]: true,
+              })}
+              @click=${entityId
+                ? (ev: Event) => {
+                    ev.stopPropagation();
+                    showMoreInfo(this, entityId);
+                  }
+                : undefined}
+            >
               <span class="stat-label"
                 >${customLocalize(`card.isp.stats.${key}`)}</span
               >
@@ -323,6 +403,49 @@ export class IspCard
       css`
         mushroom-state-item {
           cursor: pointer;
+        }
+        .head {
+          display: flex;
+          align-items: flex-start;
+          flex: 1;
+          min-width: 0;
+        }
+        .head > mushroom-state-item {
+          flex: 1;
+          min-width: 0;
+        }
+        .trail {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          flex: none;
+          /* same top padding as the state item, so the two lines sit on the
+             name (20px) and state (16px) lines of mushroom-state-info */
+          padding: calc(var(--spacing) + 4px) var(--spacing) 0 4px;
+          color: var(--secondary-text-color);
+          white-space: nowrap;
+        }
+        .trail.linked {
+          cursor: pointer;
+        }
+        .trail-main {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          --mdc-icon-size: 15px;
+          font-size: 13px;
+          line-height: 20px;
+          font-weight: 600;
+        }
+        .trail-main ha-icon {
+          color: rgb(var(--rgb-primary-color, var(--rgb-blue)));
+        }
+        .trail-sub {
+          font-size: 11px;
+          line-height: 16px;
+          font-weight: 400;
+          letter-spacing: 0.02em;
+          font-variant-numeric: tabular-nums;
         }
         .offline {
           --main-color: rgb(var(--rgb-danger));

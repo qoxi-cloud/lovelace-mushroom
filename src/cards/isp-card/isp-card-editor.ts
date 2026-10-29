@@ -18,7 +18,7 @@ import {
 } from "./isp-card-config";
 import { collectWanLinks } from "./isp-model";
 
-const ISP_LABELS = ["wan", "stats"];
+const ISP_LABELS = ["wan", "stats", "rx_entity", "tx_entity", "show_traffic"];
 
 const computeSchema = memoizeOne(
   (
@@ -47,6 +47,21 @@ const computeSchema = memoizeOne(
       ],
     },
     ...computeAppearanceFormSchema(customLocalize),
+    {
+      type: "grid",
+      name: "",
+      schema: [
+        {
+          name: "rx_entity",
+          selector: { entity: { domain: "sensor" } },
+        },
+        {
+          name: "tx_entity",
+          selector: { entity: { domain: "sensor" } },
+        },
+      ],
+    },
+    { name: "show_traffic", selector: { boolean: {} } },
     {
       name: "stats",
       selector: {

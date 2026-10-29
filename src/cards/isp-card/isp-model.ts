@@ -40,7 +40,9 @@ const BITS: Record<string, number> = {
   "Gbit/s": 1e9,
   "B/s": 8,
   "kB/s": 8e3,
+  "KB/s": 8e3,
   "MB/s": 8e6,
+  "GB/s": 8e9,
 };
 
 function toNumber(value: unknown): number {
@@ -131,6 +133,32 @@ export function collectWanLinks(hass: HomeAssistant): WanLink[] {
     });
   }
   return links.sort((a, b) => a.port - b.port || a.name.localeCompare(b.name));
+}
+
+/**
+ * Replace the gateway's throughput with sensors measured elsewhere (Omada
+ * reports no per-virtual-WAN rates). The sensors become the rx/tx stat
+ * entities, so tiles open their history.
+ */
+export function withTrafficEntities(
+  link: WanLink,
+  hass: HomeAssistant,
+  rxEntityId?: string,
+  txEntityId?: string
+): WanLink {
+  const rx = rxEntityId ? hass.states[rxEntityId] : undefined;
+  const tx = txEntityId ? hass.states[txEntityId] : undefined;
+  if (!rx && !tx) return link;
+  return {
+    ...link,
+    rxRate: rx ? bitRate(rx) : link.rxRate,
+    txRate: tx ? bitRate(tx) : link.txRate,
+    entities: {
+      ...link.entities,
+      rx: rx ?? link.entities.rx,
+      tx: tx ?? link.entities.tx,
+    },
+  };
 }
 
 /** Match by `gateway:port`, port number, slug or display name (case-insensitive). */
