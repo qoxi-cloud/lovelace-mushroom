@@ -631,16 +631,6 @@
         "columns": 6
        },
        "temperature_icon": true
-      },
-      {
-       "type": "picture-entity",
-       "entity": "camera.aqara_g100_90da",
-       "camera_view": "auto",
-       "show_name": false,
-       "show_state": false,
-       "grid_options": {
-        "columns": "full"
-       }
       }
      ]
     },
@@ -816,26 +806,6 @@
         "columns": 6
        },
        "temperature_icon": true
-      },
-      {
-       "type": "picture-entity",
-       "entity": "camera.basip_av_06m",
-       "camera_view": "auto",
-       "show_name": false,
-       "show_state": false,
-       "grid_options": {
-        "columns": "full"
-       }
-      },
-      {
-       "type": "picture-entity",
-       "entity": "camera.hallway",
-       "camera_view": "auto",
-       "show_name": false,
-       "show_state": false,
-       "grid_options": {
-        "columns": "full"
-       }
       }
      ]
     },
