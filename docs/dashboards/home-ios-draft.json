@@ -11,10 +11,88 @@
      "type": "grid",
      "cards": [
       {
-       "type": "heading",
-       "heading": "Home",
-       "heading_style": "title",
-       "icon": "mdi:home-variant"
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Home",
+       "items": [
+        {
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "domain": "light",
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/home",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
+         }
+        }
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       }
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -47,75 +125,6 @@
          }
         }
        ]
-      },
-      {
-       "type": "heading",
-       "heading": "Categories",
-       "heading_style": "subtitle"
-      },
-      {
-       "type": "custom:mushroom-template-card",
-       "primary": "Lights",
-       "secondary": "{{ states.light | selectattr('state','eq','on') | list | count }} on",
-       "icon": "mdi:lightbulb-group",
-       "icon_color": "{{ 'amber' if {{ states.light | selectattr('state','eq','on') | list | count }}|int>0 else 'disabled' }}",
-       "layout": "vertical",
-       "fill_container": true,
-       "tap_action": {
-        "action": "navigate",
-        "navigation_path": "/dashboard-home-ios/lights"
-       },
-       "grid_options": {
-        "columns": 3
-       }
-      },
-      {
-       "type": "custom:mushroom-template-card",
-       "primary": "Heating",
-       "secondary": "{{ states.climate | selectattr('entity_id','search','wiser') | selectattr('attributes.hvac_action','eq','heating') | list | count }} heating",
-       "icon": "mdi:radiator",
-       "icon_color": "{{ 'orange' if {{ states.climate | selectattr('entity_id','search','wiser') | selectattr('attributes.hvac_action','eq','heating') | list | count }}|int>0 else 'disabled' }}",
-       "layout": "vertical",
-       "fill_container": true,
-       "tap_action": {
-        "action": "navigate",
-        "navigation_path": "/dashboard-home-ios/heating"
-       },
-       "grid_options": {
-        "columns": 3
-       }
-      },
-      {
-       "type": "custom:mushroom-template-card",
-       "primary": "Cooling",
-       "secondary": "{{ states.climate | selectattr('entity_id','search','gree') | rejectattr('state','eq','off') | list | count }} on",
-       "icon": "mdi:snowflake",
-       "icon_color": "{{ 'light-blue' if {{ states.climate | selectattr('entity_id','search','gree') | rejectattr('state','eq','off') | list | count }}|int>0 else 'disabled' }}",
-       "layout": "vertical",
-       "fill_container": true,
-       "tap_action": {
-        "action": "navigate",
-        "navigation_path": "/dashboard-home-ios/cooling"
-       },
-       "grid_options": {
-        "columns": 3
-       }
-      },
-      {
-       "type": "custom:mushroom-template-card",
-       "primary": "Cameras",
-       "secondary": "3",
-       "icon": "mdi:cctv",
-       "icon_color": "blue-grey",
-       "layout": "vertical",
-       "fill_container": true,
-       "tap_action": {
-        "action": "navigate",
-        "navigation_path": "/dashboard-home-ios/cameras"
-       },
-       "grid_options": {
-        "columns": 3
-       }
       }
      ]
     },
@@ -214,7 +223,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       },
       {
        "type": "custom:mushroom-climate-card",
@@ -231,7 +241,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -289,7 +300,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -419,7 +431,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       },
       {
        "type": "custom:mushroom-climate-card",
@@ -436,7 +449,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -597,7 +611,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       },
       {
        "type": "custom:mushroom-climate-card",
@@ -614,7 +629,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       },
       {
        "type": "picture-entity",
@@ -691,7 +707,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -797,7 +814,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       },
       {
        "type": "picture-entity",
@@ -902,7 +920,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -987,7 +1006,8 @@
        ],
        "grid_options": {
         "columns": 6
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -1072,26 +1092,88 @@
      "type": "grid",
      "cards": [
       {
-       "type": "custom:mushroom-chips-card",
-       "alignment": "start",
-       "chips": [
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Lights",
+       "items": [
         {
-         "type": "template",
-         "icon": "mdi:chevron-left",
-         "icon_color": "blue",
-         "content": "Home",
-         "tap_action": {
-          "action": "navigate",
-          "navigation_path": "/dashboard-home-ios/home"
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "domain": "light",
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/home",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
          }
         }
-       ]
-      },
-      {
-       "type": "heading",
-       "heading": "Lights",
-       "heading_style": "title",
-       "icon": "mdi:lightbulb-group"
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       }
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -1750,26 +1832,88 @@
      "type": "grid",
      "cards": [
       {
-       "type": "custom:mushroom-chips-card",
-       "alignment": "start",
-       "chips": [
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Heating",
+       "items": [
         {
-         "type": "template",
-         "icon": "mdi:chevron-left",
-         "icon_color": "blue",
-         "content": "Home",
-         "tap_action": {
-          "action": "navigate",
-          "navigation_path": "/dashboard-home-ios/home"
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "domain": "light",
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/home",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
          }
         }
-       ]
-      },
-      {
-       "type": "heading",
-       "heading": "Heating",
-       "heading_style": "title",
-       "icon": "mdi:radiator"
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       }
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -1852,7 +1996,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -1880,7 +2025,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -1918,7 +2064,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -1956,7 +2103,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -1994,7 +2142,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -2022,7 +2171,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -2050,7 +2200,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       }
      ]
     },
@@ -2078,7 +2229,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       }
      ]
     }
@@ -2095,26 +2247,88 @@
      "type": "grid",
      "cards": [
       {
-       "type": "custom:mushroom-chips-card",
-       "alignment": "start",
-       "chips": [
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Cooling",
+       "items": [
         {
-         "type": "template",
-         "icon": "mdi:chevron-left",
-         "icon_color": "blue",
-         "content": "Home",
-         "tap_action": {
-          "action": "navigate",
-          "navigation_path": "/dashboard-home-ios/home"
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "domain": "light",
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/home",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
          }
         }
-       ]
-      },
-      {
-       "type": "heading",
-       "heading": "Cooling",
-       "heading_style": "title",
-       "icon": "mdi:snowflake"
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       }
       }
      ]
     },
@@ -2144,7 +2358,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -2233,7 +2448,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -2322,7 +2538,8 @@
        ],
        "grid_options": {
         "columns": "full"
-       }
+       },
+       "temperature_icon": true
       },
       {
        "type": "custom:mushroom-chips-card",
@@ -2398,26 +2615,88 @@
      "type": "grid",
      "cards": [
       {
-       "type": "custom:mushroom-chips-card",
-       "alignment": "start",
-       "chips": [
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Cameras",
+       "items": [
         {
-         "type": "template",
-         "icon": "mdi:chevron-left",
-         "icon_color": "blue",
-         "content": "Home",
-         "tap_action": {
-          "action": "navigate",
-          "navigation_path": "/dashboard-home-ios/home"
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "domain": "light",
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/home",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
          }
         }
-       ]
-      },
-      {
-       "type": "heading",
-       "heading": "Cameras",
-       "heading_style": "title",
-       "icon": "mdi:cctv"
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       }
       },
       {
        "type": "picture-entity",

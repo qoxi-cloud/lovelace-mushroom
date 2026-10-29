@@ -228,7 +228,8 @@ export class ClimateCard
     iconStyle["--icon-color"] = `rgb(${color})`;
     iconStyle["--shape-color"] = `rgba(${color}, 0.2)`;
 
-    const temp = Number(stateObj.attributes.current_temperature);
+    const raw = stateObj.attributes.current_temperature;
+    const temp = raw == null ? NaN : Number(raw);
     if (this._config?.temperature_icon && Number.isFinite(temp)) {
       // qoxi: Apple Home shows the room temperature where the icon would be
       return html`
