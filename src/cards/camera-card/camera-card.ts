@@ -4,6 +4,7 @@
 // back to a self-refreshing snapshot when the camera has no stream.
 import { css, CSSResultGroup, html, nothing } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { assert } from "superstruct";
 import {
@@ -192,17 +193,25 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
           hasDoubleClick: hasAction(this._config.double_tap_action),
         })}
       >
+        ${src
+          ? html`<img
+              src=${src}
+              alt=${name}
+              @load=${() => (this._loadedAt = Date.now())}
+            />`
+          : html`<div class="empty">
+              <ha-icon icon="mdi:cctv-off"></ha-icon>
+            </div>`}
         ${live
-          ? html`<div class="player">${this._player}</div>`
-          : src
-            ? html`<img
-                src=${src}
-                alt=${name}
-                @load=${() => (this._loadedAt = Date.now())}
-              />`
-            : html`<div class="empty">
-                <ha-icon icon="mdi:cctv-off"></ha-icon>
-              </div>`}
+          ? html`<div
+              class=${classMap({ player: true, ready: !!this._playStart })}
+            >
+              ${this._player}
+            </div>`
+          : nothing}
+        ${live && !this._playStart
+          ? html`<div class="loading"><span class="spinner"></span></div>`
+          : nothing}
         <div class="band">
           <span class="name">${name}</span>
           ${age ? html`<span class="age">${age}</span>` : nothing}
@@ -232,6 +241,33 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
         .player {
           position: absolute;
           inset: 0;
+          opacity: 0;
+          transition: opacity 300ms ease;
+        }
+        .player.ready {
+          opacity: 1;
+        }
+        .loading {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(0, 0, 0, 0.25);
+        }
+        .spinner {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          border: 3px solid rgba(255, 255, 255, 0.35);
+          border-top-color: #fff;
+          animation: qoxi-spin 0.9s linear infinite;
+        }
+        @keyframes qoxi-spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
           --ha-card-border-radius: 0;
           --ha-card-border-width: 0;
           --ha-card-background: transparent;
