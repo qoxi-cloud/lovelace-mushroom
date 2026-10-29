@@ -189,7 +189,6 @@ export class CategoryBarCard
     active.scrollIntoView({
       inline: "center",
       block: "nearest",
-      behavior: "smooth",
     });
   }
 
