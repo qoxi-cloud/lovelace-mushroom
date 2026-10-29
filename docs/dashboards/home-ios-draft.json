@@ -536,21 +536,6 @@
       },
       {
        "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_children_s_light_light",
-       "name": "Light",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-light-card",
        "entity": "light.wiser_onofflight_children_s_light_sconce_a_light",
        "name": "Sconce-A",
        "layout": "horizontal",
@@ -568,6 +553,21 @@
        "type": "custom:mushroom-light-card",
        "entity": "light.wiser_onofflight_children_s_light_sconce_s_light",
        "name": "Sconce-S",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_light_light",
+       "name": "Light",
        "layout": "horizontal",
        "fill_container": true,
        "collapsible_controls": true,
@@ -1425,21 +1425,6 @@
       },
       {
        "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_children_s_light_light",
-       "name": "Light",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-light-card",
        "entity": "light.wiser_onofflight_children_s_light_sconce_a_light",
        "name": "Sconce-A",
        "layout": "horizontal",
@@ -1457,6 +1442,21 @@
        "type": "custom:mushroom-light-card",
        "entity": "light.wiser_onofflight_children_s_light_sconce_s_light",
        "name": "Sconce-S",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_children_s_light_light",
+       "name": "Light",
        "layout": "horizontal",
        "fill_container": true,
        "collapsible_controls": true,
