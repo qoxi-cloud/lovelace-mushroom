@@ -88,8 +88,6 @@ qoxi iOS Gradient:
     light:
       primary-background-color: "#f2f2f7"
       secondary-background-color: "#e5e5ea"
-      card-background-color: "#ffffff"
-      ha-card-background: "#ffffff"
       app-header-background-color: "#f2f2f7"
       app-header-text-color: "#1c1c1e"
       sidebar-background-color: "#f2f2f7"
@@ -108,6 +106,9 @@ qoxi iOS Gradient:
       rgb-primary-text-color: 28, 28, 30
       rgb-secondary-text-color: 110, 110, 115
       rgb-card-background-color: 255, 255, 255
+      lovelace-background: "linear-gradient(180deg, #e6ebfa 0%, #f1f2f7 45%, #f6f6f9 100%)"
+      card-background-color: "rgba(255, 255, 255, 0.85)"
+      ha-card-background: "rgba(255, 255, 255, 0.85)"
     dark:
       primary-background-color: "#0b0b0f"
       secondary-background-color: "#1c1c1e"
@@ -226,11 +227,7 @@ qoxi iOS:
     light:
       primary-background-color: "#f2f2f7"
       secondary-background-color: "#e5e5ea"
-      card-background-color: "#ffffff"
-      ha-card-background: "#ffffff"
-      app-header-background-color: "#f2f2f7"
       app-header-text-color: "#1c1c1e"
-      sidebar-background-color: "#f2f2f7"
       sidebar-text-color: "#1c1c1e"
       sidebar-icon-color: "#6e6e73"
       sidebar-selected-icon-color: "#0a84ff"
@@ -246,6 +243,11 @@ qoxi iOS:
       rgb-primary-text-color: 28, 28, 30
       rgb-secondary-text-color: 110, 110, 115
       rgb-card-background-color: 255, 255, 255
+      lovelace-background: "radial-gradient(at 18% 8%, rgba(120, 160, 255, 0.55) 0px, transparent 55%), radial-gradient(at 88% 0%, rgba(190, 150, 255, 0.5) 0px, transparent 50%), radial-gradient(at 28% 100%, rgba(120, 220, 230, 0.5) 0px, transparent 55%), radial-gradient(at 90% 90%, rgba(255, 170, 200, 0.45) 0px, transparent 50%), #eef0f6"
+      card-background-color: "rgba(255, 255, 255, 0.82)"
+      ha-card-background: "rgba(255, 255, 255, 0.82)"
+      app-header-background-color: "#e9ecf5"
+      sidebar-background-color: "#eceef5"
     dark:
       primary-background-color: "#0b0b0f"
       secondary-background-color: "#1c2030"
@@ -384,6 +386,7 @@ qoxi iOS Graphite:
       rgb-primary-text-color: 28, 28, 30
       rgb-secondary-text-color: 110, 110, 115
       rgb-card-background-color: 255, 255, 255
+      lovelace-background: "#f2f2f7"
     dark:
       primary-background-color: "#0b0b0f"
       secondary-background-color: "#1c1c1e"
