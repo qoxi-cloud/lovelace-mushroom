@@ -32,15 +32,20 @@ declare global {
 
 const STREAM = 2; // CameraEntityFeature.STREAM
 
-function deepVideo(root: Element | ShadowRoot | null): HTMLVideoElement | null {
-  if (!root) return null;
-  const direct = root.querySelector("video");
-  if (direct) return direct;
+function deepVideos(root: Element | ShadowRoot | null, out: HTMLVideoElement[] = []) {
+  if (!root) return out;
+  root.querySelectorAll("video").forEach((v) => out.push(v));
   for (const el of root.querySelectorAll("*")) {
-    if (el.shadowRoot) {
-      const v = deepVideo(el.shadowRoot);
-      if (v) return v;
-    }
+    if (el.shadowRoot) deepVideos(el.shadowRoot, out);
+  }
+  return out;
+}
+
+function deepVideo(root: Element | ShadowRoot | null): HTMLVideoElement | null {
+  // prefer the element that actually carries the stream
+  const all = deepVideos(root);
+  return all.find((v) => v.srcObject || v.src) ?? all[0] ?? null;
+}
   }
   return null;
 }
@@ -99,11 +104,12 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
 
   /** audio of the live stream; browsers only allow this from a user gesture */
   public setMuted(muted: boolean) {
-    const video = deepVideo(this._player?.shadowRoot ?? this._player ?? null);
-    if (!video) return false;
-    video.muted = muted;
-    if (!muted) video.volume = 1;
-    return true;
+    const videos = deepVideos(this._player?.shadowRoot ?? this._player ?? null);
+    for (const video of videos) {
+      video.muted = muted;
+      if (!muted) video.volume = 1;
+    }
+    return videos.length > 0;
   }
 
   /** seconds since the live picture started playing (Apple Home style) */
