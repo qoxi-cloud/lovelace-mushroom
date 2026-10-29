@@ -339,6 +339,21 @@
       },
       {
        "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bedroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
        "entity": "light.wiser_dimmablelight_bedroom_led_light",
        "name": "Led",
        "layout": "horizontal",
@@ -372,21 +387,6 @@
        "type": "custom:mushroom-light-card",
        "entity": "light.wiser_onofflight_bedroom_light_bed_r_light",
        "name": "Bed-R",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_bedroom_light_light",
-       "name": "Light",
        "layout": "horizontal",
        "fill_container": true,
        "collapsible_controls": true,
@@ -1275,6 +1275,21 @@
       },
       {
        "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_bedroom_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
        "entity": "light.wiser_dimmablelight_bedroom_led_light",
        "name": "Led",
        "layout": "horizontal",
@@ -1308,21 +1323,6 @@
        "type": "custom:mushroom-light-card",
        "entity": "light.wiser_onofflight_bedroom_light_bed_r_light",
        "name": "Bed-R",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_bedroom_light_light",
-       "name": "Light",
        "layout": "horizontal",
        "fill_container": true,
        "collapsible_controls": true,
