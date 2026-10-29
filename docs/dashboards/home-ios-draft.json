@@ -109,7 +109,8 @@
           "entities": [
            "switch.wiser_bedroom_garland_switch",
            "switch.wiser_childrens_garland_switch",
-           "switch.wiser_cabinet_garland_switch"
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
           ],
           "suffix": "On"
          }
@@ -181,20 +182,6 @@
        "fill_container": true,
        "collapsible_controls": true,
        "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "switch.wiser_onofflight_kitchen_chopper_switch",
-       "name": "Chopper",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon": "mdi:string-lights",
        "tap_action": {
         "action": "toggle"
        },
@@ -1046,7 +1033,8 @@
           "entities": [
            "switch.wiser_bedroom_garland_switch",
            "switch.wiser_childrens_garland_switch",
-           "switch.wiser_cabinet_garland_switch"
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
           ],
           "suffix": "On"
          }
@@ -1134,20 +1122,6 @@
        "fill_container": true,
        "collapsible_controls": true,
        "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-entity-card",
-       "entity": "switch.wiser_onofflight_kitchen_chopper_switch",
-       "name": "Chopper",
-       "layout": "horizontal",
-       "fill_container": true,
-       "icon": "mdi:string-lights",
        "tap_action": {
         "action": "toggle"
        },
@@ -1750,7 +1724,8 @@
           "entities": [
            "switch.wiser_bedroom_garland_switch",
            "switch.wiser_childrens_garland_switch",
-           "switch.wiser_cabinet_garland_switch"
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
           ],
           "suffix": "On"
          }
@@ -2193,7 +2168,8 @@
           "entities": [
            "switch.wiser_bedroom_garland_switch",
            "switch.wiser_childrens_garland_switch",
-           "switch.wiser_cabinet_garland_switch"
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
           ],
           "suffix": "On"
          }
@@ -2480,39 +2456,29 @@
     },
     {
      "type": "grid",
+     "column_span": 2,
      "cards": [
       {
        "type": "heading",
-       "heading": "BathRoom",
+       "heading": "Hoods",
        "heading_style": "title",
-       "icon": "mdi:bathtub"
+       "icon": "mdi:fan"
       },
       {
        "type": "custom:mushroom-fan-card",
        "entity": "fan.wiser_onofflight_bathroom_hood_fan",
-       "name": "Hood",
+       "name": "BathRoom",
        "layout": "horizontal",
        "fill_container": true,
        "icon_animation": true,
        "grid_options": {
         "columns": 6
        }
-      }
-     ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "ShowerRoom",
-       "heading_style": "title",
-       "icon": "mdi:shower"
       },
       {
        "type": "custom:mushroom-fan-card",
        "entity": "fan.wiser_onofflight_showerroom_hood_fan",
-       "name": "Hood",
+       "name": "ShowerRoom",
        "layout": "horizontal",
        "fill_container": true,
        "icon_animation": true,
@@ -2633,7 +2599,8 @@
           "entities": [
            "switch.wiser_bedroom_garland_switch",
            "switch.wiser_childrens_garland_switch",
-           "switch.wiser_cabinet_garland_switch"
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
           ],
           "suffix": "On"
          }
@@ -2863,7 +2830,8 @@
           "entities": [
            "switch.wiser_bedroom_garland_switch",
            "switch.wiser_childrens_garland_switch",
-           "switch.wiser_cabinet_garland_switch"
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
           ],
           "suffix": "On"
          }
@@ -3013,7 +2981,8 @@
           "entities": [
            "switch.wiser_bedroom_garland_switch",
            "switch.wiser_childrens_garland_switch",
-           "switch.wiser_cabinet_garland_switch"
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
           ],
           "suffix": "On"
          }
@@ -3289,7 +3258,8 @@
           "entities": [
            "switch.wiser_bedroom_garland_switch",
            "switch.wiser_childrens_garland_switch",
-           "switch.wiser_cabinet_garland_switch"
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
           ],
           "suffix": "On"
          }
@@ -3300,6 +3270,31 @@
         "columns": "full"
        },
        "show_home_button": false
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Kitchen",
+       "heading_style": "title",
+       "icon": "mdi:silverware-fork-knife"
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "switch.wiser_onofflight_kitchen_chopper_switch",
+       "name": "Chopper",
+       "layout": "horizontal",
+       "fill_container": true,
+       "icon": "mdi:knife",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
       }
      ]
     },
