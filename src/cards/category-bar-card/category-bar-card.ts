@@ -177,6 +177,22 @@ export class CategoryBarCard
     `;
   }
 
+  private _scrolledFor = "";
+
+  protected updated(changed: Map<PropertyKey, unknown>) {
+    super.updated(changed);
+    // keep the active pill in view when the row is wider than the screen
+    if (this._scrolledFor === this._path) return;
+    const active = this.renderRoot?.querySelector<HTMLElement>(".pill.active");
+    if (!active) return;
+    this._scrolledFor = this._path;
+    active.scrollIntoView({
+      inline: "center",
+      block: "nearest",
+      behavior: "smooth",
+    });
+  }
+
   protected render() {
     if (!this._config || !this.hass) return nothing;
     const home = this._config.home_path;
