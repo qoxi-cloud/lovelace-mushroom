@@ -24,6 +24,7 @@ import "./cards/template-card/template-card";
 import "./cards/title-card/title-card";
 import "./cards/category-bar-card/category-bar-card";
 import "./cards/camera-card/camera-card";
+import "./cards/redirect-card/redirect-card";
 import "./shared/camera-more-info";
 import "./cards/update-card/update-card";
 import "./cards/vacuum-card/vacuum-card";
