@@ -19,6 +19,8 @@ import { MushroomBaseElement } from "../../utils/base-element";
 import { registerCustomCard } from "../../utils/custom-cards";
 import { CAMERA_CARD_NAME } from "./const";
 import { CameraCardConfig, cameraCardConfigStruct } from "./camera-card-config";
+import "./camera-viewer-dialog";
+import { showCameraViewer } from "./camera-viewer-dialog";
 
 declare global {
   interface Window {
@@ -156,6 +158,10 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
   }
 
   private _handleAction(ev: ActionHandlerEvent) {
+    if (ev.detail.action === "tap" && this._config?.viewer !== false) {
+      showCameraViewer(this, { entity: this._config!.entity });
+      return;
+    }
     handleAction(this, this.hass!, this._config!, ev.detail.action!);
   }
 
@@ -212,10 +218,12 @@ export class CameraCard extends MushroomBaseElement implements LovelaceCard {
         ${live && !this._playStart
           ? html`<div class="loading"><span class="spinner"></span></div>`
           : nothing}
-        <div class="band">
-          <span class="name">${name}</span>
-          ${age ? html`<span class="age">${age}</span>` : nothing}
-        </div>
+        ${this._config.show_band !== false
+          ? html`<div class="band">
+              <span class="name">${name}</span>
+              ${age ? html`<span class="age">${age}</span>` : nothing}
+            </div>`
+          : nothing}
       </ha-card>
     `;
   }

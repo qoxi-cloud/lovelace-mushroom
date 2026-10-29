@@ -17,6 +17,10 @@ export type CameraCardConfig = LovelaceCardConfig &
     show_age?: boolean;
     /** play the live stream (HLS/WebRTC through HA) instead of snapshots; default true when the camera supports it */
     live?: boolean;
+    /** name band at the bottom (default true) */
+    show_band?: boolean;
+    /** tap opens the full-screen viewer (default true) */
+    viewer?: boolean;
   };
 
 export const cameraCardConfigStruct = assign(
@@ -29,5 +33,7 @@ export const cameraCardConfigStruct = assign(
     aspect_ratio: optional(string()),
     show_age: optional(boolean()),
     live: optional(boolean()),
+    show_band: optional(boolean()),
+    viewer: optional(boolean()),
   })
 );
