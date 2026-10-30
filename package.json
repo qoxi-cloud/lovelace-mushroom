@@ -1,6 +1,6 @@
 {
   "name": "mushroom-cards",
-  "version": "5.2.3-qoxi.32",
+  "version": "5.2.3-qoxi.33",
   "description": "Home Assistant Mushroom Cards",
   "main": "index.js",
   "scripts": {
