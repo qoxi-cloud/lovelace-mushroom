@@ -302,15 +302,14 @@ export class IspCard
     `;
   }
 
-  /** arrow | 3-char value | unit as fixed columns: the value hugs the arrow,
-   *  the arrows and the units line up across the cards whatever the digits */
+  /** arrow + value, left-aligned: the arrows line up across the cards and
+   *  the value hugs its arrow whatever the number of digits */
   private renderTrailLine(dir: "rx" | "tx", arrow: string, bps: number) {
     const { value, unit } = splitBitRate(bps);
     return html`
       <span class=${classMap({ "trail-line": true, [dir]: true })}>
         <span class="arrow">${arrow}</span>
-        <span class="num">${value}</span>
-        <span class="unit">${unit}</span>
+        <span class="num">${value} ${unit}</span>
       </span>
     `;
   }
@@ -435,8 +434,7 @@ export class IspCard
         }
         /* both lines share the name-line style; only the arrows carry colour */
         .trail-line {
-          display: inline-grid;
-          grid-template-columns: auto 3ch auto;
+          display: inline-flex;
           align-items: baseline;
           gap: 4px;
           font-size: 13px;
@@ -451,9 +449,6 @@ export class IspCard
         }
         .trail-line .arrow {
           font-weight: 700;
-        }
-        .trail-line .num {
-          text-align: left;
         }
         .trail-line.rx .arrow {
           color: rgb(var(--rgb-blue));

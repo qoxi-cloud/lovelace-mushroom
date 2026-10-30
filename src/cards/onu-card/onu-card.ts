@@ -463,6 +463,7 @@ export class OnuCard
         }
         .trail-sub .arrow {
           font-weight: 700;
+          margin-right: 3px;
         }
         .trail-sub .arrow.rx {
           color: rgb(var(--rgb-blue));
