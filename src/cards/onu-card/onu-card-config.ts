@@ -42,13 +42,11 @@ export const ONU_STATS = [
 
 export type OnuStat = (typeof ONU_STATS)[number];
 
-// throughput lives on the ISP card (measured at the ISP-facing switch port);
-// the stick tiles stay about the stick itself
 export const DEFAULT_ONU_STATS: OnuStat[] = [
   "rx_power",
   "tx_power",
-  "optic_temp",
-  "uptime",
+  "down_rate",
+  "up_rate",
 ];
 
 export type OnuCardConfig = LovelaceCardConfig &

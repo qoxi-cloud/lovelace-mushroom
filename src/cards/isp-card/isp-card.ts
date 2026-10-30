@@ -30,7 +30,6 @@ import { DEFAULT_ISP_ICON, ISP_CARD_EDITOR_NAME, ISP_CARD_NAME } from "./const";
 import { showMoreInfo } from "../../shared/qoxi-sheet";
 import {
   DEFAULT_ISP_STATS,
-  DEFAULT_ISP_TRAFFIC_STATS,
   IspCardConfig,
   IspStat,
 } from "./isp-card-config";
@@ -157,10 +156,7 @@ export class IspCard
   }
 
   private get _stats(): IspStat[] {
-    return (
-      this._config?.stats ??
-      (this._hasTrafficSource ? DEFAULT_ISP_TRAFFIC_STATS : DEFAULT_ISP_STATS)
-    );
+    return this._config?.stats ?? DEFAULT_ISP_STATS;
   }
 
   public getGridOptions(): LovelaceGridOptions {
@@ -299,11 +295,12 @@ export class IspCard
             }
           : undefined}
       >
-        <span class="trail-main">
-          <ha-icon icon="mdi:swap-vertical"></ha-icon>
-          <span>↓ ${formatBitRate(link.rxRate)}</span>
+        <span class="trail-line rx">
+          <span class="arrow">↓</span>${formatBitRate(link.rxRate)}
         </span>
-        <span class="trail-sub">↑ ${formatBitRate(link.txRate)}</span>
+        <span class="trail-line tx">
+          <span class="arrow">↑</span>${formatBitRate(link.txRate)}
+        </span>
       </div>
     `;
   }
@@ -426,24 +423,29 @@ export class IspCard
         .trail.linked {
           cursor: pointer;
         }
-        .trail-main {
+        /* both lines share the name-line style; only the arrows carry colour */
+        .trail-line {
           display: inline-flex;
-          align-items: center;
+          align-items: baseline;
           gap: 4px;
-          --mdc-icon-size: 15px;
           font-size: 13px;
-          line-height: 20px;
           font-weight: 600;
-        }
-        .trail-main ha-icon {
-          color: rgb(var(--rgb-primary-color, var(--rgb-blue)));
-        }
-        .trail-sub {
-          font-size: 11px;
-          line-height: 16px;
-          font-weight: 400;
-          letter-spacing: 0.02em;
           font-variant-numeric: tabular-nums;
+        }
+        .trail-line.rx {
+          line-height: 20px;
+        }
+        .trail-line.tx {
+          line-height: 16px;
+        }
+        .trail-line .arrow {
+          font-weight: 700;
+        }
+        .trail-line.rx .arrow {
+          color: rgb(var(--rgb-blue));
+        }
+        .trail-line.tx .arrow {
+          color: rgb(var(--rgb-green));
         }
         .offline {
           --main-color: rgb(var(--rgb-danger));

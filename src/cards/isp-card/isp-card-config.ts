@@ -39,14 +39,6 @@ export const DEFAULT_ISP_STATS: IspStat[] = [
   "proto",
 ];
 
-/** defaults once a throughput source is configured: history-worthy tiles first */
-export const DEFAULT_ISP_TRAFFIC_STATS: IspStat[] = [
-  "latency",
-  "rx_rate",
-  "tx_rate",
-  "link_speed",
-];
-
 export type IspCardConfig = LovelaceCardConfig &
   AppearanceSharedConfig &
   ActionsSharedConfig & {
