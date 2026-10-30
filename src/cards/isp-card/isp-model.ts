@@ -178,13 +178,29 @@ export function findWanLink(
   );
 }
 
+/** value never wider than 3 characters ("999", "1.7", "10"); the threshold is
+ *  taken after rounding so 999.6 kbit/s shows as 1.0 Mbit/s, not "1000 kbit/s" */
+export function splitBitRate(bitsPerSecond: number): {
+  value: string;
+  unit: string;
+} {
+  const steps: [number, string][] = [
+    [1e9, "Gbit/s"],
+    [1e6, "Mbit/s"],
+    [1e3, "kbit/s"],
+  ];
+  for (const [div, unit] of steps) {
+    const n = bitsPerSecond / div;
+    if (n < 0.9995) continue;
+    if (div === 1e3) return { value: n.toFixed(0), unit };
+    return { value: n >= 9.95 ? n.toFixed(0) : n.toFixed(1), unit };
+  }
+  return { value: Math.max(0, bitsPerSecond).toFixed(0), unit: "bit/s" };
+}
+
 export function formatBitRate(bitsPerSecond: number): string {
-  if (bitsPerSecond >= 1e9)
-    return `${(bitsPerSecond / 1e9).toFixed(bitsPerSecond >= 1e10 ? 0 : 1)} Gbit/s`;
-  if (bitsPerSecond >= 1e6)
-    return `${(bitsPerSecond / 1e6).toFixed(bitsPerSecond >= 1e7 ? 0 : 1)} Mbit/s`;
-  if (bitsPerSecond >= 1e3) return `${(bitsPerSecond / 1e3).toFixed(0)} kbit/s`;
-  return `${bitsPerSecond.toFixed(0)} bit/s`;
+  const { value, unit } = splitBitRate(bitsPerSecond);
+  return `${value} ${unit}`;
 }
 
 export function formatLatency(ms: number): string {

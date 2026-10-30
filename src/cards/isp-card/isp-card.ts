@@ -37,6 +37,7 @@ import {
   collectWanLinks,
   findWanLink,
   formatBitRate,
+  splitBitRate,
   formatLatency,
   formatMbps,
   isLocalIp,
@@ -295,13 +296,22 @@ export class IspCard
             }
           : undefined}
       >
-        <span class="trail-line rx">
-          <span class="arrow">↓</span>${formatBitRate(link.rxRate)}
-        </span>
-        <span class="trail-line tx">
-          <span class="arrow">↑</span>${formatBitRate(link.txRate)}
-        </span>
+        ${this.renderTrailLine("rx", "↓", link.rxRate)}
+        ${this.renderTrailLine("tx", "↑", link.txRate)}
       </div>
+    `;
+  }
+
+  /** arrow | 3-char value | unit as fixed columns, so the arrows and the
+   *  units line up across the cards whatever the number of digits */
+  private renderTrailLine(dir: "rx" | "tx", arrow: string, bps: number) {
+    const { value, unit } = splitBitRate(bps);
+    return html`
+      <span class=${classMap({ "trail-line": true, [dir]: true })}>
+        <span class="arrow">${arrow}</span>
+        <span class="num">${value}</span>
+        <span class="unit">${unit}</span>
+      </span>
     `;
   }
 
@@ -412,7 +422,7 @@ export class IspCard
         .trail {
           display: flex;
           flex-direction: column;
-          align-items: flex-end;
+          align-items: flex-start;
           flex: none;
           /* same top padding as the state item, so the two lines sit on the
              name (20px) and state (16px) lines of mushroom-state-info */
@@ -425,7 +435,8 @@ export class IspCard
         }
         /* both lines share the name-line style; only the arrows carry colour */
         .trail-line {
-          display: inline-flex;
+          display: inline-grid;
+          grid-template-columns: auto 3ch auto;
           align-items: baseline;
           gap: 4px;
           font-size: 13px;
@@ -440,6 +451,9 @@ export class IspCard
         }
         .trail-line .arrow {
           font-weight: 700;
+        }
+        .trail-line .num {
+          text-align: right;
         }
         .trail-line.rx .arrow {
           color: rgb(var(--rgb-blue));
