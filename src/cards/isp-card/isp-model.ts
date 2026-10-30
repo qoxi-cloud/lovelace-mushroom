@@ -140,6 +140,45 @@ export function collectWanLinks(hass: HomeAssistant): WanLink[] {
  * reports no per-virtual-WAN rates). The sensors become the rx/tx stat
  * entities, so tiles open their history.
  */
+/** ISP name token used to match throughput sensors: "Kopiyka_sfp3" → "kopiyka" */
+export function ispNameToken(link: WanLink): string {
+  return (link.name || link.slug).split(/[\s_-]+/)[0].toLowerCase();
+}
+
+export interface TrafficEntityIds {
+  rx?: string;
+  tx?: string;
+}
+
+/** Throughput sensors found by name, so a dashboard needs no entity ids and
+ *  swapping the measuring device is a matter of naming the new sensors:
+ *  "<ISP> download" / "<ISP> upload" (case-insensitive, a device-name prefix is
+ *  allowed), any sensor in bit/s or B/s. */
+export function discoverTrafficEntities(
+  hass: HomeAssistant,
+  link: WanLink
+): TrafficEntityIds {
+  const token = ispNameToken(link);
+  if (!token) return {};
+  const wantRx = `${token} download`;
+  const wantTx = `${token} upload`;
+  const out: TrafficEntityIds = {};
+  for (const id in hass.states) {
+    if (!id.startsWith("sensor.")) continue;
+    const st = hass.states[id];
+    const unit = st.attributes.unit_of_measurement;
+    if (typeof unit !== "string" || !(unit in BITS)) continue;
+    const name = String(st.attributes.friendly_name ?? "")
+      .trim()
+      .toLowerCase();
+    if (!out.rx && (name === wantRx || name.endsWith(` ${wantRx}`))) out.rx = id;
+    else if (!out.tx && (name === wantTx || name.endsWith(` ${wantTx}`)))
+      out.tx = id;
+    if (out.rx && out.tx) break;
+  }
+  return out;
+}
+
 export function withTrafficEntities(
   link: WanLink,
   hass: HomeAssistant,

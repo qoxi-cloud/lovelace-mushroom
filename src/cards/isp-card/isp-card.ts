@@ -46,6 +46,8 @@ import {
   WanLink,
   wanStateColor,
   withTrafficEntities,
+  discoverTrafficEntities,
+  TrafficEntityIds,
 } from "./isp-model";
 
 registerCustomCard({
@@ -134,16 +136,39 @@ export class IspCard
     if (!this.hass || !this._config) return undefined;
     const link = findWanLink(this.hass, this._config.wan);
     if (!link) return undefined;
-    return withTrafficEntities(
-      link,
-      this.hass,
-      this._config.rx_entity,
-      this._config.tx_entity
-    );
+    const ids = this._trafficIds(link);
+    return withTrafficEntities(link, this.hass, ids.rx, ids.tx);
+  }
+
+  private _discovered?: TrafficEntityIds & { key: string; at: number };
+
+  /** configured rx/tx entities win; otherwise sensors named "<ISP> download" /
+   *  "<ISP> upload" are looked up once and re-looked-up when they vanish or,
+   *  while nothing matches, at most every 30 s (a states scan per render is
+   *  wasteful on a big instance) */
+  private _trafficIds(link: WanLink): TrafficEntityIds {
+    if (this._config?.rx_entity || this._config?.tx_entity)
+      return { rx: this._config.rx_entity, tx: this._config.tx_entity };
+    const d = this._discovered;
+    const now = Date.now();
+    if (d && d.key === link.key) {
+      const alive =
+        (d.rx || d.tx) &&
+        (!d.rx || this.hass.states[d.rx]) &&
+        (!d.tx || this.hass.states[d.tx]);
+      if (alive || now - d.at < 30_000) return d;
+    }
+    const found = discoverTrafficEntities(this.hass, link);
+    this._discovered = { ...found, key: link.key, at: now };
+    return found;
   }
 
   private get _hasTrafficSource(): boolean {
-    return !!(this._config?.rx_entity || this._config?.tx_entity);
+    if (!this.hass || !this._config) return false;
+    const link = findWanLink(this.hass, this._config.wan);
+    if (!link) return false;
+    const ids = this._trafficIds(link);
+    return !!(ids.rx || ids.tx);
   }
 
   protected get _stateObj(): HassEntity | undefined {
