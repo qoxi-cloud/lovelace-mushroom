@@ -42,11 +42,14 @@ export const ONU_STATS = [
 
 export type OnuStat = (typeof ONU_STATS)[number];
 
+// line diagnostics: signal both ways, module temperature (WAS-110 drops PON
+// when hot), uncorrectable FEC (fibre/connector trouble before RX dBm shows it);
+// throughput lives on the ISP card, from the aggregation switch
 export const DEFAULT_ONU_STATS: OnuStat[] = [
   "rx_power",
   "tx_power",
-  "down_rate",
-  "up_rate",
+  "optic_temp",
+  "fec_uncorrected",
 ];
 
 export type OnuCardConfig = LovelaceCardConfig &

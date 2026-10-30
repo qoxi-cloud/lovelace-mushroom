@@ -17,7 +17,7 @@ their entities exist.
 | `name`              | string  | friendly name of the PON Link sensor       | Custom name                                                                        |
 | `icon`              | string  | `mdi:lan-connect`                          | Custom icon                                                                        |
 | `icon_color`        | string  | `green` online / disabled offline          | Custom icon color                                                                  |
-| `stats`             | list    | `[rx_power, tx_power, down_rate, up_rate]` | Tiles under the header, `[]` hides the row. See values below                       |
+| `stats`             | list    | `[rx_power, tx_power, optic_temp, fec_uncorrected]` | Tiles under the header, `[]` hides the row. See values below                       |
 | `layout`            | string  | Optional                                   | Layout of the card. Vertical, horizontal and default layout are supported          |
 | `fill_container`    | boolean | `false`                                    | Fill container or not                                                              |
 | `primary_info`      | string  | `name`                                     | `name` `state` `last-changed` `last-updated` `none` (state of the PON Link sensor) |
