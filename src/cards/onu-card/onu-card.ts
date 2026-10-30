@@ -319,9 +319,12 @@ export class OnuCard
           <span>${onu.ponMode}</span>
         </span>
         ${rates
-          ? html`<span class="trail-sub"
-              >↓ ${rates.down}G&nbsp;&nbsp;↑ ${rates.up}G</span
-            >`
+          ? html`<span class="trail-sub">
+              <span class="arrow rx">↓</span>${rates.down}G&nbsp;&nbsp;<span
+                class="arrow tx"
+                >↑</span
+              >${rates.up}G
+            </span>`
           : nothing}
       </div>
     `;
@@ -457,6 +460,15 @@ export class OnuCard
           font-weight: 400;
           letter-spacing: 0.02em;
           font-variant-numeric: tabular-nums;
+        }
+        .trail-sub .arrow {
+          font-weight: 700;
+        }
+        .trail-sub .arrow.rx {
+          color: rgb(var(--rgb-blue));
+        }
+        .trail-sub .arrow.tx {
+          color: rgb(var(--rgb-green));
         }
         mushroom-shape-icon {
           --icon-color: rgb(var(--rgb-state-entity));

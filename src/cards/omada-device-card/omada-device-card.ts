@@ -323,7 +323,8 @@ export class OmadaDeviceCard
     `;
   }
 
-  /** "10 / 10" at the right end of the header row; coloured only when the score drops */
+  /** "10 / 10" at the right end of the header row; green heart while healthy,
+   *  the whole trail turns warning/danger when the score drops */
   private renderHealthTrail(device: DeviceRecord, layout: string) {
     if (this._config?.show_health === false || layout === "vertical")
       return nothing;
@@ -461,10 +462,15 @@ export class OmadaDeviceCard
           cursor: pointer;
           white-space: nowrap;
         }
-        .trail.warning {
+        .trail ha-icon {
+          color: rgb(var(--rgb-green));
+        }
+        .trail.warning,
+        .trail.warning ha-icon {
           color: rgb(var(--rgb-warning));
         }
-        .trail.danger {
+        .trail.danger,
+        .trail.danger ha-icon {
           color: rgb(var(--rgb-danger));
         }
         .offline {

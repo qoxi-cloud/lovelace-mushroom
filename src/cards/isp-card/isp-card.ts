@@ -302,8 +302,8 @@ export class IspCard
     `;
   }
 
-  /** arrow | 3-char value | unit as fixed columns, so the arrows and the
-   *  units line up across the cards whatever the number of digits */
+  /** arrow | 3-char value | unit as fixed columns: the value hugs the arrow,
+   *  the arrows and the units line up across the cards whatever the digits */
   private renderTrailLine(dir: "rx" | "tx", arrow: string, bps: number) {
     const { value, unit } = splitBitRate(bps);
     return html`
@@ -453,7 +453,7 @@ export class IspCard
           font-weight: 700;
         }
         .trail-line .num {
-          text-align: right;
+          text-align: left;
         }
         .trail-line.rx .arrow {
           color: rgb(var(--rgb-blue));
