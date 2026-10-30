@@ -423,6 +423,10 @@ export class IspCard
           flex-direction: column;
           align-items: flex-start;
           flex: none;
+          /* fits "↓ 999 kbit/s" (~79px at 13px); a fixed box keeps the arrows
+             in one column across the cards whatever the digits */
+          box-sizing: content-box;
+          min-width: 6.2em;
           /* same top padding as the state item, so the two lines sit on the
              name (20px) and state (16px) lines of mushroom-state-info */
           padding: calc(var(--spacing) + 4px) var(--spacing) 0 4px;
