@@ -274,12 +274,6 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
           ${hops.map(
             (hop, i) => html`
               <div class="hop-wrap">
-                ${i > 0
-                  ? html`<ha-icon
-                      class="path-arrow"
-                      icon="mdi:chevron-right"
-                    ></ha-icon>`
-                  : nothing}
                 <div class="hop">
                   <ha-icon class="hop-icon" .icon=${hop.icon}></ha-icon>
                   <div class="hop-text">
@@ -289,6 +283,12 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
                       : nothing}
                   </div>
                 </div>
+                ${i < hops.length - 1
+                  ? html`<ha-icon
+                      class="path-arrow"
+                      icon="mdi:chevron-right"
+                    ></ha-icon>`
+                  : nothing}
               </div>
             `
           )}
@@ -298,12 +298,6 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
             const expanded = !this._compact || this._openHop === i;
             return html`
               <div class="hop-wrap">
-                ${i > 0
-                  ? html`<ha-icon
-                      class="path-arrow"
-                      icon="mdi:chevron-right"
-                    ></ha-icon>`
-                  : nothing}
                 <div
                   class=${classMap({
                     hop: true,
@@ -327,6 +321,12 @@ export abstract class QoxiSheet<P> extends MushroomBaseElement {
                       ></ha-icon>`
                     : nothing}
                 </div>
+                ${i < hops.length - 1
+                  ? html`<ha-icon
+                      class="path-arrow"
+                      icon="mdi:chevron-right"
+                    ></ha-icon>`
+                  : nothing}
               </div>
             `;
           })}
