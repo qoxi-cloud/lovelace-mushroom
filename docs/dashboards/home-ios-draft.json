@@ -130,6 +130,20 @@
          }
         },
         {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
+         }
+        },
+        {
          "label": "Service",
          "icon": "mdi:wrench-outline",
          "color": "grey",
@@ -242,65 +256,6 @@
       {
        "type": "custom:mushroom-climate-card",
        "entity": "climate.wiser_kitchen",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": 6
-       },
-       "temperature_icon": true
-      }
-     ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "Hall",
-       "heading_style": "title",
-       "icon": "mdi:sofa"
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_hall_lighr_square_light",
-       "name": "Light-Square",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_hall_light_light",
-       "name": "Light",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.hall_wiser_hall_heating",
        "name": "Heating",
        "layout": "horizontal",
        "fill_container": true,
@@ -785,6 +740,65 @@
      "cards": [
       {
        "type": "heading",
+       "heading": "Hall",
+       "heading_style": "title",
+       "icon": "mdi:sofa"
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hall_lighr_square_light",
+       "name": "Light-Square",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hall_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.hall_wiser_hall_heating",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": 6
+       },
+       "temperature_icon": true
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
        "heading": "BathRoom",
        "heading_style": "title",
        "icon": "mdi:bathtub"
@@ -1084,6 +1098,20 @@
          }
         },
         {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
+         }
+        },
+        {
          "label": "Service",
          "icon": "mdi:wrench-outline",
          "color": "grey",
@@ -1208,48 +1236,6 @@
        "type": "custom:mushroom-light-card",
        "entity": "light.wiser_onofflight_kitchen_light_table_light",
        "name": "Light-Table",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      }
-     ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "Hall",
-       "heading_style": "title",
-       "icon": "mdi:sofa",
-       "badges": []
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_hall_lighr_square_light",
-       "name": "Light-Square",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "use_light_color": false,
-       "tap_action": {
-        "action": "toggle"
-       },
-       "grid_options": {
-        "columns": 6
-       }
-      },
-      {
-       "type": "custom:mushroom-light-card",
-       "entity": "light.wiser_onofflight_hall_light_light",
-       "name": "Light",
        "layout": "horizontal",
        "fill_container": true,
        "collapsible_controls": true,
@@ -1592,6 +1578,48 @@
      "cards": [
       {
        "type": "heading",
+       "heading": "Hall",
+       "heading_style": "title",
+       "icon": "mdi:sofa",
+       "badges": []
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hall_lighr_square_light",
+       "name": "Light-Square",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-light-card",
+       "entity": "light.wiser_onofflight_hall_light_light",
+       "name": "Light",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": true,
+       "use_light_color": false,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
        "heading": "BathRoom",
        "heading_style": "title",
        "icon": "mdi:bathtub",
@@ -1835,6 +1863,20 @@
          }
         },
         {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
+         }
+        },
+        {
          "label": "Service",
          "icon": "mdi:wrench-outline",
          "color": "grey",
@@ -1927,35 +1969,6 @@
       {
        "type": "custom:mushroom-climate-card",
        "entity": "climate.wiser_kitchen",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": false,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": "full"
-       },
-       "temperature_icon": true
-      }
-     ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "Hall",
-       "heading_style": "title",
-       "icon": "mdi:sofa"
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.hall_wiser_hall_heating",
        "name": "Heating",
        "layout": "horizontal",
        "fill_container": true,
@@ -2102,6 +2115,35 @@
       {
        "type": "custom:mushroom-climate-card",
        "entity": "climate.hallway_wiser_hallway_heating",
+       "name": "Heating",
+       "layout": "horizontal",
+       "fill_container": true,
+       "collapsible_controls": false,
+       "show_temperature_control": true,
+       "hvac_modes": [
+        "auto",
+        "heat",
+        "off"
+       ],
+       "grid_options": {
+        "columns": "full"
+       },
+       "temperature_icon": true
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Hall",
+       "heading_style": "title",
+       "icon": "mdi:sofa"
+      },
+      {
+       "type": "custom:mushroom-climate-card",
+       "entity": "climate.hall_wiser_hall_heating",
        "name": "Heating",
        "layout": "horizontal",
        "fill_container": true,
@@ -2306,6 +2348,20 @@
           "kind": "count_on",
           "domain": "device_tracker",
           "suffix": "online"
+         }
+        },
+        {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
          }
         },
         {
@@ -2769,6 +2825,20 @@
          }
         },
         {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
+         }
+        },
+        {
          "label": "Service",
          "icon": "mdi:wrench-outline",
          "color": "grey",
@@ -3030,6 +3100,20 @@
          }
         },
         {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
+         }
+        },
+        {
          "label": "Service",
          "icon": "mdi:wrench-outline",
          "color": "grey",
@@ -3053,28 +3137,25 @@
        "show_home_button": false
       },
       {
-       "type": "custom:mushroom-camera-card",
-       "entity": "camera.hallway",
-       "name": "Hallway",
-       "grid_options": {
-        "columns": 12
-       }
+       "type": "custom:scrypted-nvr-camera",
+       "id": 31,
+       "live": true,
+       "imageClick": "popup",
+       "videoClick": "popup"
       },
       {
-       "type": "custom:mushroom-camera-card",
-       "entity": "camera.basip_av_06m",
-       "name": "Intercom",
-       "grid_options": {
-        "columns": 12
-       }
+       "type": "custom:scrypted-nvr-camera",
+       "id": 50,
+       "live": true,
+       "imageClick": "popup",
+       "videoClick": "popup"
       },
       {
-       "type": "custom:mushroom-camera-card",
-       "entity": "camera.aqara_g100_90da",
-       "name": "Children's",
-       "grid_options": {
-        "columns": 12
-       }
+       "type": "custom:scrypted-nvr-camera",
+       "id": 30,
+       "live": true,
+       "imageClick": "popup",
+       "videoClick": "popup"
       }
      ],
      "column_span": 2
@@ -3208,6 +3289,20 @@
           "kind": "count_on",
           "domain": "device_tracker",
           "suffix": "online"
+         }
+        },
+        {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
          }
         },
         {
@@ -3388,6 +3483,611 @@
    ]
   },
   {
+   "title": "Energy",
+   "path": "energy",
+   "type": "sections",
+   "max_columns": 2,
+   "icon": "mdi:home-battery",
+   "sections": [
+    {
+     "type": "grid",
+     "column_span": 2,
+     "cards": [
+      {
+       "type": "custom:mushroom-category-bar-card",
+       "title": "Energy",
+       "items": [
+        {
+         "label": "Lights",
+         "icon": "mdi:lightbulb",
+         "color": "amber",
+         "path": "/dashboard-home-ios/lights",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "light.wiser_dimmablelight_bathroom_led_light",
+           "light.wiser_dimmablelight_bedroom_led_light",
+           "light.wiser_dimmablelight_hallway_led_1_light",
+           "light.wiser_dimmablelight_hallway_led_2_light",
+           "light.wiser_dimmablelight_showerroom_led_light",
+           "light.wiser_onofflight_bathroom_light_light",
+           "light.wiser_onofflight_bathroom_light_table_light",
+           "light.wiser_onofflight_bedroom_light_bed_l_light",
+           "light.wiser_onofflight_bedroom_light_bed_r_light",
+           "light.wiser_onofflight_bedroom_light_light",
+           "light.wiser_onofflight_bedroom_ligth_table_light",
+           "light.wiser_onofflight_cabinet_light_light",
+           "light.wiser_onofflight_children_s_led_bed_a_light",
+           "light.wiser_onofflight_children_s_led_bed_s_light",
+           "light.wiser_onofflight_children_s_light_bed_a_light",
+           "light.wiser_onofflight_children_s_light_bed_s_light",
+           "light.wiser_onofflight_children_s_light_light",
+           "light.wiser_onofflight_children_s_light_sconce_a_light",
+           "light.wiser_onofflight_children_s_light_sconce_s_light",
+           "light.wiser_onofflight_hall_lighr_square_light",
+           "light.wiser_onofflight_hall_light_light",
+           "light.wiser_onofflight_hallway_led_wall_light",
+           "light.wiser_onofflight_hallway_light_light",
+           "light.wiser_onofflight_hallway_track_light",
+           "light.wiser_onofflight_kitchen_light_light",
+           "light.wiser_onofflight_kitchen_light_square_light",
+           "light.wiser_onofflight_kitchen_light_table_light",
+           "light.wiser_onofflight_showerroom_light_light",
+           "light.wiser_onofflight_showerroom_light_table_light"
+          ],
+          "suffix": "On"
+         }
+        },
+        {
+         "label": "Heating",
+         "icon": "mdi:radiator",
+         "color": "orange",
+         "path": "/dashboard-home-ios/heating",
+         "status": {
+          "kind": "attribute_equals",
+          "entities": [
+           "climate.hallway_wiser_hallway_heating",
+           "climate.wiser_bedroom",
+           "climate.wiser_kitchen",
+           "climate.bathroom_wiser_bathroom_heating",
+           "climate.showerroom_wiser_showerroom_heating",
+           "climate.hall_wiser_hall_heating",
+           "climate.wiser_cabinet",
+           "climate.wiser_children_s"
+          ],
+          "attribute": "hvac_action",
+          "equals": "heating",
+          "suffix": "heating"
+         }
+        },
+        {
+         "label": "Cooling",
+         "icon": "mdi:snowflake",
+         "color": "light-blue",
+         "path": "/dashboard-home-ios/cooling",
+         "status": {
+          "kind": "temperature",
+          "entities": [
+           "climate.gree_ac_1",
+           "climate.gree_ac_2",
+           "climate.gree_ac_3"
+          ]
+         }
+        },
+        {
+         "label": "Security",
+         "icon": "mdi:lock",
+         "color": "teal",
+         "path": "/dashboard-home-ios/security",
+         "status": {
+          "kind": "state",
+          "entity": "alarm_control_panel.server_hub_2_plus_jeweller",
+          "map": {
+           "disarmed": "Off",
+           "armed_away": "Away",
+           "armed_home": "Home",
+           "arming": "Arming",
+           "triggered": "Alarm!"
+          }
+         }
+        },
+        {
+         "label": "Cameras",
+         "icon": "mdi:cctv",
+         "color": "blue-grey",
+         "path": "/dashboard-home-ios/cameras",
+         "status": {
+          "kind": "count",
+          "domain": "camera"
+         }
+        },
+        {
+         "label": "Network",
+         "icon": "mdi:lan",
+         "color": "blue",
+         "path": "/dashboard-home-ios/network",
+         "status": {
+          "kind": "count_on",
+          "domain": "device_tracker",
+          "suffix": "online"
+         }
+        },
+        {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
+         }
+        },
+        {
+         "label": "Service",
+         "icon": "mdi:wrench-outline",
+         "color": "grey",
+         "path": "/dashboard-home-ios/service",
+         "status": {
+          "kind": "count_on",
+          "entities": [
+           "switch.wiser_bedroom_garland_switch",
+           "switch.wiser_childrens_garland_switch",
+           "switch.wiser_cabinet_garland_switch",
+           "switch.wiser_onofflight_kitchen_chopper_switch"
+          ],
+          "suffix": "On"
+         }
+        }
+       ],
+       "home_path": "/dashboard-home-ios/home",
+       "grid_options": {
+        "columns": "full"
+       },
+       "show_home_button": false
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Grid",
+       "secondary": "{% if is_state('binary_sensor.victron_grid_available', 'on') %}{{ states('sensor.victron_ac_in_voltage') | float(0) | round(0) | int }} V \u00b7 {{ (states('sensor.victron_ac_out_frequency') if is_state('sensor.victron_active_input_source', 'grid') else states('sensor.victron_ac_in_frequency')) | float(0) | round(2) }} Hz{% else %}Off{% endif %}",
+       "icon": "{{ 'mdi:transmission-tower' if is_state('binary_sensor.victron_grid_available', 'on') else 'mdi:transmission-tower-off' }}",
+       "icon_color": "{{ 'green' if is_state('binary_sensor.victron_grid_available', 'on') else 'red' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "binary_sensor.victron_grid_available",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "{{ state_translated('select.victron_multi_mode') }}",
+       "secondary": "{% set bl = {'soc_below_battery_life_dynamic_soc_limit': 'Discharge disabled', 'soc_below_soc_limit_24_hours': 'Slow charge', 'recharge': 'Recharge', 'recharge_no_battery_life': 'Recharge', 'sustain': 'Sustain', 'keep_batteries_charged': 'Keep charged'}.get(states('sensor.victron_batterylife_state')) %}{{ bl if bl and is_state('sensor.victron_active_input_source', 'grid') else state_translated('sensor.victron_system_state') }}",
+       "icon": "mdi:sine-wave",
+       "icon_color": "blue",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "select.victron_multi_mode",
+       "tap_action": {
+        "action": "none"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Battery {{ states('sensor.victron_battery_soc') | int(0) }} %",
+       "secondary": "{% set p = states('sensor.victron_battery_power') | float(0) %}{% set w = (p | abs / 1000) | round(1) ~ ' kW' if p | abs >= 1000 else (p | abs | round(0) | int) ~ ' W' %}{% if p < -50 %}\u2212{{ w }} \u00b7 {% set h = states('sensor.victron_battery_time_to_empty') | float(-1) %}{{ (h | int) ~ ' h ' ~ (((h % 1) * 60) | round | int) ~ ' m' if h >= 0 else '' }}{% elif p > 50 %}+{{ w }} \u00b7 {% set h = states('sensor.victron_battery_time_to_full') | float(-1) %}{{ (h | int) ~ ' h ' ~ (((h % 1) * 60) | round | int) ~ ' m' if h >= 0 else '' }}{% else %}Idle{% endif %}",
+       "icon": "{% set s = states('sensor.victron_battery_soc') | int(0) %}{% set c = states('sensor.victron_battery_power') | float(0) > 50 %}{% set b = 'mdi:battery-charging' if c else 'mdi:battery' %}{{ b if s >= 95 else (b ~ '-' ~ ((s / 10) | int * 10) if s >= 10 else ('mdi:battery-charging-outline' if c else 'mdi:battery-outline')) }}",
+       "icon_color": "{% set s = states('sensor.victron_battery_soc') | int(0) %}{{ 'green' if s >= 50 else ('amber' if s >= 20 else 'red') }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_battery_soc",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Load {{ states('sensor.victron_load_power') | float(0) | round(0) | int }} W",
+       "secondary": "{{ ('input ' ~ states('sensor.victron_input_load') | int(0)) if is_state('sensor.victron_active_input_source', 'grid') else ('inverter ' ~ states('sensor.victron_inverter_load') | int(0)) }} % \u00b7 {{ states('sensor.victron_load_current') | float(0) | round(1) }} A",
+       "icon": "mdi:home-lightning-bolt",
+       "icon_color": "orange",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_load_power",
+       "tap_action": {
+        "action": "more-info"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Battery",
+       "heading_style": "title",
+       "icon": "mdi:battery-high"
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.victron_battery_voltage",
+       "name": "Voltage",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.victron_battery_current",
+       "name": "Current",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.victron_bms_temperature",
+       "name": "Temperature",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.victron_bms_soh",
+       "name": "Health",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "icon": "mdi:heart-pulse"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "{% set lo, hi = states('sensor.victron_bms_minimum_cell_voltage') | float(0), states('sensor.victron_bms_maximum_cell_voltage') | float(0) %}Cells \u0394{{ ((hi - lo) * 1000) | round(0) | int }} mV",
+       "secondary": "{{ '%.3f' % (states('sensor.victron_bms_minimum_cell_voltage') | float(0)) }}\u2013{{ '%.3f' % (states('sensor.victron_bms_maximum_cell_voltage') | float(0)) }} V",
+       "icon": "mdi:car-battery",
+       "icon_color": "teal",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_bms_minimum_cell_voltage",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Modules",
+       "secondary": "{{ states('sensor.victron_bms_number_of_modules_online') }} online \u00b7 {{ states('sensor.victron_bms_installed_capacity') | float(0) | int }} Ah",
+       "icon": "mdi:battery-sync",
+       "icon_color": "teal",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_bms_number_of_modules_online",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "{% if has_value('sensor.victron_round_trip_efficiency') %}Round-trip {{ states('sensor.victron_round_trip_efficiency') | float | round(0) | int }} %{% else %}Round-trip efficiency{% endif %}",
+       "secondary": "{% set c, i = state_attr('sensor.victron_efficiency_stats', 'charger_efficiency'), state_attr('sensor.victron_efficiency_stats', 'inverter_efficiency') %}{% if has_value('sensor.victron_round_trip_efficiency') %}charger {{ c | round(0) | int }} % \u00b7 inverter {{ i | round(0) | int }} % \u00b7 7 d{% else %}Collecting \u00b7 charger {{ (c | round(0) | int ~ ' %') if c is number else '\u2014' }} \u00b7 inverter {{ (i | round(0) | int ~ ' %') if i is number else '\u2014' }}{% endif %}",
+       "icon": "mdi:swap-vertical-circle-outline",
+       "icon_color": "{% set e = states('sensor.victron_round_trip_efficiency') | float(-1) %}{{ 'grey' if e < 0 else ('green' if e >= 80 else ('amber' if e >= 72 else 'red')) }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 12
+       },
+       "entity": "sensor.victron_round_trip_efficiency",
+       "tap_action": {
+        "action": "more-info"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Inverter",
+       "heading_style": "title",
+       "icon": "mdi:sine-wave"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "MultiPlus #1",
+       "secondary": "{% set c = states('sensor.victron_multi_1_inverted_power') | float(0) %}out {{ states('sensor.victron_multi_1_output_power') | float(0) | round(0) | int }} W \u00b7 {{ 'inverting' if c < -60 else ('charging' if c > 60 else 'idle') }}{{ (' ' ~ (c | abs | round(0) | int) ~ ' W') if c | abs > 60 else '' }}",
+       "icon": "mdi:numeric-1-box-outline",
+       "icon_color": "blue",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_multi_1_output_power",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "MultiPlus #2",
+       "secondary": "{% set c = states('sensor.victron_multi_2_inverted_power') | float(0) %}out {{ states('sensor.victron_multi_2_output_power') | float(0) | round(0) | int }} W \u00b7 {{ 'inverting' if c < -60 else ('charging' if c > 60 else 'idle') }}{{ (' ' ~ (c | abs | round(0) | int) ~ ' W') if c | abs > 60 else '' }}",
+       "icon": "mdi:numeric-2-box-outline",
+       "icon_color": "blue",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_multi_2_output_power",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Inverter {{ states('sensor.victron_inverter_load') | int(0) }} %",
+       "secondary": "of 8 kW (2 \u00d7 4 kW)",
+       "icon": "mdi:gauge",
+       "icon_color": "{% set l = states('sensor.victron_inverter_load') | int(0) %}{{ 'green' if l < 70 else ('amber' if l < 90 else 'red') }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_inverter_load",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Input {{ states('sensor.victron_input_load') | int(0) ~ ' %' if has_value('sensor.victron_input_load') else '\u2014' }}",
+       "secondary": "{{ states('sensor.victron_ac_in_current') | float(0) | round(1) }} of {{ states('number.victron_multi_current_limit') | float(0) | round(1) }} A",
+       "icon": "mdi:speedometer",
+       "icon_color": "{% set l = states('sensor.victron_input_load') | int(0) %}{{ 'green' if l < 70 else ('amber' if l < 90 else 'red') }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_input_load",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.victron_ac_out_apparent_power",
+       "name": "Apparent",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "icon": "mdi:flash-outline"
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Grid",
+       "heading_style": "title",
+       "icon": "mdi:transmission-tower"
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.victron_ac_in_voltage",
+       "name": "Voltage",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Frequency",
+       "secondary": "{{ (states('sensor.victron_ac_out_frequency') if is_state('sensor.victron_active_input_source', 'grid') else states('sensor.victron_ac_in_frequency')) | float(0) | round(2) }} Hz",
+       "icon": "mdi:sine-wave",
+       "icon_color": "blue",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_ac_out_frequency",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-entity-card",
+       "entity": "sensor.victron_ac_in_power",
+       "name": "Power",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Input",
+       "secondary": "{{ state_translated('sensor.victron_active_input_source') }}",
+       "icon": "mdi:power-plug",
+       "icon_color": "grey",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_active_input_source",
+       "tap_action": {
+        "action": "more-info"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Today",
+       "heading_style": "title",
+       "icon": "mdi:calendar-today"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "From grid",
+       "secondary": "{{ (states('sensor.victron_grid_import_today') | float(0) | round(2)) ~ ' kWh' }}",
+       "icon": "mdi:transmission-tower-import",
+       "icon_color": "blue",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_grid_import_today",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Grid \u2192 charger",
+       "secondary": "{{ (states('sensor.victron_grid_to_charger_today') | float(0) | round(2)) ~ ' kWh' }}",
+       "icon": "mdi:battery-charging-high",
+       "icon_color": "teal",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_grid_to_charger_today",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "From battery",
+       "secondary": "{{ (states('sensor.victron_battery_to_loads_today') | float(0) | round(2)) ~ ' kWh' }}",
+       "icon": "mdi:battery-arrow-down-outline",
+       "icon_color": "green",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_battery_to_loads_today",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "primary": "Grid \u2192 loads",
+       "secondary": "{{ (states('sensor.victron_grid_to_loads_today') | float(0) | round(2)) ~ ' kWh' }}",
+       "icon": "mdi:home-import-outline",
+       "icon_color": "orange",
+       "layout": "horizontal",
+       "fill_container": true,
+       "grid_options": {
+        "columns": 6
+       },
+       "entity": "sensor.victron_grid_to_loads_today",
+       "tap_action": {
+        "action": "more-info"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "column_span": 2,
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "History",
+       "heading_style": "title",
+       "icon": "mdi:chart-line"
+      },
+      {
+       "type": "history-graph",
+       "hours_to_show": 24,
+       "entities": [
+        {
+         "entity": "sensor.victron_battery_soc",
+         "name": "SOC"
+        }
+       ],
+       "grid_options": {
+        "columns": 12
+       }
+      },
+      {
+       "type": "history-graph",
+       "hours_to_show": 24,
+       "entities": [
+        {
+         "entity": "sensor.victron_load_power",
+         "name": "Load"
+        },
+        {
+         "entity": "sensor.victron_ac_in_power",
+         "name": "Grid"
+        },
+        {
+         "entity": "sensor.victron_battery_power",
+         "name": "Battery"
+        }
+       ],
+       "grid_options": {
+        "columns": 12
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
    "title": "Service",
    "path": "service",
    "icon": "mdi:wrench-outline",
@@ -3515,6 +4215,20 @@
           "kind": "count_on",
           "domain": "device_tracker",
           "suffix": "online"
+         }
+        },
+        {
+         "label": "Energy",
+         "icon": "mdi:home-battery",
+         "color": "green",
+         "path": "/dashboard-home-ios/energy",
+         "status": {
+          "kind": "state",
+          "entity": "binary_sensor.victron_grid_available",
+          "map": {
+           "on": "Grid",
+           "off": "No grid"
+          }
          }
         },
         {
