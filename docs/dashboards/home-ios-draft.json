@@ -161,6 +161,32 @@
         "columns": "full"
        },
        "show_home_button": false
+      },
+      {
+       "type": "custom:mushroom-chips-card",
+       "alignment": "start",
+       "grid_options": {
+        "columns": "full"
+       },
+       "visibility": [
+        {
+         "condition": "state",
+         "entity": "binary_sensor.wiser_hub",
+         "state": "off"
+        }
+       ],
+       "chips": [
+        {
+         "type": "template",
+         "entity": "binary_sensor.wiser_hub",
+         "icon": "mdi:close-network-outline",
+         "icon_color": "red",
+         "content": "{% set t = as_timestamp(state_attr('sensor.wiser_heathub_wiserheat06724f_wiser_heating_operation_mode', 'last_updated'), 0) %}{% set t = t if t > 0 else as_timestamp(states[entity].last_changed if states[entity] else none, 0) %}Wiser hub offline{{ ' since ' ~ t | timestamp_custom('%H:%M' if as_timestamp(now()) - t < 86400 else '%d.%m %H:%M') if t > 0 else '' }}",
+         "tap_action": {
+          "action": "more-info"
+         }
+        }
+       ]
       }
      ],
      "column_span": 2
@@ -1059,6 +1085,26 @@
        "alignment": "start",
        "chips": [
         {
+         "type": "conditional",
+         "conditions": [
+          {
+           "condition": "state",
+           "entity": "binary_sensor.wiser_hub",
+           "state": "off"
+          }
+         ],
+         "chip": {
+          "type": "template",
+          "entity": "binary_sensor.wiser_hub",
+          "icon": "mdi:close-network-outline",
+          "icon_color": "red",
+          "content": "{% set t = as_timestamp(state_attr('sensor.wiser_heathub_wiserheat06724f_wiser_heating_operation_mode', 'last_updated'), 0) %}{% set t = t if t > 0 else as_timestamp(states[entity].last_changed if states[entity] else none, 0) %}Hub offline{{ ' since ' ~ t | timestamp_custom('%H:%M' if as_timestamp(now()) - t < 86400 else '%d.%m %H:%M') if t > 0 else '' }}",
+          "tap_action": {
+           "action": "more-info"
+          }
+         }
+        },
+        {
          "type": "template",
          "icon": "mdi:lightbulb-on",
          "icon_color": "amber",
@@ -1819,6 +1865,26 @@
        "type": "custom:mushroom-chips-card",
        "alignment": "start",
        "chips": [
+        {
+         "type": "conditional",
+         "conditions": [
+          {
+           "condition": "state",
+           "entity": "binary_sensor.wiser_hub",
+           "state": "off"
+          }
+         ],
+         "chip": {
+          "type": "template",
+          "entity": "binary_sensor.wiser_hub",
+          "icon": "mdi:close-network-outline",
+          "icon_color": "red",
+          "content": "{% set t = as_timestamp(state_attr('sensor.wiser_heathub_wiserheat06724f_wiser_heating_operation_mode', 'last_updated'), 0) %}{% set t = t if t > 0 else as_timestamp(states[entity].last_changed if states[entity] else none, 0) %}Hub offline{{ ' since ' ~ t | timestamp_custom('%H:%M' if as_timestamp(now()) - t < 86400 else '%d.%m %H:%M') if t > 0 else '' }}",
+          "tap_action": {
+           "action": "more-info"
+          }
+         }
+        },
         {
          "type": "template",
          "entity": "sensor.wiser_heathub_wiserheat06724f_wiser_heating",
