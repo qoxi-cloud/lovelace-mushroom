@@ -1828,28 +1828,12 @@
         },
         {
          "type": "template",
-         "icon": "mdi:fire",
+         "icon": "{% set b = [\"climate.wiser_kitchen\", \"climate.wiser_bedroom\", \"climate.wiser_cabinet\", \"climate.wiser_children_s\"] | select('is_state_attr', 'is_boosted', true) | list %}{{ 'mdi:fire-off' if b else 'mdi:fire' }}",
          "icon_color": "orange",
-         "content": "Boost all",
+         "content": "{% set b = [\"climate.wiser_kitchen\", \"climate.wiser_bedroom\", \"climate.wiser_cabinet\", \"climate.wiser_children_s\"] | select('is_state_attr', 'is_boosted', true) | list %}{% if b %}Cancel boost \u00b7 {{ [\"climate.wiser_kitchen\", \"climate.wiser_bedroom\", \"climate.wiser_cabinet\", \"climate.wiser_children_s\"] | map('state_attr', 'boost_time_remaining') | select('number') | max }}m{% else %}Boost all{% endif %}",
          "tap_action": {
           "action": "perform-action",
-          "perform_action": "button.press",
-          "target": {
-           "entity_id": "button.wiser_heathub_wiserheat06724f_wiser_boost_all_heating"
-          }
-         }
-        },
-        {
-         "type": "template",
-         "icon": "mdi:fire-off",
-         "icon_color": "disabled",
-         "content": "Cancel overrides",
-         "tap_action": {
-          "action": "perform-action",
-          "perform_action": "button.press",
-          "target": {
-           "entity_id": "button.wiser_heathub_wiserheat06724f_wiser_cancel_all_heating_overrides"
-          }
+          "perform_action": "script.wiser_boost_toggle"
          }
         },
         {
