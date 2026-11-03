@@ -178,6 +178,16 @@
          "tap_action": {
           "action": "more-info"
          }
+        },
+        {
+         "type": "template",
+         "entity": "binary_sensor.gree_acs_online",
+         "icon": "{{ 'mdi:check-network-outline' if is_state(entity, 'on') else 'mdi:close-network-outline' if is_state(entity, 'off') else 'mdi:help-network-outline' }}",
+         "icon_color": "{{ 'green' if is_state(entity, 'on') else 'red' if is_state(entity, 'off') else 'disabled' }}",
+         "content": "{% set ns = namespace(off=[], t=0, unk=false) %}{% for b, c, n in [('binary_sensor.gree_ac_3_online', 'climate.gree_ac_3', 'Kitchen'), ('binary_sensor.gree_ac_2_online', 'climate.gree_ac_2', 'BedRoom'), ('binary_sensor.gree_ac_1_online', 'climate.gree_ac_1', \"Children's\")] %}{% if is_state(b, 'off') %}{% set ns.off = ns.off + [n] %}{% set ts = as_timestamp(states[c].last_changed if states[c] and not has_value(c) else (states[b].last_changed if states[b] else none), 0) %}{% set ns.t = ts if ts > 0 and (ns.t == 0 or ts < ns.t) else ns.t %}{% elif not is_state(b, 'on') %}{% set ns.unk = true %}{% endif %}{% endfor %}{% if ns.off %}AC {{ 'all' if ns.off | count == 3 else ns.off | join(', ') }} offline{{ ' ' ~ ns.t | timestamp_custom('%H:%M' if as_timestamp(now()) - ns.t < 86400 else '%d.%m %H:%M') if ns.t > 0 else '' }}{% elif ns.unk %}AC ?{% else %}AC{% endif %}",
+         "tap_action": {
+          "action": "more-info"
+         }
         }
        ]
       }
@@ -2213,6 +2223,16 @@
          "icon": "{{ 'mdi:check-network-outline' if is_state(entity, 'on') else 'mdi:close-network-outline' if is_state(entity, 'off') else 'mdi:help-network-outline' }}",
          "icon_color": "{{ 'green' if is_state(entity, 'on') else 'red' if is_state(entity, 'off') else 'disabled' }}",
          "content": "{% if is_state(entity, 'on') %}Wiser{% elif is_state(entity, 'off') %}{% set t = as_timestamp(state_attr('sensor.wiser_heathub_wiserheat06724f_wiser_heating_operation_mode', 'last_updated'), 0) %}{% set t = t if t > 0 else as_timestamp(states[entity].last_changed if states[entity] else none, 0) %}Wiser off{{ ' ' ~ t | timestamp_custom('%H:%M' if as_timestamp(now()) - t < 86400 else '%d.%m %H:%M') if t > 0 else '' }}{% else %}Wiser ?{% endif %}",
+         "tap_action": {
+          "action": "more-info"
+         }
+        },
+        {
+         "type": "template",
+         "entity": "binary_sensor.gree_acs_online",
+         "icon": "{{ 'mdi:check-network-outline' if is_state(entity, 'on') else 'mdi:close-network-outline' if is_state(entity, 'off') else 'mdi:help-network-outline' }}",
+         "icon_color": "{{ 'green' if is_state(entity, 'on') else 'red' if is_state(entity, 'off') else 'disabled' }}",
+         "content": "{% set ns = namespace(off=[], t=0, unk=false) %}{% for b, c, n in [('binary_sensor.gree_ac_3_online', 'climate.gree_ac_3', 'Kitchen'), ('binary_sensor.gree_ac_2_online', 'climate.gree_ac_2', 'BedRoom'), ('binary_sensor.gree_ac_1_online', 'climate.gree_ac_1', \"Children's\")] %}{% if is_state(b, 'off') %}{% set ns.off = ns.off + [n] %}{% set ts = as_timestamp(states[c].last_changed if states[c] and not has_value(c) else (states[b].last_changed if states[b] else none), 0) %}{% set ns.t = ts if ts > 0 and (ns.t == 0 or ts < ns.t) else ns.t %}{% elif not is_state(b, 'on') %}{% set ns.unk = true %}{% endif %}{% endfor %}{% if ns.off %}AC {{ 'all' if ns.off | count == 3 else ns.off | join(', ') }} offline{{ ' ' ~ ns.t | timestamp_custom('%H:%M' if as_timestamp(now()) - ns.t < 86400 else '%d.%m %H:%M') if ns.t > 0 else '' }}{% elif ns.unk %}AC ?{% else %}AC{% endif %}",
          "tap_action": {
           "action": "more-info"
          }
