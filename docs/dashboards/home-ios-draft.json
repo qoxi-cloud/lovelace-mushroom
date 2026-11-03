@@ -63,12 +63,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
@@ -714,24 +710,6 @@
        "grid_options": {
         "columns": 6
        }
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.hallway_wiser_hallway_heating",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": 6
-       },
-       "temperature_icon": true
       }
      ]
     },
@@ -773,24 +751,6 @@
        "grid_options": {
         "columns": 6
        }
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.hall_wiser_hall_heating",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": 6
-       },
-       "temperature_icon": true
       }
      ]
     },
@@ -859,24 +819,6 @@
        "grid_options": {
         "columns": 6
        }
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.bathroom_wiser_bathroom_heating",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": 6
-       },
-       "temperature_icon": true
       }
      ]
     },
@@ -945,24 +887,6 @@
        "grid_options": {
         "columns": 6
        }
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.showerroom_wiser_showerroom_heating",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": true,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": 6
-       },
-       "temperature_icon": true
       }
      ]
     }
@@ -1031,12 +955,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
@@ -1796,12 +1716,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
@@ -2102,122 +2018,6 @@
        "temperature_icon": true
       }
      ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "Hallway",
-       "heading_style": "title",
-       "icon": "mdi:door"
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.hallway_wiser_hallway_heating",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": false,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": "full"
-       },
-       "temperature_icon": true
-      }
-     ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "Hall",
-       "heading_style": "title",
-       "icon": "mdi:sofa"
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.hall_wiser_hall_heating",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": false,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": "full"
-       },
-       "temperature_icon": true
-      }
-     ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "BathRoom",
-       "heading_style": "title",
-       "icon": "mdi:bathtub"
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.bathroom_wiser_bathroom_heating",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": false,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": "full"
-       },
-       "temperature_icon": true
-      }
-     ]
-    },
-    {
-     "type": "grid",
-     "cards": [
-      {
-       "type": "heading",
-       "heading": "ShowerRoom",
-       "heading_style": "title",
-       "icon": "mdi:shower"
-      },
-      {
-       "type": "custom:mushroom-climate-card",
-       "entity": "climate.showerroom_wiser_showerroom_heating",
-       "name": "Heating",
-       "layout": "horizontal",
-       "fill_container": true,
-       "collapsible_controls": false,
-       "show_temperature_control": true,
-       "hvac_modes": [
-        "auto",
-        "heat",
-        "off"
-       ],
-       "grid_options": {
-        "columns": "full"
-       },
-       "temperature_icon": true
-      }
-     ]
     }
    ]
   },
@@ -2284,12 +2084,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
@@ -2758,12 +2554,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
@@ -3033,12 +2825,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
@@ -3225,12 +3013,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
@@ -3546,12 +3330,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
@@ -4151,12 +3931,8 @@
          "status": {
           "kind": "attribute_equals",
           "entities": [
-           "climate.hallway_wiser_hallway_heating",
            "climate.wiser_bedroom",
            "climate.wiser_kitchen",
-           "climate.bathroom_wiser_bathroom_heating",
-           "climate.showerroom_wiser_showerroom_heating",
-           "climate.hall_wiser_hall_heating",
            "climate.wiser_cabinet",
            "climate.wiser_children_s"
           ],
