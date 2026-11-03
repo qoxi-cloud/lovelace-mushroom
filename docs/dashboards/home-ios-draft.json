@@ -1835,12 +1835,6 @@
           "action": "perform-action",
           "perform_action": "script.wiser_boost_toggle"
          }
-        },
-        {
-         "type": "entity",
-         "entity": "switch.wiser_heathub_wiserheat06724f_wiser_away_mode",
-         "icon": "mdi:home-export-outline",
-         "content_info": "name"
         }
        ]
       }
