@@ -254,7 +254,7 @@
        "name": "AC",
        "layout": "horizontal",
        "fill_container": true,
-       "collapsible_controls": true,
+       "collapsible_controls": false,
        "show_temperature_control": true,
        "hvac_modes": [
         "cool",
@@ -264,7 +264,7 @@
         "off"
        ],
        "grid_options": {
-        "columns": 6
+        "columns": "full"
        },
        "temperature_icon": true
       },
@@ -274,7 +274,7 @@
        "name": "Heating",
        "layout": "horizontal",
        "fill_container": true,
-       "collapsible_controls": true,
+       "collapsible_controls": false,
        "show_temperature_control": true,
        "hvac_modes": [
         "auto",
@@ -282,7 +282,7 @@
         "off"
        ],
        "grid_options": {
-        "columns": 6
+        "columns": "full"
        },
        "temperature_icon": true
       }
@@ -389,7 +389,7 @@
        "name": "AC",
        "layout": "horizontal",
        "fill_container": true,
-       "collapsible_controls": true,
+       "collapsible_controls": false,
        "show_temperature_control": true,
        "hvac_modes": [
         "cool",
@@ -399,7 +399,7 @@
         "off"
        ],
        "grid_options": {
-        "columns": 6
+        "columns": "full"
        },
        "temperature_icon": true
       },
@@ -409,7 +409,7 @@
        "name": "Heating",
        "layout": "horizontal",
        "fill_container": true,
-       "collapsible_controls": true,
+       "collapsible_controls": false,
        "show_temperature_control": true,
        "hvac_modes": [
         "auto",
@@ -417,7 +417,7 @@
         "off"
        ],
        "grid_options": {
-        "columns": 6
+        "columns": "full"
        },
        "temperature_icon": true
       }
@@ -555,7 +555,7 @@
        "name": "AC",
        "layout": "horizontal",
        "fill_container": true,
-       "collapsible_controls": true,
+       "collapsible_controls": false,
        "show_temperature_control": true,
        "hvac_modes": [
         "cool",
@@ -565,7 +565,7 @@
         "off"
        ],
        "grid_options": {
-        "columns": 6
+        "columns": "full"
        },
        "temperature_icon": true
       },
@@ -575,7 +575,7 @@
        "name": "Heating",
        "layout": "horizontal",
        "fill_container": true,
-       "collapsible_controls": true,
+       "collapsible_controls": false,
        "show_temperature_control": true,
        "hvac_modes": [
         "auto",
@@ -583,7 +583,7 @@
         "off"
        ],
        "grid_options": {
-        "columns": 6
+        "columns": "full"
        },
        "temperature_icon": true
       }
@@ -629,7 +629,7 @@
        "name": "Heating",
        "layout": "horizontal",
        "fill_container": true,
-       "collapsible_controls": true,
+       "collapsible_controls": false,
        "show_temperature_control": true,
        "hvac_modes": [
         "auto",
@@ -637,7 +637,7 @@
         "off"
        ],
        "grid_options": {
-        "columns": 6
+        "columns": "full"
        },
        "temperature_icon": true
       }
