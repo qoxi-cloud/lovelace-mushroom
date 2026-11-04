@@ -4129,6 +4129,50 @@
        "grid_options": {
         "columns": 6
        }
+      },
+      {
+       "type": "heading",
+       "heading": "Batteries",
+       "heading_style": "subtitle",
+       "icon": "mdi:battery-heart-variant"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.wiser_itrv_kitchen_battery",
+       "primary": "Valve",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_itrv_kitchen_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
+       "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.wiser_roomstat_kitchen_battery",
+       "primary": "Thermostat",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_roomstat_kitchen_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
+       "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       }
       }
      ]
     },
@@ -4153,6 +4197,50 @@
        },
        "grid_options": {
         "columns": 6
+       }
+      },
+      {
+       "type": "heading",
+       "heading": "Batteries",
+       "heading_style": "subtitle",
+       "icon": "mdi:battery-heart-variant"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.wiser_itrv_bedroom_battery",
+       "primary": "Valve",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_itrv_bedroom_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
+       "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.wiser_roomstat_bedroom_battery",
+       "primary": "Thermostat",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_roomstat_bedroom_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
+       "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "icon_tap_action": {
+        "action": "more-info"
        }
       }
      ]
@@ -4179,6 +4267,50 @@
        "grid_options": {
         "columns": 6
        }
+      },
+      {
+       "type": "heading",
+       "heading": "Batteries",
+       "heading_style": "subtitle",
+       "icon": "mdi:battery-heart-variant"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.wiser_itrv_children_s_battery",
+       "primary": "Valve",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_itrv_children_s_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
+       "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.wiser_roomstat_children_s_battery",
+       "primary": "Thermostat",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_roomstat_children_s_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
+       "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       }
       }
      ]
     },
@@ -4203,6 +4335,50 @@
        },
        "grid_options": {
         "columns": 6
+       }
+      },
+      {
+       "type": "heading",
+       "heading": "Batteries",
+       "heading_style": "subtitle",
+       "icon": "mdi:battery-heart-variant"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.wiser_itrv_cabinet_battery",
+       "primary": "Valve",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_itrv_cabinet_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
+       "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.wiser_roomstat_cabinet_battery",
+       "primary": "Thermostat",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_roomstat_cabinet_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
+       "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       },
+       "icon_tap_action": {
+        "action": "more-info"
        }
       }
      ]
