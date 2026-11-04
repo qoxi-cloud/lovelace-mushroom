@@ -4140,7 +4140,7 @@
        "type": "custom:mushroom-template-card",
        "entity": "sensor.wiser_itrv_kitchen_battery",
        "primary": "Valve",
-       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_itrv_kitchen_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "secondary": "{% set s = states('sensor.wiser_itrv_kitchen_signal') %}{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if s in ['Offline', 'NoSignal', 'unavailable', 'unknown'] else '' }}",
        "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
        "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
        "layout": "horizontal",
@@ -4152,14 +4152,17 @@
         "columns": 6
        },
        "icon_tap_action": {
-        "action": "more-info"
-       }
+        "action": "more-info",
+        "entity": "sensor.wiser_itrv_kitchen_signal"
+       },
+       "badge_icon": "{% set s = states('sensor.wiser_itrv_kitchen_signal') %}{{ {'VeryGood': 'mdi:wifi-strength-4', 'Good': 'mdi:wifi-strength-3', 'Medium': 'mdi:wifi-strength-2', 'Poor': 'mdi:wifi-strength-1'}.get(s, 'mdi:wifi-strength-off-outline') }}",
+       "badge_color": "{% set s = states('sensor.wiser_itrv_kitchen_signal') %}{{ 'green' if s in ['VeryGood', 'Good'] else 'amber' if s == 'Medium' else 'red' }}"
       },
       {
        "type": "custom:mushroom-template-card",
        "entity": "sensor.wiser_roomstat_kitchen_battery",
        "primary": "Thermostat",
-       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_roomstat_kitchen_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "secondary": "{% set s = states('sensor.wiser_roomstat_kitchen_signal') %}{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if s in ['Offline', 'NoSignal', 'unavailable', 'unknown'] else '' }}",
        "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
        "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
        "layout": "horizontal",
@@ -4171,8 +4174,11 @@
         "columns": 6
        },
        "icon_tap_action": {
-        "action": "more-info"
-       }
+        "action": "more-info",
+        "entity": "sensor.wiser_roomstat_kitchen_signal"
+       },
+       "badge_icon": "{% set s = states('sensor.wiser_roomstat_kitchen_signal') %}{{ {'VeryGood': 'mdi:wifi-strength-4', 'Good': 'mdi:wifi-strength-3', 'Medium': 'mdi:wifi-strength-2', 'Poor': 'mdi:wifi-strength-1'}.get(s, 'mdi:wifi-strength-off-outline') }}",
+       "badge_color": "{% set s = states('sensor.wiser_roomstat_kitchen_signal') %}{{ 'green' if s in ['VeryGood', 'Good'] else 'amber' if s == 'Medium' else 'red' }}"
       }
      ]
     },
@@ -4209,7 +4215,7 @@
        "type": "custom:mushroom-template-card",
        "entity": "sensor.wiser_itrv_bedroom_battery",
        "primary": "Valve",
-       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_itrv_bedroom_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "secondary": "{% set s = states('sensor.wiser_itrv_bedroom_signal') %}{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if s in ['Offline', 'NoSignal', 'unavailable', 'unknown'] else '' }}",
        "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
        "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
        "layout": "horizontal",
@@ -4221,14 +4227,17 @@
         "columns": 6
        },
        "icon_tap_action": {
-        "action": "more-info"
-       }
+        "action": "more-info",
+        "entity": "sensor.wiser_itrv_bedroom_signal"
+       },
+       "badge_icon": "{% set s = states('sensor.wiser_itrv_bedroom_signal') %}{{ {'VeryGood': 'mdi:wifi-strength-4', 'Good': 'mdi:wifi-strength-3', 'Medium': 'mdi:wifi-strength-2', 'Poor': 'mdi:wifi-strength-1'}.get(s, 'mdi:wifi-strength-off-outline') }}",
+       "badge_color": "{% set s = states('sensor.wiser_itrv_bedroom_signal') %}{{ 'green' if s in ['VeryGood', 'Good'] else 'amber' if s == 'Medium' else 'red' }}"
       },
       {
        "type": "custom:mushroom-template-card",
        "entity": "sensor.wiser_roomstat_bedroom_battery",
        "primary": "Thermostat",
-       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_roomstat_bedroom_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "secondary": "{% set s = states('sensor.wiser_roomstat_bedroom_signal') %}{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if s in ['Offline', 'NoSignal', 'unavailable', 'unknown'] else '' }}",
        "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
        "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
        "layout": "horizontal",
@@ -4240,8 +4249,11 @@
         "columns": 6
        },
        "icon_tap_action": {
-        "action": "more-info"
-       }
+        "action": "more-info",
+        "entity": "sensor.wiser_roomstat_bedroom_signal"
+       },
+       "badge_icon": "{% set s = states('sensor.wiser_roomstat_bedroom_signal') %}{{ {'VeryGood': 'mdi:wifi-strength-4', 'Good': 'mdi:wifi-strength-3', 'Medium': 'mdi:wifi-strength-2', 'Poor': 'mdi:wifi-strength-1'}.get(s, 'mdi:wifi-strength-off-outline') }}",
+       "badge_color": "{% set s = states('sensor.wiser_roomstat_bedroom_signal') %}{{ 'green' if s in ['VeryGood', 'Good'] else 'amber' if s == 'Medium' else 'red' }}"
       }
      ]
     },
@@ -4278,7 +4290,7 @@
        "type": "custom:mushroom-template-card",
        "entity": "sensor.wiser_itrv_children_s_battery",
        "primary": "Valve",
-       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_itrv_children_s_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "secondary": "{% set s = states('sensor.wiser_itrv_children_s_signal') %}{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if s in ['Offline', 'NoSignal', 'unavailable', 'unknown'] else '' }}",
        "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
        "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
        "layout": "horizontal",
@@ -4290,14 +4302,17 @@
         "columns": 6
        },
        "icon_tap_action": {
-        "action": "more-info"
-       }
+        "action": "more-info",
+        "entity": "sensor.wiser_itrv_children_s_signal"
+       },
+       "badge_icon": "{% set s = states('sensor.wiser_itrv_children_s_signal') %}{{ {'VeryGood': 'mdi:wifi-strength-4', 'Good': 'mdi:wifi-strength-3', 'Medium': 'mdi:wifi-strength-2', 'Poor': 'mdi:wifi-strength-1'}.get(s, 'mdi:wifi-strength-off-outline') }}",
+       "badge_color": "{% set s = states('sensor.wiser_itrv_children_s_signal') %}{{ 'green' if s in ['VeryGood', 'Good'] else 'amber' if s == 'Medium' else 'red' }}"
       },
       {
        "type": "custom:mushroom-template-card",
        "entity": "sensor.wiser_roomstat_children_s_battery",
        "primary": "Thermostat",
-       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_roomstat_children_s_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "secondary": "{% set s = states('sensor.wiser_roomstat_children_s_signal') %}{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if s in ['Offline', 'NoSignal', 'unavailable', 'unknown'] else '' }}",
        "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
        "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
        "layout": "horizontal",
@@ -4309,8 +4324,11 @@
         "columns": 6
        },
        "icon_tap_action": {
-        "action": "more-info"
-       }
+        "action": "more-info",
+        "entity": "sensor.wiser_roomstat_children_s_signal"
+       },
+       "badge_icon": "{% set s = states('sensor.wiser_roomstat_children_s_signal') %}{{ {'VeryGood': 'mdi:wifi-strength-4', 'Good': 'mdi:wifi-strength-3', 'Medium': 'mdi:wifi-strength-2', 'Poor': 'mdi:wifi-strength-1'}.get(s, 'mdi:wifi-strength-off-outline') }}",
+       "badge_color": "{% set s = states('sensor.wiser_roomstat_children_s_signal') %}{{ 'green' if s in ['VeryGood', 'Good'] else 'amber' if s == 'Medium' else 'red' }}"
       }
      ]
     },
@@ -4347,7 +4365,7 @@
        "type": "custom:mushroom-template-card",
        "entity": "sensor.wiser_itrv_cabinet_battery",
        "primary": "Valve",
-       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_itrv_cabinet_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "secondary": "{% set s = states('sensor.wiser_itrv_cabinet_signal') %}{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if s in ['Offline', 'NoSignal', 'unavailable', 'unknown'] else '' }}",
        "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
        "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
        "layout": "horizontal",
@@ -4359,14 +4377,17 @@
         "columns": 6
        },
        "icon_tap_action": {
-        "action": "more-info"
-       }
+        "action": "more-info",
+        "entity": "sensor.wiser_itrv_cabinet_signal"
+       },
+       "badge_icon": "{% set s = states('sensor.wiser_itrv_cabinet_signal') %}{{ {'VeryGood': 'mdi:wifi-strength-4', 'Good': 'mdi:wifi-strength-3', 'Medium': 'mdi:wifi-strength-2', 'Poor': 'mdi:wifi-strength-1'}.get(s, 'mdi:wifi-strength-off-outline') }}",
+       "badge_color": "{% set s = states('sensor.wiser_itrv_cabinet_signal') %}{{ 'green' if s in ['VeryGood', 'Good'] else 'amber' if s == 'Medium' else 'red' }}"
       },
       {
        "type": "custom:mushroom-template-card",
        "entity": "sensor.wiser_roomstat_cabinet_battery",
        "primary": "Thermostat",
-       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if states('sensor.wiser_roomstat_cabinet_signal') in ['Offline', 'NoSignal', 'unavailable'] else '' }}",
+       "secondary": "{% set s = states('sensor.wiser_roomstat_cabinet_signal') %}{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} % \u00b7 {{ state_attr(entity, 'battery_voltage') }} V{% endif %}{{ ' \u00b7 offline' if s in ['Offline', 'NoSignal', 'unavailable', 'unknown'] else '' }}",
        "icon": "{% set p = states(entity) | int(-1) %}{{ 'mdi:battery-unknown' if p < 0 else 'mdi:battery' if p >= 95 else 'mdi:battery-outline' if p < 10 else 'mdi:battery-' ~ (p // 10 * 10) }}",
        "icon_color": "{% set p = states(entity) | int(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 20 else 'orange' if p <= 40 else 'green' }}",
        "layout": "horizontal",
@@ -4378,7 +4399,136 @@
         "columns": 6
        },
        "icon_tap_action": {
+        "action": "more-info",
+        "entity": "sensor.wiser_roomstat_cabinet_signal"
+       },
+       "badge_icon": "{% set s = states('sensor.wiser_roomstat_cabinet_signal') %}{{ {'VeryGood': 'mdi:wifi-strength-4', 'Good': 'mdi:wifi-strength-3', 'Medium': 'mdi:wifi-strength-2', 'Poor': 'mdi:wifi-strength-1'}.get(s, 'mdi:wifi-strength-off-outline') }}",
+       "badge_color": "{% set s = states('sensor.wiser_roomstat_cabinet_signal') %}{{ 'green' if s in ['VeryGood', 'Good'] else 'amber' if s == 'Medium' else 'red' }}"
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "ShowerRoom",
+       "heading_style": "title",
+       "icon": "mdi:shower"
+      },
+      {
+       "type": "heading",
+       "heading": "Water softener",
+       "heading_style": "subtitle",
+       "icon": "mdi:water-opacity"
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.bwt_perla_silk_salt_level",
+       "primary": "Salt",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) | float(0) | round(0) | int }} %{% endif %}",
+       "icon": "mdi:shaker-outline",
+       "icon_color": "{% set p = states(entity) | float(-1) %}{{ 'disabled' if p < 0 else 'red' if p <= 10 else 'orange' if p <= 25 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
         "action": "more-info"
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.bwt_perla_silk_days_until_regeneration",
+       "primary": "Regeneration",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}in {{ states(entity) }} d \u00b7 {{ states('sensor.bwt_perla_silk_remaining_capacity') }} L left{% endif %}",
+       "icon": "mdi:calendar-refresh",
+       "icon_color": "blue",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.bwt_perla_silk_water_today",
+       "primary": "Water today",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}{{ states(entity) }} L \u00b7 avg {{ states('sensor.bwt_perla_silk_average_daily_usage') }} L{% endif %}{{ ' \u00b7 ' ~ states('sensor.bwt_perla_silk_current_flow') ~ ' L/min' if is_state('binary_sensor.bwt_perla_silk_water_flowing', 'on') else '' }}",
+       "icon": "{{ 'mdi:water-pump' if is_state('binary_sensor.bwt_perla_silk_water_flowing', 'on') else 'mdi:water' }}",
+       "icon_color": "blue",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "sensor.bwt_perla_silk_days_until_service",
+       "primary": "Service",
+       "secondary": "{% if states(entity) in ['unavailable', 'unknown'] %}\u2014{% else %}in {{ states(entity) }} d{% endif %}{% set w = states('sensor.bwt_perla_silk_warranty_days_remaining') | int(-1) %}{{ ' \u00b7 warranty ' ~ w ~ ' d' if 0 <= w <= 60 else '' }}{{ ' \u00b7 cloud off' if is_state('binary_sensor.bwt_perla_silk_cloud_connection', 'off') else '' }}",
+       "icon": "mdi:wrench-clock",
+       "icon_color": "{% set d = states(entity) | int(-1) %}{{ 'disabled' if d < 0 else 'red' if d <= 7 else 'orange' if d <= 30 else 'green' }}",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "more-info"
+       },
+       "icon_tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": 6
+       }
+      },
+      {
+       "type": "custom:mushroom-template-card",
+       "entity": "button.bwt_perla_silk_start_regeneration",
+       "primary": "Regenerate now",
+       "secondary": "{{ states('sensor.bwt_perla_silk_total_regenerations') }} total",
+       "icon": "mdi:refresh-circle",
+       "icon_color": "grey",
+       "layout": "horizontal",
+       "fill_container": true,
+       "tap_action": {
+        "action": "perform-action",
+        "perform_action": "button.press",
+        "target": {
+         "entity_id": "button.bwt_perla_silk_start_regeneration"
+        },
+        "confirmation": {
+         "text": "Start BWT regeneration now?"
+        }
+       },
+       "icon_tap_action": {
+        "action": "perform-action",
+        "perform_action": "button.press",
+        "target": {
+         "entity_id": "button.bwt_perla_silk_start_regeneration"
+        },
+        "confirmation": {
+         "text": "Start BWT regeneration now?"
+        }
+       },
+       "grid_options": {
+        "columns": 6
        }
       }
      ]
